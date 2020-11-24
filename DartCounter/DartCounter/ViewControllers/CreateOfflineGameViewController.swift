@@ -9,29 +9,16 @@ import UIKit
 import Starscream
 
 class CreateOfflineGameViewController: UIViewController {
-    
-    private enum Constants {
-        static let InGameSegue = "createOfflineGame_inGame"
-    }
-    
+
     @IBOutlet weak var switchDartbot: UISwitch!
-    
     @IBOutlet weak var dartBotView: UIView!
-    
     @IBOutlet weak var sliderDartbotAverage: UISlider!
-    
     @IBOutlet weak var labelDartbotAverage: UILabel!
-    
     @IBOutlet weak var playerTableView: UITableView!
-    
     @IBOutlet weak var segmentedStartingScore: UISegmentedControl!
-    
     @IBOutlet weak var segmentedGameMode: UISegmentedControl!
-    
     @IBOutlet weak var pickerSize: UIPickerView!
-    
     @IBOutlet weak var segmentedGameType: UISegmentedControl!
-    
     @IBOutlet weak var advancedSettingsTableView: UITableView!
     var advancedSettingsData = ["SPRACHEINGABE", "AVERAGE ANZEIGEN", "DOPPELQUOTE ANZEIGEN"]
 
@@ -48,13 +35,11 @@ class CreateOfflineGameViewController: UIViewController {
         onAddPlayer()
     }
     
-    
-    
-    
     @IBAction func onStartGame(_ sender: UIButton) {
        onStartGame()
     }
 
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         initView()
@@ -63,7 +48,6 @@ class CreateOfflineGameViewController: UIViewController {
     private func initView() {
         switchDartbot.isOn = false
         dartBotView.isHidden = true
-        
         
         segmentedStartingScore.selectedSegmentIndex = 1
         
@@ -78,7 +62,7 @@ class CreateOfflineGameViewController: UIViewController {
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == Constants.InGameSegue, let viewController = segue.destination as? InGameViewController {
+        if segue.identifier == Segues.CreateOfflineGame_InGame, let viewController = segue.destination as? InGameViewController {
             // TODO
         }
     }
@@ -120,7 +104,7 @@ extension CreateOfflineGameViewController {
         
         App.game!.config = GameConfig(mode: mode, type: type, size: size, startingPoints: startingPoints)
         if App.game!.start() {
-            self.performSegue(withIdentifier: Constants.InGameSegue, sender: self)
+            self.performSegue(withIdentifier: Segues.CreateOfflineGame_InGame, sender: self)
         }
     }
     

@@ -11,13 +11,8 @@ import FirebaseAuth.FIRAuthErrors
 
 class SignInViewController: UIViewController {
     
-    private enum Constants {
-        static let OnlineOrOfflineSegue = "signIn_OnlineOrOfflineSegue"
-    }
-    
     @IBOutlet weak var textField_username: UITextField!
     @IBOutlet weak var textField_password: UITextField!
-    
     @IBOutlet weak var label_error: UILabel!
     
     
@@ -44,6 +39,11 @@ class SignInViewController: UIViewController {
         AuthService.shared.signInInstagram(onError: onSignInInstagramError(error:))
     }
     
+    @IBAction func onGotoSignUp(_ sender: UIButton) {
+        performSegue(withIdentifier: Segues.SignIn_SignUp, sender: self)
+    }
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -51,7 +51,6 @@ class SignInViewController: UIViewController {
         
         self.textField_username.delegate = self
         self.textField_password.delegate = self
-        // Do any additional setup after loading the view.
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -103,9 +102,7 @@ extension SignInViewController {
         print(App.user!.uid)
         print(App.user!.username)
         
-        DispatchQueue.main.async {
-            self.performSegue(withIdentifier: Constants.OnlineOrOfflineSegue, sender: self)
-        }
+        performSegue(withIdentifier: Segues.SignIn_Home, sender: self)
     }
     
 }

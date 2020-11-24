@@ -11,14 +11,9 @@ import FirebaseAuth
 
 class SignUpViewController: UIViewController {
     
-    private enum Constants {
-        static let OnlineOrOfflineSegue = "signUp_OnlineOrOfflineSegue"
-    }
-    
     @IBOutlet weak var textField_username: UITextField!
     @IBOutlet weak var textField_password: UITextField!
     @IBOutlet weak var textField_passwordAgain: UITextField!
-    
     @IBOutlet weak var label_error: UILabel!
     
     @IBAction func onSignUp(_ sender: UIButton) {
@@ -64,7 +59,7 @@ class SignUpViewController: UIViewController {
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == Constants.OnlineOrOfflineSegue, let viewController = segue.destination as? OnlineOrOfflineViewController {
+        if segue.identifier == Segues.SignUp_Home, let viewController = segue.destination as? HomeViewController {
           
         }
     }
@@ -115,7 +110,7 @@ extension SignUpViewController {
         print(App.user!.username)
         
         DispatchQueue.main.async {
-            self.performSegue(withIdentifier: Constants.OnlineOrOfflineSegue, sender: self)
+            self.performSegue(withIdentifier: Segues.SignUp_Home, sender: self)
         }
     }
     

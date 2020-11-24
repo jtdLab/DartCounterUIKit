@@ -9,19 +9,10 @@ import UIKit
 
 class InGameViewController: UIViewController {
     
-    private enum Constants {
-        static let ThrowDetailsSegue = "inGame_throwDetails"
-        static let PostGameSegue = "inGame_postGame"
-    }
-    
-    
     private var playerContainer: UIView? // TODO check if good practice
     
-    
     @IBOutlet weak var navItem: UINavigationItem!
-    
     @IBOutlet weak var playerView: UIView!
-    
     @IBOutlet weak var label_pointsScored: UILabel!
     
     
@@ -87,7 +78,6 @@ class InGameViewController: UIViewController {
         initView()
     }
 
-    
     private func initView() {
         navItem.hidesBackButton = true
         navItem.title = App.game!.getDescription()
@@ -118,7 +108,7 @@ class InGameViewController: UIViewController {
 
     private func refreshView() {
         if App.game?.getWinner() != nil {
-            performSegue(withIdentifier: Constants.PostGameSegue, sender: self)
+            performSegue(withIdentifier: Segues.InGame_PostGame, sender: self)
             return
         }
         
@@ -146,7 +136,7 @@ class InGameViewController: UIViewController {
 
     // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == Constants.ThrowDetailsSegue, let viewController = segue.destination as? ThrowDetailsViewController {
+        if segue.identifier == Segues.InGame_CheckoutDetails, let viewController = segue.destination as? CheckoutDetailsViewController {
             
             viewController.delegate = self
             viewController.pointsLeft = App.game!.getCurrentTurn().pointsLeft!
@@ -174,7 +164,7 @@ extension InGameViewController {
         
         if ThrowValidator.isThreeDartFinish(points: pointsLeft) {
             // TODO logic to show Details Screen
-            performSegue(withIdentifier: Constants.ThrowDetailsSegue, sender: self)
+            performSegue(withIdentifier: Segues.InGame_CheckoutDetails, sender: self)
         } else {
             if App.game!.performThrow(t: Throw(points: points, dartsOnDouble: 0, dartsThrown: 3)) {
                 refreshView()
@@ -237,7 +227,7 @@ extension InGameViewController {
         if ThrowValidator.isThreeDartFinish(points: pointsLeft) {
             label_pointsScored.text = String(pointsLeft)
             // TODO logic to show Details Screen
-            performSegue(withIdentifier: Constants.ThrowDetailsSegue, sender: self)
+            performSegue(withIdentifier: Segues.InGame_CheckoutDetails, sender: self)
         }
     }
     

@@ -1,5 +1,5 @@
 //
-//  OnlineOrOfflineViewController.swift
+//  HomeViewController.swift
 //  DartCounter
 //
 //  Created by Jonas Schlauch on 09.11.20.
@@ -7,23 +7,13 @@
 
 import UIKit
 
-class OnlineOrOfflineViewController: UIViewController {
-    
-    private enum Constants {
-        static let OnOnlineCreateGameSegue = "onOnline_createGame"
-        static let OnOfflineCreateGameSegue = "onOffline_createGame"
-    }
+class HomeViewController: UIViewController {
     
     @IBOutlet weak var navItem: UINavigationItem!
-    
     @IBOutlet weak var btn_Profile: UIView!
-    
     @IBOutlet weak var btn_Online: UIView!
-    
     @IBOutlet weak var btn_Offline: UIView!
-    
     @IBOutlet weak var btn_SocialMedia: UIView!
-    
     @IBOutlet weak var btn_Settings: UIView!
     
     override func viewDidLoad() {
@@ -45,31 +35,28 @@ class OnlineOrOfflineViewController: UIViewController {
         btn_Settings.addGestureRecognizer(settingsTapGesture)
     }
     
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == Constants.OnOnlineCreateGameSegue, let viewController = segue.destination as? CreateOnlineGameViewController {
+        if segue.identifier == Segues.Home_CreateOnlineGame, let viewController = segue.destination as? CreateOnlineGameViewController {
             // TODO
-        } else if segue.identifier == Constants.OnOfflineCreateGameSegue, let viewController = segue.destination as? CreateOfflineGameViewController {
+        } else if segue.identifier == Segues.Home_CreateOfflineGame, let viewController = segue.destination as? CreateOfflineGameViewController {
             App.game = Game(player: Player(name: App.user!.username))
         }
     }
 
 }
 
-extension OnlineOrOfflineViewController {
+extension HomeViewController {
     
     @objc func onProfile() {
 
     }
     
     @objc func onOnline() {
-        self.performSegue(withIdentifier: Constants.OnOnlineCreateGameSegue, sender: self)
+        self.performSegue(withIdentifier: Segues.Home_CreateOnlineGame, sender: self)
     }
     
     @objc func onOffline() {
-        self.performSegue(withIdentifier: Constants.OnOfflineCreateGameSegue, sender: self)
+        self.performSegue(withIdentifier: Segues.Home_CreateOfflineGame, sender: self)
     }
     
     @objc func onSocialMedia() {

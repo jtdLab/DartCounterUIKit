@@ -11,33 +11,17 @@ protocol DimissManager {
   func onDismiss()
 }
 
-class ThrowDetailsViewController: UIViewController {
-    
-    var delegate: DimissManager?
-    
-    var pointsLeft: Int?
-    var pointsScored: Int?
-    
-    var dartsThrown: Int = 1
-    var dartsOnDouble: Int = 0
+class CheckoutDetailsViewController: UIViewController {
 
     @IBOutlet weak var btn_dartsThrown_1: UIButton!
-    
     @IBOutlet weak var btn_dartsThrown_2: UIButton!
-
     @IBOutlet weak var btn_dartsThrown_3: UIButton!
-    
-    
     @IBOutlet weak var btn_dartsOnDouble_0: UIButton!
-    
     @IBOutlet weak var btn_dartsOnDouble_1: UIButton!
-    
     @IBOutlet weak var btn_dartsOnDouble_2: UIButton!
-    
     @IBOutlet weak var btn_dartsOnDouble_3: UIButton!
-    
-    
     @IBOutlet weak var btn_submit: UIButton!
+    
     
     @IBAction func onDartsThrown1(_ sender: UIButton) {
         onDartsThrown(digit: 1)
@@ -71,6 +55,14 @@ class ThrowDetailsViewController: UIViewController {
         dismiss(animated: true, completion: nil)
     }
     
+    
+    var delegate: DimissManager?
+    var pointsLeft: Int?
+    var pointsScored: Int?
+    var dartsThrown: Int = 1
+    var dartsOnDouble: Int = 0
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         initView()
@@ -86,20 +78,10 @@ class ThrowDetailsViewController: UIViewController {
         btn_dartsOnDouble_3.isHidden = true
     }
 
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
 }
 
 // Contains UserEventHandling
-extension ThrowDetailsViewController {
+extension CheckoutDetailsViewController {
     
     func onDartsThrown(digit: Int) {
         // TODO reset all buttons to default looking

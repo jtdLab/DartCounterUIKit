@@ -9,8 +9,8 @@ import UIKit
 
 class CreateOnlineGameViewController: UIViewController {
     
-    private enum Constants {
-        static let InGameSegue = "createOnlineGame_inGame"
+    @IBAction func onStartGame(_ sender: UIButton) {
+        self.performSegue(withIdentifier: Segues.CreateOnlineGame_InGame, sender: self)
     }
 
     override func viewDidLoad() {
@@ -19,12 +19,8 @@ class CreateOnlineGameViewController: UIViewController {
         // Do any additional setup after loading the view.
     }
     
-    @IBAction func onStartGame(_ sender: UIButton) {
-        self.performSegue(withIdentifier: Constants.InGameSegue, sender: self)
-    }
-    
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == Constants.InGameSegue, let viewController = segue.destination as? InGameViewController {
+        if segue.identifier == Segues.CreateOnlineGame_InGame, let viewController = segue.destination as? InGameViewController {
           // TODO
         }
     }
