@@ -1,2 +1,2 @@
-# DartCounterMobileIOS
-DartCounter Mobile (native IOS)
+# DartCounterIOS
+DartCounter (native IOS)
