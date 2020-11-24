@@ -1,0 +1,19 @@
+//
+//  App.swift
+//  DartCounter
+//
+//  Created by Jonas Schlauch on 25.10.20.
+//
+
+import Foundation
+import FirebaseAuth
+
+class App {
+    
+    static var user: User?
+    static let settings = Settings()
+    static var game: Game?
+    
+    static var playServerUrl = "ws://localhost:9000"
+}
+

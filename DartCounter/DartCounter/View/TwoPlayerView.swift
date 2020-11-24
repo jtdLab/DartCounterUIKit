@@ -1,0 +1,116 @@
+//
+//  TwoPlayerView.swift
+//  DartCounter
+//
+//  Created by Jonas Schlauch on 12.11.20.
+//
+
+import UIKit
+
+class TwoPlayerView: UIView {
+    
+    
+    @IBOutlet weak var label_player1_name: UILabel!
+    
+    @IBOutlet weak var label_player1_sets: UILabel!
+    
+    @IBOutlet weak var label_player1_legs: UILabel!
+    
+    @IBOutlet weak var label_player1_pointsLeft: UILabel!
+    
+    @IBOutlet weak var label_player1_lastThrow: UILabel!
+    
+    @IBOutlet weak var label_player1_dartsThrown: UILabel!
+    
+    @IBOutlet weak var label_player1_average: UILabel!
+    
+    @IBOutlet weak var label_player1_checkoutPercentage: UILabel!
+    
+    
+    @IBOutlet weak var label_player2_name: UILabel!
+    
+    @IBOutlet weak var label_player2_sets: UILabel!
+    
+    @IBOutlet weak var label_player2_legs: UILabel!
+    
+    @IBOutlet weak var label_player2_pointsLeft: UILabel!
+    
+    @IBOutlet weak var label_player2_lastThrow: UILabel!
+    
+    @IBOutlet weak var label_player2_dartsThrown: UILabel!
+    
+    @IBOutlet weak var label_player2_average: UILabel!
+    
+    @IBOutlet weak var label_player2_checkoutPercentage: UILabel!
+    
+    
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        self.initView()
+    }
+    
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
+        self.initView()
+    }
+    
+    private func initView() {
+        guard let view = self.loadViewFromNib(nibName: "TwoPlayerView") else { return }
+        self.addSubview(view)
+        self.refreshView()
+    }
+    
+    func refreshView() {
+        let player1 = App.game!.players[0]
+        let player2 = App.game!.players[1]
+        
+        if player1.isNext! {
+            label_player1_name.backgroundColor = .black
+            label_player1_name.textColor = .white
+        } else {
+            label_player1_name.backgroundColor = .systemBackground
+            label_player1_name.textColor = .black
+        }
+        
+        if player2.isNext! {
+            label_player2_name.backgroundColor = .black
+            label_player2_name.textColor = .white
+        } else {
+            label_player2_name.backgroundColor = .systemBackground
+            label_player2_name.textColor = .black
+        }
+        
+        label_player1_name.text = player1.name
+        label_player1_sets.text = String(player1.sets ?? -1)
+        label_player1_legs.text = String(player1.legs!)
+        label_player1_pointsLeft.text = String(player1.pointsLeft!)
+        label_player1_lastThrow.text = String(player1.lastThrow ?? -1)
+        label_player1_dartsThrown.text = String(player1.dartsThrown!)
+        
+        label_player2_name.text = player2.name
+        label_player2_sets.text = String(player2.sets ?? -1)
+        label_player2_legs.text = String(player2.legs!)
+        label_player2_pointsLeft.text = String(player2.pointsLeft!)
+        label_player2_lastThrow.text = String(player2.lastThrow ?? -1)
+        label_player2_dartsThrown.text = String(player2.dartsThrown!)
+        
+        
+        if App.settings.showAverage {
+            label_player1_average.text = String(player1.average!)
+            label_player2_average.text = String(player2.average!)
+        } else {
+            label_player1_average.isHidden = true
+            label_player2_average.isHidden = true
+        }
+        
+        if App.settings.showCheckoutPercentage {
+            label_player1_checkoutPercentage.text = String(player1.checkoutPercentage!)
+            label_player2_checkoutPercentage.text = String(player2.checkoutPercentage!)
+        } else {
+            label_player1_checkoutPercentage.isHidden = true
+            label_player2_checkoutPercentage.isHidden = true
+        }
+    }
+
+}

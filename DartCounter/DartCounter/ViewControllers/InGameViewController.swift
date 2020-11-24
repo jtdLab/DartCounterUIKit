@@ -1,0 +1,265 @@
+//
+//  InGameViewController.swift
+//  DartCounter
+//
+//  Created by Jonas Schlauch on 24.10.20.
+//
+
+import UIKit
+
+class InGameViewController: UIViewController {
+    
+    private enum Constants {
+        static let ThrowDetailsSegue = "inGame_throwDetails"
+        static let PostGameSegue = "inGame_postGame"
+    }
+    
+    
+    private var playerContainer: UIView? // TODO check if good practice
+    
+    
+    @IBOutlet weak var navItem: UINavigationItem!
+    
+    @IBOutlet weak var playerView: UIView!
+    
+    @IBOutlet weak var label_pointsScored: UILabel!
+    
+    
+    @IBAction func onUndo(_ sender: UIButton) {
+       onUndo()
+    }
+    
+    @IBAction func onPerform(_ sender: UIButton) {
+        onPerform()
+    }
+    
+    @IBAction func onOne(_ sender: UIButton) {
+        onDigit(digit: 1)
+    }
+    
+    @IBAction func onTwo(_ sender: UIButton) {
+        onDigit(digit: 2)
+    }
+    
+    @IBAction func onThree(_ sender: UIButton) {
+        onDigit(digit: 3)
+    }
+    
+    @IBAction func onFour(_ sender: UIButton) {
+        onDigit(digit: 4)
+    }
+    
+    @IBAction func onFive(_ sender: UIButton) {
+        onDigit(digit: 5)
+    }
+    
+    @IBAction func onSix(_ sender: UIButton) {
+        onDigit(digit: 6)
+    }
+    
+    @IBAction func onSeven(_ sender: UIButton) {
+        onDigit(digit: 7)
+    }
+    
+    @IBAction func onEight(_ sender: UIButton) {
+        onDigit(digit: 8)
+    }
+    
+    @IBAction func onNine(_ sender: UIButton) {
+        onDigit(digit: 9)
+    }
+    
+    @IBAction func onCheck(_ sender: UIButton) {
+        onCheck()
+    }
+    
+    @IBAction func onZero(_ sender: UIButton) {
+        onDigit(digit: 0)
+    }
+    
+    @IBAction func onDelete(_ sender: UIButton) {
+        onDelete()
+    }
+
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        initView()
+    }
+
+    
+    private func initView() {
+        navItem.hidesBackButton = true
+        navItem.title = App.game!.getDescription()
+        
+        label_pointsScored.text = "0"
+        
+        switch App.game!.players.count {
+        case 1:
+            playerContainer = OnePlayerView()
+            playerView.addSubview(playerContainer!)
+            break
+        case 2:
+            playerContainer = TwoPlayerView()
+            playerView.addSubview(playerContainer!)
+            break
+        case 3:
+            playerContainer = ThreePlayerView()
+            playerView.addSubview(playerContainer!)
+            break
+        case 4:
+            playerContainer = FourPlayerView()
+            playerView.addSubview(playerContainer!)
+            break
+        default:
+            return
+        }
+    }
+
+    private func refreshView() {
+        if App.game?.getWinner() != nil {
+            performSegue(withIdentifier: Constants.PostGameSegue, sender: self)
+            return
+        }
+        
+        label_pointsScored.text = "0"
+        
+        switch App.game!.players.count {
+        case 1:
+            (playerContainer as! OnePlayerView).refreshView()
+            break
+        case 2:
+            (playerContainer as! TwoPlayerView).refreshView()
+            break
+        case 3:
+            (playerContainer as! ThreePlayerView).refreshView()
+            break
+        case 4:
+            (playerContainer as! FourPlayerView).refreshView()
+            break
+        default:
+            return
+        }
+    }
+
+    // MARK: - Navigation
+
+    // In a storyboard-based application, you will often want to do a little preparation before navigation
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == Constants.ThrowDetailsSegue, let viewController = segue.destination as? ThrowDetailsViewController {
+            
+            viewController.delegate = self
+            viewController.pointsLeft = App.game!.getCurrentTurn().pointsLeft!
+            viewController.pointsScored = Int(label_pointsScored.text!)!
+        } 
+    }
+    
+}
+
+
+// Contains UserEventHandling
+extension InGameViewController {
+    
+    func onUndo() {
+        /*
+        if App.game!.undoThrow() {
+            refreshView()
+        }
+ */
+    }
+    
+    func onPerform() {
+        let pointsLeft = App.game!.getCurrentTurn().pointsLeft!
+        let points = Int(label_pointsScored.text!)!
+        
+        if ThrowValidator.isThreeDartFinish(points: pointsLeft) {
+            // TODO logic to show Details Screen
+            performSegue(withIdentifier: Constants.ThrowDetailsSegue, sender: self)
+        } else {
+            if App.game!.performThrow(t: Throw(points: points, dartsOnDouble: 0, dartsThrown: 3)) {
+                refreshView()
+            }
+        }
+        
+    }
+    
+    func onDigit(digit: Int) {
+        let pointsLeft = App.game!.getCurrentTurn().pointsLeft!
+        let currentPoints = label_pointsScored.text!
+    
+        if currentPoints == "0" {
+            switch digit {
+                case 1:
+                    label_pointsScored.text = "1"
+                    return
+                case 2:
+                    label_pointsScored.text = "2"
+                    return
+                case 3:
+                    label_pointsScored.text = "3"
+                    return
+                case 4:
+                    label_pointsScored.text = "4"
+                    return
+                case 5:
+                    label_pointsScored.text = "5"
+                    return
+                case 6:
+                    label_pointsScored.text = "6"
+                    return
+                case 7:
+                    label_pointsScored.text = "7"
+                    return
+                case 8:
+                    label_pointsScored.text = "8"
+                    return
+                case 9:
+                    label_pointsScored.text = "9"
+                    return
+                default:
+                    return
+    
+            }
+        }
+        
+        let nextPointsString = label_pointsScored.text! + String(digit)
+        let nextPoints = Int(nextPointsString)!
+        
+        if nextPoints > 180 || ((pointsLeft - nextPoints) < 2 && pointsLeft != nextPoints) {
+            return
+        }
+        
+        label_pointsScored.text = nextPointsString
+    }
+    
+    func onCheck() {
+        let pointsLeft = App.game!.getCurrentTurn().pointsLeft!
+        if ThrowValidator.isThreeDartFinish(points: pointsLeft) {
+            label_pointsScored.text = String(pointsLeft)
+            // TODO logic to show Details Screen
+            performSegue(withIdentifier: Constants.ThrowDetailsSegue, sender: self)
+        }
+    }
+    
+    func onDelete() {
+        let currentPoints = label_pointsScored.text!
+        
+        if currentPoints.count == 1 {
+            label_pointsScored.text = "0"
+            return
+        }
+    
+        if currentPoints != "0" {
+            label_pointsScored.text = String(currentPoints.dropLast())
+        }
+    }
+    
+}
+
+extension InGameViewController: DimissManager {
+    
+    func onDismiss() {
+        refreshView()
+    }
+
+}
