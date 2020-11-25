@@ -7,7 +7,6 @@
 
 import Foundation
 
-class Packet: Decodable {
+class Packet: Codable {
     
 }
-   

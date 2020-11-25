@@ -6,3 +6,7 @@
 //
 
 import Foundation
+
+class GameStartedPacket: Packet {
+    
+}

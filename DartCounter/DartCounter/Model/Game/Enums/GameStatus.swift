@@ -7,7 +7,7 @@
 
 import Foundation
 
-public enum GameStatus {
+public enum GameStatus: String {
     case PENDING
     case RUNNING
     case FINISHED

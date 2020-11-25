@@ -33,6 +33,9 @@ class HomeViewController: UIViewController {
         
         let settingsTapGesture = UITapGestureRecognizer(target:self,action:#selector(self.onSettings))
         btn_Settings.addGestureRecognizer(settingsTapGesture)
+        
+        PlayService.delegate = self
+        PlayService.connect()
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -45,6 +48,42 @@ class HomeViewController: UIViewController {
 
 }
 
+extension HomeViewController: PlayServiceDelegate {
+    
+    func onAuthResponse(authResponse: AuthResponsePacket) {
+        authResponse.successful ? print("Joined server") : print("Couldn't join server")
+    }
+    
+    func onCreateGameResponse(createGameResponse: CreateGameResponsePacket) {
+        createGameResponse.successful ? print("Created game") : print("Couldn't create game")
+    }
+    
+    func onJoinGameResponse(joinGameResponse: JoinGameResponsePacket) {
+        joinGameResponse.successful ? print("Joined game") : print("Couldn't join game")
+    }
+    
+    func onGameCanceled(gameCanceled: GameCanceledPacket) {
+        print("Game canceled")
+    }
+    
+    func onGameStarted(gameStarted: GameStartedPacket) {
+        print("Game started")
+    }
+    
+    func onSnapshot(snapshot: SnapshotPacket) {
+        print(snapshot.snapshot.description)
+    }
+    
+    func onPlayerExited(playerExited: PlayerExitedPacket) {
+        print(playerExited.username + " exited the game")
+    }
+    
+    func onPlayerJoined(playerJoined: PlayerJoinedPacket) {
+        print(playerJoined.username + " joined the game")
+    }
+    
+}
+
 extension HomeViewController {
     
     @objc func onProfile() {
@@ -52,6 +91,7 @@ extension HomeViewController {
     }
     
     @objc func onOnline() {
+        PlayService.createGame()
         self.performSegue(withIdentifier: Segues.Home_CreateOnlineGame, sender: self)
     }
     

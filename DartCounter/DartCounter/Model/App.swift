@@ -14,6 +14,5 @@ class App {
     static let settings = Settings()
     static var game: Game?
     
-    static var playServerUrl = "ws://localhost:9000"
 }
 

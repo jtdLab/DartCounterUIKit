@@ -63,10 +63,10 @@ class FourPlayerView: UIView {
     }
     
     func refreshView() {
-        let player1 = App.game!.players[0]
-        let player2 = App.game!.players[1]
-        let player3 = App.game!.players[2]
-        let player4 = App.game!.players[3]
+        let player1 = App.game!.getSnapshot().players[0]
+        let player2 = App.game!.getSnapshot().players[1]
+        let player3 = App.game!.getSnapshot().players[2]
+        let player4 = App.game!.getSnapshot().players[3]
         
         if player1.isNext! {
             // TODO

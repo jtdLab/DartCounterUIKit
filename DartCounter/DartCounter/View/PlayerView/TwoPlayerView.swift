@@ -45,8 +45,8 @@ class TwoPlayerView: UIView {
     }
     
     func refreshView() {
-        let player1 = App.game!.players[0]
-        let player2 = App.game!.players[1]
+        let player1 =  App.game!.getSnapshot().players[0]
+        let player2 = App.game!.getSnapshot().players[1]
         
         if player1.isNext! {
             // TODO

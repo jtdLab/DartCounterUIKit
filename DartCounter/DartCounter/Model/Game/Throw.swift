@@ -7,7 +7,7 @@
 
 import Foundation
 
-class Throw {
+class Throw: Codable {
     
     var points :Int
     var dartsOnDouble :Int

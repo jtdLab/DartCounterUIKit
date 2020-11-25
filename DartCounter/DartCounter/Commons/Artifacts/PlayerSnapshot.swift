@@ -7,7 +7,7 @@
 
 import Foundation
 
-class PlayerSnapshot {
+class PlayerSnapshot: Codable {
     
     let name: String?
     
@@ -38,18 +38,34 @@ class PlayerSnapshot {
 }
 
 extension PlayerSnapshot: CustomStringConvertible {
+    
     public var description: String {
+        
+        let tempIsNext = String(isNext ?? false)
+        var tempLastThrow = String(lastThrow ?? -1)
+        if tempLastThrow == "-1" {
+            tempLastThrow = "-"
+        }
+        let tempPointsLeft = String(pointsLeft!)
+        let tempDartsThrown = String(dartsThrown!)
+        var tempSets = String(sets ?? -1)
+        if tempSets == "-1" {
+            tempSets = ""
+        }
+        let tempLegs = String(legs!)
+        
         return "{" + "\n" +
             "name: " + name! + "\n" +
-            "isNext: " + String(isNext ?? false) + "\n" +
-            "lastThrow: " + String(lastThrow ?? -1) + "\n" +
-            "pointsLeft: " + String(pointsLeft ?? -1) + "\n" +
-            "dartsThrown: " + String(dartsThrown ?? -1) + "\n" +
-            "sets: " + String(sets ?? -1) + "\n" +
-            "legs: " + String(legs ?? -1) + "\n" +
+            "isNext: " + tempIsNext + "\n" +
+            "lastThrow: " + tempLastThrow + "\n" +
+            "pointsLeft: " + tempPointsLeft + "\n" +
+            "dartsThrown: " + tempDartsThrown + "\n" +
+            "sets: " + tempSets + "\n" +
+            "legs: " + tempLegs + "\n" +
             "average: " + average! + "\n" +
             "checkoutPercentage: " + checkoutPercentage! + "\n" +
             "}"
+
     }
 }
 

@@ -8,50 +8,136 @@
 import Foundation
 import Starscream
 
+protocol PlayServiceDelegate {
+    
+    func onAuthResponse(authResponse: AuthResponsePacket)
+    
+    func onCreateGameResponse(createGame: CreateGameResponsePacket)
+    
+    func onJoinGameResponse(joinGame: JoinGameResponsePacket)
+    
+    func onGameCanceled(gameCanceled: GameCanceledPacket)
+    
+    func onGameStarted(gameStarted: GameStartedPacket)
+    
+    func onSnapshotPacket(snapshot: SnapshotPacket)
+    
+    func onPlayerExited(playerExited: PlayerExitedPacket)
+    
+    func onPlayerJoined(playerJoined: PlayerJoinedPacket)
+    
+}
+
+extension PlayServiceDelegate {
+    
+    func onAuthResponse(authResponse: AuthResponsePacket) {}
+    
+    func onCreateGameResponse(createGame: CreateGameResponsePacket) {}
+    
+    func onJoinGameResponse(joinGame: JoinGameResponsePacket) {}
+    
+    func onGameCanceled(gameCanceled: GameCanceledPacket) {}
+    
+    func onGameStarted(gameStarted: GameStartedPacket) {}
+    
+    func onSnapshotPacket(snapshot: SnapshotPacket) {}
+    
+    func onPlayerExited(playerExited: PlayerExitedPacket) {}
+    
+    func onPlayerJoined(playerJoined: PlayerJoinedPacket) {}
+    
+}
+
 class PlayService {
     
+    static var delegate: PlayServiceDelegate?
+    
+    private static let host = "ws://localhost"
+    private static let port = 9000
+    
     private static let socket: WebSocket = {
-        let s = WebSocket(url: URL(string: App.playServerUrl)!)
-        s.onConnect = {
-            print()
+        var request = URLRequest(url: URL(string: host + ":" + String(port))!)
+        request.timeoutInterval = 5
+        let ws = WebSocket(request: request)
+        ws.onConnect = {
+            // TODO read password from user
+            sendPacket(packet: AuthRequestPacket(username: App.user!.username, password: "password"))
         }
         
-        s.onDisconnect = { (error: Error?) in
+        ws.onDisconnect = { (error: Error?) in
             print("websocket is disconnected: \(String(describing: error?.localizedDescription))")
         }
       
-        s.onText = { (text: String) in
-            // TODO string -> container -> packet
-            print("MESSAGE RECEIVED")
-            print(text)
-
+        ws.onText = { (text: String) in
+            // add error handling make more robust
+            let packetContainer = try! JSONDecoder().decode(PacketContainer.self, from: text.data(using: .utf8)!)
+            
+            onPacket(packet: packetContainer.payload!)
         }
         
-        return s
+        return ws
     }()
     
-    static func join() {
-        connect()
-        socket.onConnect = {
-            sendPacket()
-        }
-    }
-    
-    
-    private static func connect() {
-        print("Connecting ...")
+    static func connect() {
         socket.connect()
-        print("Connected!")
     }
     
-    private static func sendPacket() {
-        print("Sending ....")
-        socket.write(string: #"{"payloadType":"authRequest","payload":{"username":"mrjosch","password":"sanoj050499"},"timestamp":"2020-10-17 03:38:16.44"}"#)
-        
-        print("Packet sent")
+    static func cancelGame() {
+        sendPacket(packet: CancelGamePacket())
+    }
+    
+    static func createGame() {
+        sendPacket(packet: CreateGamePacket())
+    }
+    
+    static func exitGame() {
+        sendPacket(packet: ExitGamePacket())
+    }
+    
+    static func joinGame(gameCode: Int) {
+        sendPacket(packet: JoinGamePacket(gameCode: gameCode))
+    }
+    
+    static func performThrow(t: Throw) {
+        sendPacket(packet: PerformThrowPacket(t: t))
+    }
+    
+    static func startGame() {
+        sendPacket(packet: StartGamePacket())
+    }
+    
+    static func undoThrow() {
+        sendPacket(packet: UndoThrowPacket())
+    }
+    
+    static func disconnect() {
+        socket.disconnect()
+    }
+
+    
+    private static func sendPacket(packet: Packet) {
+        let jsonData = try! JSONEncoder().encode(PacketContainer(payload: packet))
+        let json = String(data: jsonData, encoding: String.Encoding.utf8)!
+        socket.write(string: json)
     }
     
     private static func onPacket(packet: Packet) {
-        print(packet)
+        if(packet is AuthResponsePacket) {
+            delegate?.onAuthResponse(authResponse: packet as! AuthResponsePacket)
+        } else if(packet is CreateGameResponsePacket) {
+            delegate?.onCreateGameResponse(createGame: packet as! CreateGameResponsePacket)
+        } else if(packet is JoinGameResponsePacket) {
+            delegate?.onJoinGameResponse(joinGame: packet as! JoinGameResponsePacket)
+        } else if(packet is GameCanceledPacket) {
+            delegate?.onGameCanceled(gameCanceled: packet as! GameCanceledPacket)
+        } else if(packet is GameStartedPacket) {
+            delegate?.onGameStarted(gameStarted: packet as! GameStartedPacket)
+        } else if(packet is SnapshotPacket) {
+            delegate?.onSnapshotPacket(snapshot: packet as! SnapshotPacket)
+        } else if(packet is PlayerExitedPacket) {
+            delegate?.onPlayerExited(playerExited: packet as! PlayerExitedPacket)
+        } else if(packet is PlayerJoinedPacket) {
+            delegate?.onPlayerJoined(playerJoined: packet as! PlayerJoinedPacket)
+        }
     }
 }

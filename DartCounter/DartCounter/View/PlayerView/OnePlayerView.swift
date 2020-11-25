@@ -36,7 +36,7 @@ class OnePlayerView: UIView {
     }
     
     func refreshView() {
-        let player = App.game!.players[0]
+        let player = App.game!.getSnapshot().players[0]
         label_name.text = player.name
         label_sets.text = "S: " + String(player.sets ?? -1)
         label_legs.text = "L: " + String(player.legs!)

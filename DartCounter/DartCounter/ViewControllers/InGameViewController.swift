@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Starscream
 
 class InGameViewController: UIViewController {
     
@@ -24,7 +25,7 @@ class InGameViewController: UIViewController {
     }
     
     @IBAction func onPerform(_ sender: UIButton) {
-        onPerform()
+        onPerformThrow()
     }
     
     @IBAction func onOne(_ sender: UIButton) {
@@ -110,7 +111,7 @@ class InGameViewController: UIViewController {
     }
 
     private func refreshView() {
-        if App.game?.getWinner() != nil {
+        if App.game!.getWinner() != nil {
             performSegue(withIdentifier: Segues.InGame_PostGame, sender: self)
             return
         }
@@ -165,10 +166,10 @@ extension InGameViewController {
         if App.game!.undoThrow() {
             refreshView()
         }
- */
+        */
     }
     
-    func onPerform() {
+    func onPerformThrow() {
         let pointsLeft = App.game!.getCurrentTurn().pointsLeft!
         let points = Int(label_pointsScored.text!)!
         
@@ -263,3 +264,4 @@ extension InGameViewController: DimissManager {
     }
 
 }
+
