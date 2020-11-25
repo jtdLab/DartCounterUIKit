@@ -9,6 +9,7 @@ import UIKit
 
 class PostGameViewController: UIViewController {
 
+    @IBOutlet weak var navItem: UINavigationItem!
     @IBOutlet weak var label_winner: UILabel!
     
     
@@ -24,6 +25,8 @@ class PostGameViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        navItem.hidesBackButton = true
+        
         label_winner.text = App.game!.getWinner()!.name + " gewinnt"
         
     }

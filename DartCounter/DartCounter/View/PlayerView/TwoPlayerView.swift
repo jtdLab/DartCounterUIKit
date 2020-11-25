@@ -9,40 +9,23 @@ import UIKit
 
 class TwoPlayerView: UIView {
     
-    
     @IBOutlet weak var label_player1_name: UILabel!
-    
     @IBOutlet weak var label_player1_sets: UILabel!
-    
     @IBOutlet weak var label_player1_legs: UILabel!
-    
     @IBOutlet weak var label_player1_pointsLeft: UILabel!
-    
     @IBOutlet weak var label_player1_lastThrow: UILabel!
-    
     @IBOutlet weak var label_player1_dartsThrown: UILabel!
-    
     @IBOutlet weak var label_player1_average: UILabel!
-    
     @IBOutlet weak var label_player1_checkoutPercentage: UILabel!
-    
-    
+
     @IBOutlet weak var label_player2_name: UILabel!
-    
     @IBOutlet weak var label_player2_sets: UILabel!
-    
     @IBOutlet weak var label_player2_legs: UILabel!
-    
     @IBOutlet weak var label_player2_pointsLeft: UILabel!
-    
     @IBOutlet weak var label_player2_lastThrow: UILabel!
-    
     @IBOutlet weak var label_player2_dartsThrown: UILabel!
-    
     @IBOutlet weak var label_player2_average: UILabel!
-    
     @IBOutlet weak var label_player2_checkoutPercentage: UILabel!
-    
     
     
     override init(frame: CGRect) {
@@ -66,31 +49,27 @@ class TwoPlayerView: UIView {
         let player2 = App.game!.players[1]
         
         if player1.isNext! {
-            label_player1_name.backgroundColor = .black
-            label_player1_name.textColor = .white
+            // TODO
         } else {
-            label_player1_name.backgroundColor = .systemBackground
-            label_player1_name.textColor = .black
+            // TODO
         }
         
         if player2.isNext! {
-            label_player2_name.backgroundColor = .black
-            label_player2_name.textColor = .white
+            // TODO
         } else {
-            label_player2_name.backgroundColor = .systemBackground
-            label_player2_name.textColor = .black
+            // TODO
         }
         
         label_player1_name.text = player1.name
-        label_player1_sets.text = String(player1.sets ?? -1)
-        label_player1_legs.text = String(player1.legs!)
+        label_player1_sets.text = "S: " + String(player1.sets ?? -1)
+        label_player1_legs.text = "L: " + String(player1.legs!)
         label_player1_pointsLeft.text = String(player1.pointsLeft!)
         label_player1_lastThrow.text = String(player1.lastThrow ?? -1)
         label_player1_dartsThrown.text = String(player1.dartsThrown!)
         
         label_player2_name.text = player2.name
-        label_player2_sets.text = String(player2.sets ?? -1)
-        label_player2_legs.text = String(player2.legs!)
+        label_player2_sets.text = "S: " + String(player2.sets ?? -1)
+        label_player2_legs.text = "L: " + String(player2.legs!)
         label_player2_pointsLeft.text = String(player2.pointsLeft!)
         label_player2_lastThrow.text = String(player2.lastThrow ?? -1)
         label_player2_dartsThrown.text = String(player2.dartsThrown!)

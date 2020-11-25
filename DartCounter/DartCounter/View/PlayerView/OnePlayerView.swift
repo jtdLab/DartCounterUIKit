@@ -10,19 +10,12 @@ import UIKit
 class OnePlayerView: UIView {
     
     @IBOutlet weak var label_name: UILabel!
-    
     @IBOutlet weak var label_sets: UILabel!
-    
     @IBOutlet weak var label_legs: UILabel!
-    
     @IBOutlet weak var label_pointsLeft: UILabel!
-    
     @IBOutlet weak var label_lastThrow: UILabel!
-    
     @IBOutlet weak var label_dartsThrown: UILabel!
-    
     @IBOutlet weak var label_average: UILabel!
-    
     @IBOutlet weak var label_checkoutPercentage: UILabel!
     
     
@@ -45,8 +38,8 @@ class OnePlayerView: UIView {
     func refreshView() {
         let player = App.game!.players[0]
         label_name.text = player.name
-        label_sets.text = String(player.sets ?? -1)
-        label_legs.text = String(player.legs!)
+        label_sets.text = "S: " + String(player.sets ?? -1)
+        label_legs.text = "L: " + String(player.legs!)
         label_pointsLeft.text = String(player.pointsLeft!)
         label_lastThrow.text = String(player.lastThrow ?? -1)
         label_dartsThrown.text = String(player.dartsThrown!)

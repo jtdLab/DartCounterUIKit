@@ -15,6 +15,9 @@ class InGameViewController: UIViewController {
     @IBOutlet weak var playerView: UIView!
     @IBOutlet weak var label_pointsScored: UILabel!
     
+    @IBAction func onExit(_ sender: UIBarButtonItem) {
+        onExit()
+    }
     
     @IBAction func onUndo(_ sender: UIButton) {
        onUndo()
@@ -80,7 +83,7 @@ class InGameViewController: UIViewController {
 
     private func initView() {
         navItem.hidesBackButton = true
-        navItem.title = App.game!.getDescription()
+        navItem.title = App.game!.getDescription().uppercased()
         
         label_pointsScored.text = "0"
         
@@ -136,7 +139,10 @@ class InGameViewController: UIViewController {
 
     // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == Segues.InGame_CheckoutDetails, let viewController = segue.destination as? CheckoutDetailsViewController {
+        if segue.identifier == Segues.InGame_Home, let viewController = segue.destination as? HomeViewController {
+            
+            // TODO
+        } else if segue.identifier == Segues.InGame_CheckoutDetails, let viewController = segue.destination as? CheckoutDetailsViewController {
             
             viewController.delegate = self
             viewController.pointsLeft = App.game!.getCurrentTurn().pointsLeft!
@@ -149,6 +155,10 @@ class InGameViewController: UIViewController {
 
 // Contains UserEventHandling
 extension InGameViewController {
+    
+    func onExit() {
+        performSegue(withIdentifier: Segues.InGame_Home, sender: self)
+    }
     
     func onUndo() {
         /*
