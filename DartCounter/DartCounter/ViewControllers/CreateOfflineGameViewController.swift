@@ -133,7 +133,7 @@ extension CreateOfflineGameViewController: UITableViewDataSource, UITableViewDel
         case advancedSettingsTableView:
             let property = advancedSettingsData[indexPath.row]
             let cell = tableView.dequeueReusableCell(withIdentifier: "advancedSettingsCell", for: indexPath) as! AdvancedSettingsCell
-            cell.setProperty(property: property)
+            cell.propertyLabel.text = property
             return cell
         default:
             return UITableViewCell()

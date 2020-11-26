@@ -346,6 +346,7 @@ PODS:
   - nanopb/decode (1.30906.0)
   - nanopb/encode (1.30906.0)
   - PromisesObjC (1.2.11)
+  - SideMenu (6.5.0)
   - Starscream (3.0.6)
 
 DEPENDENCIES:
@@ -353,6 +354,7 @@ DEPENDENCIES:
   - Firebase/Auth
   - Firebase/Firestore
   - GoogleSignIn
+  - SideMenu
   - Starscream (~> 3.0.2)
 
 SPEC REPOS:
@@ -378,6 +380,7 @@ SPEC REPOS:
     - leveldb-library
     - nanopb
     - PromisesObjC
+    - SideMenu
     - Starscream
 
 SPEC CHECKSUMS:
@@ -402,8 +405,9 @@ SPEC CHECKSUMS:
   leveldb-library: 55d93ee664b4007aac644a782d11da33fba316f7
   nanopb: 59317e09cf1f1a0af72f12af412d54edf52603fc
   PromisesObjC: 8c196f5a328c2cba3e74624585467a557dcb482f
+  SideMenu: f583187d21c5b1dd04c72002be544b555a2627a2
   Starscream: ef3ece99d765eeccb67de105bfa143f929026cf5
 
-PODFILE CHECKSUM: bcabbdd2556e19f778cca28d917ab20fea8a1bc9
+PODFILE CHECKSUM: c5fb80692427d9f9cd5d0cf4df96e94b24fa0418
 
 COCOAPODS: 1.10.0

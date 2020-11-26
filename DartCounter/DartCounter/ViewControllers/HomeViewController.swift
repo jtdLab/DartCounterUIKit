@@ -6,8 +6,11 @@
 //
 
 import UIKit
+import SideMenu
 
 class HomeViewController: UIViewController {
+    
+    var sideMenu: SideMenuNavigationController?
     
     @IBOutlet weak var navItem: UINavigationItem!
     @IBOutlet weak var btn_Profile: UIView!
@@ -17,9 +20,20 @@ class HomeViewController: UIViewController {
     @IBOutlet weak var btn_Settings: UIView!
     
     
+    @IBAction func onSideMenu(_ sender: UIBarButtonItem) {
+        present(sideMenu!, animated: true)
+    }
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         initView()
+        
+        sideMenu = SideMenuNavigationController(rootViewController: SideMenuController())
+        sideMenu?.leftSide = true
+        sideMenu?.setNavigationBarHidden(true, animated: false)
+        SideMenuManager.default.leftMenuNavigationController = sideMenu
+        SideMenuManager.default.addPanGestureToPresent(toView: self.view)
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -89,6 +103,9 @@ extension HomeViewController: PlayServiceDelegate {
     
 }
 
+
+
+// Contains UserEventHandling
 extension HomeViewController {
     
     @objc func onProfile() {
@@ -96,7 +113,6 @@ extension HomeViewController {
     }
     
     @objc func onOnline() {
-        PlayService.createGame()
         self.performSegue(withIdentifier: Segues.Home_CreateOnlineGame, sender: self)
     }
     
@@ -112,4 +128,26 @@ extension HomeViewController {
      
     }
     
+}
+
+
+class SideMenuController: UITableViewController {
+    
+    var sideMenuItems = [("user", "PROFIL"), ("invite", "EINLADUNGEN"), ("friends", "FREUNDE"), ("settings-1", "EINSTELLUNGEN"), ("info", "SONSTIGES"),]
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        tableView.register(UINib(nibName: "SideMenuItemCell", bundle: nil), forCellReuseIdentifier: "SideMenuItemCell")
+    }
+    
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return sideMenuItems.count
+    }
+    
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "SideMenuItemCell", for: indexPath) as! SideMenuItemCell
+        cell.iconImageView.image = UIImage(named: sideMenuItems[indexPath.row].0)
+        cell.titleLabel.text = sideMenuItems[indexPath.row].1
+        return cell
+    }
 }

@@ -9,6 +9,8 @@ import UIKit
 
 class CreateOnlineGameViewController: UIViewController {
     
+    var snapshot: GameSnapshot?
+    
     @IBOutlet weak var playerTableView: UITableView!
     @IBOutlet weak var segmentedStartingScore: UISegmentedControl!
     @IBOutlet weak var segmentedGameMode: UISegmentedControl!
@@ -40,6 +42,7 @@ class CreateOnlineGameViewController: UIViewController {
     
     private func initView() {
         PlayService.delegate = self
+        PlayService.createGame()
         
         segmentedStartingScore.selectedSegmentIndex = 1
         
@@ -69,11 +72,7 @@ extension CreateOnlineGameViewController {
 }
 
 extension CreateOnlineGameViewController: PlayServiceDelegate {
-    
-    func onAuthResponse(authResponse: AuthResponsePacket) {
-        authResponse.successful ? print("Joined server1") : print("Couldn't join server1")
-    }
-    
+     
     func onCreateGameResponse(createGameResponse: CreateGameResponsePacket) {
         createGameResponse.successful ? print("Created game1") : print("Couldn't create game1")
     }
@@ -91,7 +90,8 @@ extension CreateOnlineGameViewController: PlayServiceDelegate {
     }
     
     func onSnapshot(snapshot: SnapshotPacket) {
-        print("Snapshot1")
+        self.snapshot = snapshot.snapshot
+        playerTableView.reloadData()
     }
     
     func onPlayerExited(playerExited: PlayerExitedPacket) {
@@ -109,11 +109,11 @@ extension CreateOnlineGameViewController: UITableViewDataSource, UITableViewDele
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch tableView {
         case playerTableView:
-            return App.game!.players.count
+            return snapshot?.players.count ?? 0
         case advancedSettingsTableView:
             return advancedSettingsData.count
         default:
-            return 1
+            return 0
         }
     }
     
@@ -121,12 +121,12 @@ extension CreateOnlineGameViewController: UITableViewDataSource, UITableViewDele
         switch tableView {
         case playerTableView:
             let cell :PlayerCell = tableView.dequeueReusableCell(withIdentifier: "playerCell", for: indexPath) as! PlayerCell
-            cell.label_name.text = App.game!.players[indexPath.row].name
+            cell.label_name.text = snapshot?.players[indexPath.row].name
             return cell
         case advancedSettingsTableView:
             let property = advancedSettingsData[indexPath.row]
             let cell = tableView.dequeueReusableCell(withIdentifier: "advancedSettingsCell", for: indexPath) as! AdvancedSettingsCell
-            cell.setProperty(property: property)
+            cell.propertyLabel.text = property
             return cell
         default:
             return UITableViewCell()
@@ -151,4 +151,3 @@ extension CreateOnlineGameViewController: UIPickerViewDataSource, UIPickerViewDe
     }
     
 }
-

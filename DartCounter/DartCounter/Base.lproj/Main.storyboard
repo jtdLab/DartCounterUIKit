@@ -1595,7 +1595,11 @@ Media</string>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="HOME" id="DkP-TP-p6e">
-                        <barButtonItem key="leftBarButtonItem" title="Menu" image="burger_menu" id="bJf-Ug-j4w"/>
+                        <barButtonItem key="leftBarButtonItem" title="Menu" image="burger_menu" id="bJf-Ug-j4w">
+                            <connections>
+                                <action selector="onSideMenu:" destination="HUj-ua-tmK" id="hwO-eF-xS5"/>
+                            </connections>
+                        </barButtonItem>
                     </navigationItem>
                     <connections>
                         <outlet property="btn_Offline" destination="JHQ-Mt-16S" id="noL-fO-RZu"/>
@@ -1650,7 +1654,7 @@ Media</string>
                                                     <constraint firstAttribute="height" constant="100" id="3nA-gV-gtK"/>
                                                 </constraints>
                                                 <prototypes>
-                                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="playerCell" rowHeight="50" id="rtp-VU-Uid" userLabel="playerCell">
+                                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="playerCell" rowHeight="50" id="rtp-VU-Uid" userLabel="playerCell" customClass="PlayerCell" customModule="DartCounter" customModuleProvider="target">
                                                         <rect key="frame" x="0.0" y="28" width="414" height="50"/>
                                                         <autoresizingMask key="autoresizingMask"/>
                                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="rtp-VU-Uid" id="kmT-e2-xHA">
@@ -1676,6 +1680,9 @@ Media</string>
                                                             </constraints>
                                                         </tableViewCellContentView>
                                                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                                        <connections>
+                                                            <outlet property="label_name" destination="Rmb-mR-sgG" id="dSq-vy-g8P"/>
+                                                        </connections>
                                                     </tableViewCell>
                                                 </prototypes>
                                             </tableView>
@@ -1826,6 +1833,10 @@ Media</string>
                                                                         <constraint firstItem="gSJ-JH-g69" firstAttribute="centerY" secondItem="DXR-SL-KpA" secondAttribute="centerY" id="fHm-Dn-Eu9"/>
                                                                     </constraints>
                                                                 </tableViewCellContentView>
+                                                                <connections>
+                                                                    <outlet property="propertyLabel" destination="gSJ-JH-g69" id="605-pV-G54"/>
+                                                                    <outlet property="switch" destination="P4A-QO-RFy" id="75x-PR-aZz"/>
+                                                                </connections>
                                                             </tableViewCell>
                                                         </prototypes>
                                                         <sections/>
@@ -1922,7 +1933,8 @@ Media</string>
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="yix-1d-mgK"/>
+        <segue reference="Ed6-1i-n2d"/>
+        <segue reference="4db-I8-Led"/>
         <segue reference="bcO-0b-pEi"/>
     </inferredMetricsTieBreakers>
     <resources>
