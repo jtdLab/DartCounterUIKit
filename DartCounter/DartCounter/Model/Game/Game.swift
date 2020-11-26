@@ -282,7 +282,7 @@ class Game {
     }
     
     func getSnapshot() -> GameSnapshot {
-        return GameSnapshot(status: status, description: getDescription(), players: players.map({ player in
+        return GameSnapshot(status: status, config: config, players: players.map({ player in
             return player.getSnapshot()
         }))
     }

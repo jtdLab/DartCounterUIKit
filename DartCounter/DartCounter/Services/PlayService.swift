@@ -20,7 +20,7 @@ protocol PlayServiceDelegate {
     
     func onGameStarted(gameStarted: GameStartedPacket)
     
-    func onSnapshotPacket(snapshot: SnapshotPacket)
+    func onSnapshot(snapshot: SnapshotPacket)
     
     func onPlayerExited(playerExited: PlayerExitedPacket)
     
@@ -40,7 +40,7 @@ extension PlayServiceDelegate {
     
     func onGameStarted(gameStarted: GameStartedPacket) {}
     
-    func onSnapshotPacket(snapshot: SnapshotPacket) {}
+    func onSnapshot(snapshot: SnapshotPacket) {}
     
     func onPlayerExited(playerExited: PlayerExitedPacket) {}
     
@@ -71,7 +71,6 @@ class PlayService {
         ws.onText = { (text: String) in
             // add error handling make more robust
             let packetContainer = try! JSONDecoder().decode(PacketContainer.self, from: text.data(using: .utf8)!)
-            
             onPacket(packet: packetContainer.payload!)
         }
         
@@ -133,7 +132,7 @@ class PlayService {
         } else if(packet is GameStartedPacket) {
             delegate?.onGameStarted(gameStarted: packet as! GameStartedPacket)
         } else if(packet is SnapshotPacket) {
-            delegate?.onSnapshotPacket(snapshot: packet as! SnapshotPacket)
+            delegate?.onSnapshot(snapshot: packet as! SnapshotPacket)
         } else if(packet is PlayerExitedPacket) {
             delegate?.onPlayerExited(playerExited: packet as! PlayerExitedPacket)
         } else if(packet is PlayerJoinedPacket) {

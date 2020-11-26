@@ -8,13 +8,13 @@
 import UIKit
 import FirebaseAuth
 
-
 class SignUpViewController: UIViewController {
     
     @IBOutlet weak var textField_username: UITextField!
     @IBOutlet weak var textField_password: UITextField!
     @IBOutlet weak var textField_passwordAgain: UITextField!
     @IBOutlet weak var label_error: UILabel!
+    
     
     @IBAction func onSignUp(_ sender: UIButton) {
         label_error.isHidden = true
@@ -38,14 +38,7 @@ class SignUpViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        self.hideKeyboardWhenTappedAround()
-        
-        self.textField_username.delegate = self
-        self.textField_password.delegate = self
-        self.textField_passwordAgain.delegate = self
-
-        // Do any additional setup after loading the view.
+        initView()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -64,6 +57,16 @@ class SignUpViewController: UIViewController {
         }
     }
 
+    
+    private func initView() {
+        self.hideKeyboardWhenTappedAround()
+        
+        self.textField_username.delegate = self
+        self.textField_password.delegate = self
+        self.textField_passwordAgain.delegate = self
+
+    }
+    
 }
 
 extension SignUpViewController: UITextFieldDelegate {

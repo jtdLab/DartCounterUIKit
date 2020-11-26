@@ -12,6 +12,12 @@ protocol DimissManager {
 }
 
 class CheckoutDetailsViewController: UIViewController {
+    
+    var delegate: DimissManager?
+    var pointsLeft: Int?
+    var pointsScored: Int?
+    var dartsThrown: Int = 1
+    var dartsOnDouble: Int = 0
 
     @IBOutlet weak var btn_dartsThrown_1: UIButton!
     @IBOutlet weak var btn_dartsThrown_2: UIButton!
@@ -54,14 +60,7 @@ class CheckoutDetailsViewController: UIViewController {
     @IBAction func onSubmit(_ sender: UIButton) {
         dismiss(animated: true, completion: nil)
     }
-    
-    
-    var delegate: DimissManager?
-    var pointsLeft: Int?
-    var pointsScored: Int?
-    var dartsThrown: Int = 1
-    var dartsOnDouble: Int = 0
-    
+
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -72,6 +71,7 @@ class CheckoutDetailsViewController: UIViewController {
         App.game!.performThrow(t: Throw(points: pointsScored!, dartsOnDouble: dartsOnDouble, dartsThrown: dartsThrown))
         delegate?.onDismiss()
     }
+    
     
     private func initView() {
         btn_dartsOnDouble_2.isHidden = true

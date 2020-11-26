@@ -7,7 +7,7 @@
 
 import Foundation
 
-public enum GameMode {
+public enum GameMode: String {
     case FIRST_TO
     case BEST_OF
 }

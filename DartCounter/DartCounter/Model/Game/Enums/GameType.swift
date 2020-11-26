@@ -7,7 +7,7 @@
 
 import Foundation
 
-public enum GameType {
+public enum GameType: String {
     case LEGS
     case SETS
 }

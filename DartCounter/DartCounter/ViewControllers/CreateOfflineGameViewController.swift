@@ -45,6 +45,13 @@ class CreateOfflineGameViewController: UIViewController {
         initView()
     }
     
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == Segues.CreateOfflineGame_InGame, let viewController = segue.destination as? InGameViewController {
+            // TODO
+        }
+    }
+    
+    
     private func initView() {
         switchDartbot.isOn = false
         dartBotView.isHidden = true
@@ -59,12 +66,6 @@ class CreateOfflineGameViewController: UIViewController {
         
         advancedSettingsTableView.dataSource = self
         advancedSettingsTableView.delegate = self
-    }
-    
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == Segues.CreateOfflineGame_InGame, let viewController = segue.destination as? InGameViewController {
-            // TODO
-        }
     }
 
 }

@@ -16,9 +16,22 @@ class HomeViewController: UIViewController {
     @IBOutlet weak var btn_SocialMedia: UIView!
     @IBOutlet weak var btn_Settings: UIView!
     
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        initView()
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == Segues.Home_CreateOnlineGame, let viewController = segue.destination as? CreateOnlineGameViewController {
+            // TODO
+        } else if segue.identifier == Segues.Home_CreateOfflineGame, let viewController = segue.destination as? CreateOfflineGameViewController {
+            App.game = Game(player: Player(name: App.user!.username))
+        }
+    }
+    
 
+    private func initView() {
         let profileTapGesture = UITapGestureRecognizer(target:self,action:#selector(self.onProfile))
         btn_Profile.addGestureRecognizer(profileTapGesture)
         
@@ -36,14 +49,6 @@ class HomeViewController: UIViewController {
         
         PlayService.delegate = self
         PlayService.connect()
-    }
-    
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == Segues.Home_CreateOnlineGame, let viewController = segue.destination as? CreateOnlineGameViewController {
-            // TODO
-        } else if segue.identifier == Segues.Home_CreateOfflineGame, let viewController = segue.destination as? CreateOfflineGameViewController {
-            App.game = Game(player: Player(name: App.user!.username))
-        }
     }
 
 }
@@ -71,7 +76,7 @@ extension HomeViewController: PlayServiceDelegate {
     }
     
     func onSnapshot(snapshot: SnapshotPacket) {
-        print(snapshot.snapshot.description)
+        print("Snapshot")
     }
     
     func onPlayerExited(playerExited: PlayerExitedPacket) {

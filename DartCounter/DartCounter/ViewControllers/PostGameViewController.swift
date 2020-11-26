@@ -24,11 +24,14 @@ class PostGameViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        initView()
+    }
+    
+    
+    private func initView() {
         navItem.hidesBackButton = true
         
         label_winner.text = App.game!.getWinner()!.name + " gewinnt"
-        
     }
     
 }

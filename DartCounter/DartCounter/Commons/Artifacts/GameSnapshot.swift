@@ -10,37 +10,36 @@ import Foundation
 class GameSnapshot: Codable  {
     
     let status :GameStatus
-    let descr :String
+    let config :GameConfig
     let players  :[PlayerSnapshot]
     
     private enum CodingKeys: String, CodingKey {
         case status
-        case description
+        case config
         case players
     }
     
-    init(status :GameStatus, description :String, players: [PlayerSnapshot]) {
+    init(status :GameStatus, config :GameConfig, players: [PlayerSnapshot]) {
         self.status = status
-        self.descr = description
+        self.config = config
         self.players = players
     }
     
     required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         self.status = GameStatus(rawValue: try! container.decode(String.self, forKey: .status).uppercased())!
-        self.descr = try container.decode(String.self, forKey: .description)
+        self.config = try container.decode(GameConfig.self, forKey: .config)
         self.players = try container.decode([PlayerSnapshot].self, forKey: .players)
     }
    
     func encode(to encoder: Encoder) throws {
-       var container = encoder.container(keyedBy: CodingKeys.self)
+        var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(status.rawValue.lowercased(), forKey: .status)
-       try container.encode(descr, forKey: .description)
-       try container.encode(players, forKey: .players)
+        try container.encode(config, forKey: .config)
+        try container.encode(players, forKey: .players)
    }
     
     /**
-     
      func getCurrentTurn() -> PlayerSnapshot? {
          for player in players {
              if(player.isNext!) {
@@ -50,6 +49,7 @@ class GameSnapshot: Codable  {
          return nil
      }
      */
+    
 }
 
 extension GameSnapshot: CustomStringConvertible {
@@ -67,7 +67,7 @@ extension GameSnapshot: CustomStringConvertible {
             playerString += playerSnapshot.description  + "\n"
         })
         
-        return statusString + "\n" + descr  + "\n" + playerString
+        return statusString + "\n" + config.getModeAsString() + String(config.size) + config.getTypeAsString()  + "\n" + playerString
     }
 }
 

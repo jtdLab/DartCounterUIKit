@@ -1688,6 +1688,9 @@ Media</string>
                                                 <state key="normal" title="SPIELER HINZUFÜGEN">
                                                     <color key="titleColor" systemColor="systemGreenColor"/>
                                                 </state>
+                                                <connections>
+                                                    <action selector="onAddPlayer:" destination="acn-ms-Sss" eventType="touchUpInside" id="DMH-Xk-v37"/>
+                                                </connections>
                                             </button>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="aTG-5W-2jd" userLabel="ModusHeader">
                                                 <rect key="frame" x="0.0" y="200" width="414" height="50"/>
@@ -1904,6 +1907,12 @@ Media</string>
                         <barButtonItem key="rightBarButtonItem" title="Item" image="online" id="KAy-iS-Pk8"/>
                     </navigationItem>
                     <connections>
+                        <outlet property="advancedSettingsTableView" destination="c3d-6g-VFO" id="Eb3-6c-JTS"/>
+                        <outlet property="pickerSize" destination="OxJ-6X-9m1" id="6i9-b1-tbX"/>
+                        <outlet property="playerTableView" destination="xHe-oL-haT" id="cE5-oU-236"/>
+                        <outlet property="segmentedGameMode" destination="0mk-6l-uIN" id="zn6-Ak-oXb"/>
+                        <outlet property="segmentedGameType" destination="VEz-AD-MnH" id="jdp-XP-I9X"/>
+                        <outlet property="segmentedStartingScore" destination="9vF-hl-jR6" id="10e-01-TSY"/>
                         <segue destination="4W9-fm-VOZ" kind="show" identifier="CreateOnlineGame_InGame" id="bcO-0b-pEi"/>
                     </connections>
                 </viewController>
@@ -1914,7 +1923,7 @@ Media</string>
     </scenes>
     <inferredMetricsTieBreakers>
         <segue reference="yix-1d-mgK"/>
-        <segue reference="90u-yn-QdH"/>
+        <segue reference="bcO-0b-pEi"/>
     </inferredMetricsTieBreakers>
     <resources>
         <image name="adBanner" width="156" height="80"/>

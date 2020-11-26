@@ -10,11 +10,12 @@ import Starscream
 
 class InGameViewController: UIViewController {
     
-    private var playerContainer: UIView? // TODO check if good practice
+    var playerContainer: UIView? // TODO check if good practice
     
     @IBOutlet weak var navItem: UINavigationItem!
     @IBOutlet weak var playerView: UIView!
     @IBOutlet weak var label_pointsScored: UILabel!
+    
     
     @IBAction func onExit(_ sender: UIBarButtonItem) {
         onExit()
@@ -81,7 +82,19 @@ class InGameViewController: UIViewController {
         super.viewDidLoad()
         initView()
     }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == Segues.InGame_Home, let viewController = segue.destination as? HomeViewController {
+            // TODO
+        } else if segue.identifier == Segues.InGame_CheckoutDetails, let viewController = segue.destination as? CheckoutDetailsViewController {
+            
+            viewController.delegate = self
+            viewController.pointsLeft = App.game!.getCurrentTurn().pointsLeft!
+            viewController.pointsScored = Int(label_pointsScored.text!)!
+        }
+    }
 
+    
     private func initView() {
         navItem.hidesBackButton = true
         navItem.title = App.game!.getDescription().uppercased()
@@ -134,21 +147,6 @@ class InGameViewController: UIViewController {
         default:
             return
         }
-    }
-
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == Segues.InGame_Home, let viewController = segue.destination as? HomeViewController {
-            
-            // TODO
-        } else if segue.identifier == Segues.InGame_CheckoutDetails, let viewController = segue.destination as? CheckoutDetailsViewController {
-            
-            viewController.delegate = self
-            viewController.pointsLeft = App.game!.getCurrentTurn().pointsLeft!
-            viewController.pointsScored = Int(label_pointsScored.text!)!
-        } 
     }
     
 }

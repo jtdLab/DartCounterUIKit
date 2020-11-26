@@ -46,11 +46,7 @@ class SignInViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        self.hideKeyboardWhenTappedAround()
-        
-        self.textField_username.delegate = self
-        self.textField_password.delegate = self
+        initView()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -61,6 +57,14 @@ class SignInViewController: UIViewController {
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         self.navigationController?.isNavigationBarHidden = false
+    }
+    
+    
+    private func initView() {
+        self.hideKeyboardWhenTappedAround()
+    
+        self.textField_username.delegate = self
+        self.textField_password.delegate = self
     }
 
 }
@@ -97,7 +101,6 @@ extension SignInViewController: UITextFieldDelegate {
 extension SignInViewController {
     
     func onSignInUsernameAndPasswordSuccess(user: FirebaseAuth.User) {
-        print("onSignInSuccess")
         App.user = User(firebaseUser: user)
         print(App.user!.uid)
         print(App.user!.username)
