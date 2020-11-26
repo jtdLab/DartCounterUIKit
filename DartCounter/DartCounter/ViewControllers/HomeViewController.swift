@@ -29,9 +29,13 @@ class HomeViewController: UIViewController {
         super.viewDidLoad()
         initView()
         
-        sideMenu = SideMenuNavigationController(rootViewController: SideMenuController())
+        let sideMenuController = SideMenuController()
+        sideMenuController.delegate = self
+        
+        sideMenu = SideMenuNavigationController(rootViewController: sideMenuController)
         sideMenu?.leftSide = true
         sideMenu?.setNavigationBarHidden(true, animated: false)
+        
         SideMenuManager.default.leftMenuNavigationController = sideMenu
         SideMenuManager.default.addPanGestureToPresent(toView: self.view)
     }
@@ -103,6 +107,25 @@ extension HomeViewController: PlayServiceDelegate {
     
 }
 
+extension HomeViewController: SideMenuControllerDelegate {
+    
+    func onClick(index: Int) {
+        sideMenu?.dismiss(animated: false, completion: {
+            if index == 0 {
+                self.performSegue(withIdentifier: Segues.Home_Profile, sender: self)
+            } else if index == 1 {
+                self.performSegue(withIdentifier: Segues.Home_Invitations, sender: self)
+            } else if index == 2 {
+                self.performSegue(withIdentifier: Segues.Home_Friends, sender: self)
+            } else if index == 3 {
+                self.performSegue(withIdentifier: Segues.Home_Settings, sender: self)
+            } else if index == 4 {
+                self.performSegue(withIdentifier: Segues.Home_AboutUs, sender: self)
+            }
+        })
+    }
+    
+}
 
 
 // Contains UserEventHandling
@@ -130,10 +153,16 @@ extension HomeViewController {
     
 }
 
+protocol SideMenuControllerDelegate {
+    
+    func onClick(index: Int)
+}
 
 class SideMenuController: UITableViewController {
     
-    var sideMenuItems = [("user", "PROFIL"), ("invite", "EINLADUNGEN"), ("friends", "FREUNDE"), ("settings-1", "EINSTELLUNGEN"), ("info", "SONSTIGES"),]
+    var delegate: SideMenuControllerDelegate?
+    
+    var items = [("user", "PROFIL"), ("invite", "EINLADUNGEN"), ("friends", "FREUNDE"), ("settings-1", "EINSTELLUNGEN"), ("info", "SONSTIGES"),]
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -141,13 +170,19 @@ class SideMenuController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return sideMenuItems.count
+        return items.count
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "SideMenuItemCell", for: indexPath) as! SideMenuItemCell
-        cell.iconImageView.image = UIImage(named: sideMenuItems[indexPath.row].0)
-        cell.titleLabel.text = sideMenuItems[indexPath.row].1
+        cell.iconImageView.image = UIImage(named: items[indexPath.row].0)
+        cell.titleLabel.text = items[indexPath.row].1
+        
         return cell
     }
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        delegate?.onClick(index: indexPath.row)
+    }
+
 }

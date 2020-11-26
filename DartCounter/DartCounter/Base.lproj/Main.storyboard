@@ -8,6 +8,62 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
+        <!--FriendsViewController-->
+        <scene sceneID="q1B-Ft-0qy">
+            <objects>
+                <viewController id="NOT-IR-VGG" userLabel="FriendsViewController" customClass="FriendsViewController" customModule="DartCounter" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="dxt-Om-Gfb">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="842"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="FriendsView" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nEl-zP-Ebb">
+                                <rect key="frame" x="103" y="397" width="208" height="48"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="40"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="H9G-PQ-zAn"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="nEl-zP-Ebb" firstAttribute="centerX" secondItem="dxt-Om-Gfb" secondAttribute="centerX" id="Qci-zo-636"/>
+                            <constraint firstItem="nEl-zP-Ebb" firstAttribute="centerY" secondItem="dxt-Om-Gfb" secondAttribute="centerY" id="ozw-zZ-KqY"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" id="hmx-lV-HDB"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Eu9-au-fqX" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-3788" y="1921"/>
+        </scene>
+        <!--InvitationsViewController-->
+        <scene sceneID="Fvr-T4-9XF">
+            <objects>
+                <viewController id="ho0-Th-zwC" userLabel="InvitationsViewController" customClass="InvitationsViewController" customModule="DartCounter" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="FDA-3F-R67">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="842"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="InvitationsView" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="LXs-CI-0hn">
+                                <rect key="frame" x="79" y="397" width="256" height="48"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="40"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="liI-QS-HCt"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="LXs-CI-0hn" firstAttribute="centerY" secondItem="FDA-3F-R67" secondAttribute="centerY" id="TNI-o8-LE6"/>
+                            <constraint firstItem="LXs-CI-0hn" firstAttribute="centerX" secondItem="FDA-3F-R67" secondAttribute="centerX" id="gyL-dO-OCd"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" id="7P3-Ca-Gug"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="9Rs-A5-Vmj" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-2971" y="1921"/>
+        </scene>
         <!--CreateOfflineGameViewController-->
         <scene sceneID="fKZ-AK-3P4">
             <objects>
@@ -1610,11 +1666,16 @@ Media</string>
                         <outlet property="navItem" destination="DkP-TP-p6e" id="LxI-e8-ab0"/>
                         <segue destination="dMP-t6-5S2" kind="show" identifier="Home_CreateOfflineGame" id="lLT-OJ-ciG"/>
                         <segue destination="acn-ms-Sss" kind="show" identifier="Home_CreateOnlineGame" id="Ed6-1i-n2d"/>
+                        <segue destination="ho0-Th-zwC" kind="show" identifier="Home_Invitations" id="wN0-em-hYB"/>
+                        <segue destination="a83-gK-iu1" kind="show" identifier="Home_Profile" id="UpG-p0-z9c"/>
+                        <segue destination="NOT-IR-VGG" kind="show" identifier="Home_Friends" id="PG0-jG-IWw"/>
+                        <segue destination="uGg-wc-0a6" kind="show" identifier="Home_Settings" id="jQk-V8-5JD"/>
+                        <segue destination="CS9-Zb-iB5" kind="show" identifier="Home_AboutUs" id="5tm-iO-x0T"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="urX-4G-qA9" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-2162.3188405797105" y="1132.3660714285713"/>
+            <point key="canvasLocation" x="-2162" y="1106"/>
         </scene>
         <!--CreateOnlineGameViewController-->
         <scene sceneID="5LH-Jl-1LL">
@@ -1931,11 +1992,134 @@ Media</string>
             </objects>
             <point key="canvasLocation" x="-1010" y="800"/>
         </scene>
+        <!--ProfileViewController-->
+        <scene sceneID="Hh8-mZ-3Gt">
+            <objects>
+                <viewController id="a83-gK-iu1" userLabel="ProfileViewController" customClass="ProfileViewController" customModule="DartCounter" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="NKr-eM-kch">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="842"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="WP5-wp-87g" userLabel="ModusHeader">
+                                <rect key="frame" x="0.0" y="304" width="414" height="50"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="KARRIERE STATISTIKEN" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tIw-t6-t97">
+                                        <rect key="frame" x="97" y="13" width="220.5" height="24"/>
+                                        <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="20"/>
+                                        <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                                <color key="backgroundColor" systemColor="labelColor"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="50" id="G7g-KX-JIz"/>
+                                    <constraint firstItem="tIw-t6-t97" firstAttribute="centerX" secondItem="WP5-wp-87g" secondAttribute="centerX" id="OGr-tA-qCq"/>
+                                    <constraint firstItem="tIw-t6-t97" firstAttribute="centerY" secondItem="WP5-wp-87g" secondAttribute="centerY" id="vpy-Td-5Ws"/>
+                                </constraints>
+                            </view>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="profile" translatesAutoresizingMaskIntoConstraints="NO" id="0Wn-cP-ecs">
+                                <rect key="frame" x="107" y="30" width="200" height="200"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="200" id="arC-mD-PhY"/>
+                                    <constraint firstAttribute="height" constant="200" id="eWr-ws-kyE"/>
+                                </constraints>
+                            </imageView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="SPIELER 1" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qsh-gp-I7d">
+                                <rect key="frame" x="163" y="255" width="88" height="24"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="20"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="T30-eb-4to">
+                                <rect key="frame" x="0.0" y="354" width="414" height="250"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="250" id="jMv-y2-eg7"/>
+                                </constraints>
+                                <sections/>
+                            </tableView>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="vBM-q1-6vm"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="vBM-q1-6vm" firstAttribute="trailing" secondItem="T30-eb-4to" secondAttribute="trailing" id="Enp-oM-PkA"/>
+                            <constraint firstItem="qsh-gp-I7d" firstAttribute="top" secondItem="0Wn-cP-ecs" secondAttribute="bottom" constant="25" id="F2k-ON-Jhj"/>
+                            <constraint firstItem="T30-eb-4to" firstAttribute="leading" secondItem="vBM-q1-6vm" secondAttribute="leading" id="HP3-mk-DfL"/>
+                            <constraint firstItem="qsh-gp-I7d" firstAttribute="centerX" secondItem="NKr-eM-kch" secondAttribute="centerX" id="J8I-yo-KLe"/>
+                            <constraint firstItem="WP5-wp-87g" firstAttribute="leading" secondItem="vBM-q1-6vm" secondAttribute="leading" id="LRs-T4-3ag"/>
+                            <constraint firstItem="WP5-wp-87g" firstAttribute="top" secondItem="qsh-gp-I7d" secondAttribute="bottom" constant="25" id="UyA-Nz-6kD"/>
+                            <constraint firstItem="0Wn-cP-ecs" firstAttribute="centerX" secondItem="NKr-eM-kch" secondAttribute="centerX" id="ayL-6i-DVb"/>
+                            <constraint firstItem="0Wn-cP-ecs" firstAttribute="top" secondItem="vBM-q1-6vm" secondAttribute="top" constant="30" id="hQO-rY-n26"/>
+                            <constraint firstAttribute="trailing" secondItem="WP5-wp-87g" secondAttribute="trailing" id="mZd-So-tmW"/>
+                            <constraint firstItem="T30-eb-4to" firstAttribute="top" secondItem="WP5-wp-87g" secondAttribute="bottom" id="q5H-cl-RXK"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" id="jZK-co-keW"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="NeC-BA-ayN" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-2116" y="1921"/>
+        </scene>
+        <!--SettingsViewController-->
+        <scene sceneID="aiq-v7-C1c">
+            <objects>
+                <viewController id="uGg-wc-0a6" userLabel="SettingsViewController" customClass="SettingsViewController" customModule="DartCounter" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="yUl-Gz-7Df">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="842"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="SettingsView" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fng-wN-BI3">
+                                <rect key="frame" x="95.5" y="397" width="223" height="48"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="40"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="HIf-qH-FgZ"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="fng-wN-BI3" firstAttribute="centerX" secondItem="yUl-Gz-7Df" secondAttribute="centerX" id="9aW-7f-WDM"/>
+                            <constraint firstItem="fng-wN-BI3" firstAttribute="centerY" secondItem="yUl-Gz-7Df" secondAttribute="centerY" id="WF4-k9-xsC"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" id="DYI-bO-n9T"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="VyS-WZ-Kc7" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-4597" y="1921"/>
+        </scene>
+        <!--AboutUsViewController-->
+        <scene sceneID="HTZ-Ld-yl4">
+            <objects>
+                <viewController id="CS9-Zb-iB5" userLabel="AboutUsViewController" customClass="AboutUsViewController" customModule="DartCounter" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="H8L-Eh-9Cq">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="842"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="AboutUsView" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="G5G-RU-seA">
+                                <rect key="frame" x="91" y="397" width="232" height="48"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="40"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="rVQ-i3-XxO"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="G5G-RU-seA" firstAttribute="centerX" secondItem="H8L-Eh-9Cq" secondAttribute="centerX" id="BRd-4u-Ltg"/>
+                            <constraint firstItem="G5G-RU-seA" firstAttribute="centerY" secondItem="H8L-Eh-9Cq" secondAttribute="centerY" id="xok-dG-V2h"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" id="6sc-Xw-uu9"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="WOb-Py-NSv" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-5420" y="1921"/>
+        </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="Ed6-1i-n2d"/>
         <segue reference="4db-I8-Led"/>
-        <segue reference="bcO-0b-pEi"/>
+        <segue reference="90u-yn-QdH"/>
     </inferredMetricsTieBreakers>
     <resources>
         <image name="adBanner" width="156" height="80"/>
