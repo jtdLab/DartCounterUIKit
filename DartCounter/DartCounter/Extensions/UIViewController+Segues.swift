@@ -28,5 +28,6 @@ extension UIViewController {
         static let InGame_Home = "InGame_Home"
         static let InGame_PostGame = "InGame_PostGame"
         static let PostGame_Home = "PostGame_Home"
+        static let PostGame_Stats = "PostGame_Stats"
     }
 }

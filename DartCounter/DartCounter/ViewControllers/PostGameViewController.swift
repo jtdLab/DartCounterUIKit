@@ -14,7 +14,7 @@ class PostGameViewController: UIViewController {
     
     
     @IBAction func onStats(_ sender: UIButton) {
-        
+        performSegue(withIdentifier: Segues.PostGame_Stats, sender: self)
     }
     
     @IBAction func onPlayAgain(_ sender: UIButton) {

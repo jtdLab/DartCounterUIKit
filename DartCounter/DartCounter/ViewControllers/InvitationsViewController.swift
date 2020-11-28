@@ -9,21 +9,32 @@ import UIKit
 
 class InvitationsViewController: UIViewController {
 
+    @IBOutlet weak var invitationdTableView: UITableView!
+    var items = ["ONLINE SPIELER 1", "ONLINE SPIELER 2"]
+
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Do any additional setup after loading the view.
+        initView()
     }
     
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
+    private func initView() {
+        invitationdTableView.dataSource = self
+        invitationdTableView.delegate = self
+        invitationdTableView.isScrollEnabled = false
     }
-    */
 
+
+}
+
+extension InvitationsViewController: UITableViewDataSource, UITableViewDelegate {
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return items.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "InvitationCell", for: indexPath) as! InvitationCell
+        cell.nameLabel.text = items[indexPath.row]
+        return cell
+    }
 }
