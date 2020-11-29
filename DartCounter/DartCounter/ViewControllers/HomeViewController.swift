@@ -132,7 +132,7 @@ extension HomeViewController: SideMenuControllerDelegate {
 extension HomeViewController {
     
     @objc func onProfile() {
-
+        self.performSegue(withIdentifier: Segues.Home_Profile, sender: self)
     }
     
     @objc func onOnline() {
@@ -148,7 +148,7 @@ extension HomeViewController {
     }
     
     @objc func onSettings() {
-     
+        self.performSegue(withIdentifier: Segues.Home_Settings, sender: self)
     }
     
 }
