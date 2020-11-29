@@ -9,6 +9,7 @@ import Foundation
 import FirebaseAuth
 import GoogleSignIn
 import FirebaseAuth.FIRAuthErrors
+import FirebaseFirestore
 
 public class AuthService {
     
@@ -52,10 +53,18 @@ public class AuthService {
         // TODO
     }
     
+    
+    func updateProfilePicture(photoUrl: String) {
+        let uid = String(Auth.auth().currentUser?.uid ?? "")
+        let collection = Firestore.firestore().collection("users").document(uid).setData([
+            "photoUrl":photoUrl
+        ])
+    }
+    
     func signOut() {
         do {
           try Auth.auth().signOut()
-          App.user = nil
+            App.user = nil
         } catch let signOutError as NSError {
           print ("Error signing out: %@", signOutError)
         }

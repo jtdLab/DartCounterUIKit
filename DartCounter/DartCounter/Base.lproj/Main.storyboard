@@ -2449,7 +2449,6 @@ Media</string>
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="OpP-xP-0XU"/>
         <segue reference="4db-I8-Led"/>
         <segue reference="90u-yn-QdH"/>
     </inferredMetricsTieBreakers>
