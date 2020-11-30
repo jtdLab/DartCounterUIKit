@@ -26,6 +26,7 @@ extension UIViewController {
         static let CreateOfflineGame_InGame = "CreateOfflineGame_InGame"
         static let InGame_CheckoutDetails = "InGame_CheckoutDetails"
         static let InGame_Home = "InGame_Home"
+        static let Ingame_Stats = "Ingame_Stats"
         static let InGame_PostGame = "InGame_PostGame"
         static let PostGame_Home = "PostGame_Home"
         static let PostGame_Stats = "PostGame_Stats"

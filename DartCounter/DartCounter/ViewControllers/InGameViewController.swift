@@ -21,6 +21,10 @@ class InGameViewController: UIViewController {
         onExit()
     }
     
+    @IBAction func onStats(_ sender: Any) {
+        onStats()
+    }
+    
     @IBAction func onUndo(_ sender: UIButton) {
        onUndo()
     }
@@ -157,6 +161,10 @@ extension InGameViewController {
     
     func onExit() {
         performSegue(withIdentifier: Segues.InGame_Home, sender: self)
+    }
+    
+    func onStats() {
+        performSegue(withIdentifier: Segues.Ingame_Stats, sender: self)
     }
     
     func onUndo() {

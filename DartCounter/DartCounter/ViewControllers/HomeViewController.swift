@@ -144,7 +144,7 @@ extension HomeViewController {
     }
     
     @objc func onSocialMedia() {
-     
+        // TODO
     }
     
     @objc func onSettings() {

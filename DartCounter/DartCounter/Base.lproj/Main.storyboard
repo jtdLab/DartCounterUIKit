@@ -952,6 +952,11 @@
                                 <action selector="onExit:" destination="4W9-fm-VOZ" id="WIL-K3-Wjh"/>
                             </connections>
                         </barButtonItem>
+                        <barButtonItem key="rightBarButtonItem" title="Stats" image="stats" id="cWs-rm-SDJ">
+                            <connections>
+                                <action selector="onStats:" destination="4W9-fm-VOZ" id="XfD-zq-YFJ"/>
+                            </connections>
+                        </barButtonItem>
                     </navigationItem>
                     <connections>
                         <outlet property="label_pointsScored" destination="FDJ-z7-Va3" id="xlo-t2-LvA"/>
@@ -960,6 +965,7 @@
                         <segue destination="NGg-6x-OoO" kind="presentation" identifier="InGame_CheckoutDetails" id="cVf-Qe-jmD"/>
                         <segue destination="xZZ-yJ-kGe" kind="show" identifier="InGame_PostGame" id="OpP-xP-0XU"/>
                         <segue destination="HUj-ua-tmK" kind="show" identifier="InGame_Home" id="yix-1d-mgK"/>
+                        <segue destination="Dyf-Db-OBy" kind="presentation" identifier="Ingame_Stats" id="yCH-9i-6Ka"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="j8d-X7-gMR" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -2449,7 +2455,8 @@ Media</string>
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="4db-I8-Led"/>
+        <segue reference="yix-1d-mgK"/>
+        <segue reference="yCH-9i-6Ka"/>
         <segue reference="90u-yn-QdH"/>
     </inferredMetricsTieBreakers>
     <resources>
@@ -2470,6 +2477,7 @@ Media</string>
         <image name="placeholder" width="36" height="37"/>
         <image name="profile" width="88" height="89"/>
         <image name="settings" width="71" height="71"/>
+        <image name="stats" width="40" height="40"/>
         <image name="winner" width="192" height="192"/>
         <systemColor name="labelColor">
             <color white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
