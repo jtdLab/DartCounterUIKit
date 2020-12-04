@@ -61,7 +61,9 @@ class PlayService {
         let ws = WebSocket(request: request)
         ws.onConnect = {
             // TODO read password from user
+            /*
             sendPacket(packet: AuthRequestPacket(username: App.user!.username, password: "password"))
+ */
         }
         
         ws.onDisconnect = { (error: Error?) in

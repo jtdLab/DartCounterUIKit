@@ -9,8 +9,7 @@ import Foundation
 import FirebaseAuth
 
 class App {
-    
-    static var user: User?
+
     static let settings = Settings()
     static var game: Game?
     

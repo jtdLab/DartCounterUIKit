@@ -13,8 +13,8 @@ extension UIViewController {
     enum Segues {
         static let SignIn_SignUp = "SignIn_SignUp"
         //static let SignUp_SignIn = "SignUp_SignIn"
-        static let SignIn_Home = "SignIn_Home"
-        static let SignUp_Home = "SignUp_Home"
+        //static let SignIn_Home = "SignIn_Home"
+        //static let SignUp_Home = "SignUp_Home"
         static let Home_CreateOnlineGame = "Home_CreateOnlineGame"
         static let Home_CreateOfflineGame = "Home_CreateOfflineGame"
         static let Home_Profile = "Home_Profile"

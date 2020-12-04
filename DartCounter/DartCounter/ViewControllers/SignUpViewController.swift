@@ -22,7 +22,6 @@ class SignUpViewController: UIViewController {
             AuthService.shared.signUpUsernameAndPassword(
                 username: textField_username.text!,
                 password: textField_password.text!,
-                onSuccess: onSignUpSuccess(user:),
                 onError: onSignUpError(error:)
             )
         }
@@ -49,12 +48,6 @@ class SignUpViewController: UIViewController {
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         self.navigationController?.isNavigationBarHidden = false
-    }
-    
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == Segues.SignUp_Home, let viewController = segue.destination as? HomeViewController {
-          
-        }
     }
 
     
@@ -99,22 +92,6 @@ extension SignUpViewController: UITextFieldDelegate {
         // TODO
         
         return true
-    }
-    
-}
-
-// Extension for success handling after trying to contact the Firebase API
-extension SignUpViewController {
-    
-    func onSignUpSuccess(user: FirebaseAuth.User) {
-        print("onSignUpSuccess")
-        App.user = User(firebaseUser: user)
-        print(App.user!.uid)
-        print(App.user!.username)
-        
-        DispatchQueue.main.async {
-            self.performSegue(withIdentifier: Segues.SignUp_Home, sender: self)
-        }
     }
     
 }

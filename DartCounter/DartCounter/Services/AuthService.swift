@@ -9,7 +9,7 @@ import Foundation
 import FirebaseAuth
 import GoogleSignIn
 import FirebaseAuth.FIRAuthErrors
-import FirebaseFirestore
+
 
 public class AuthService {
     
@@ -19,25 +19,24 @@ public class AuthService {
         
     }
     
-    func signUpUsernameAndPassword(username :String, password :String, onSuccess: @escaping (FirebaseAuth.User) -> Void, onError: @escaping (NSError) -> Void) {
+    func signUpUsernameAndPassword(username :String, password :String, onError: @escaping (NSError) -> Void) {
         Auth.auth().createUser(withEmail: username + "@username.com", password: password) { authResult, error in
-            if error != nil {
+            if error == nil {
+                guard let newUser = authResult?.user else { return }
+                
+                DatabaseService.createProfile(uid: newUser.uid, username: username, onError: onError)
+                DatabaseService.createCareerStats(uid: newUser.uid, username: username, onError: onError)
+            } else {
                 onError(error! as NSError)
-                return
             }
-            
-            onSuccess(authResult!.user)
         }
     }
     
-    func signInUsernameAndPassword(username :String, password :String, onSuccess: @escaping (FirebaseAuth.User) -> Void, onError: @escaping (NSError) -> Void) {
+    func signInUsernameAndPassword(username :String, password :String, onError: @escaping (NSError) -> Void) {
         Auth.auth().signIn(withEmail: username + "@username.com", password: password) { authResult, error in
             if error != nil {
                 onError(error! as NSError)
-                return
             }
-            
-            onSuccess(authResult!.user)
         }
     }
     
@@ -53,18 +52,9 @@ public class AuthService {
         // TODO
     }
     
-    
-    func updateProfilePicture(photoUrl: String) {
-        let uid = String(Auth.auth().currentUser?.uid ?? "")
-        let collection = Firestore.firestore().collection("users").document(uid).setData([
-            "photoUrl":photoUrl
-        ])
-    }
-    
     func signOut() {
         do {
           try Auth.auth().signOut()
-            App.user = nil
         } catch let signOutError as NSError {
           print ("Error signing out: %@", signOutError)
         }

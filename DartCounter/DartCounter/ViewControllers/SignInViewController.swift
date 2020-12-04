@@ -21,7 +21,6 @@ class SignInViewController: UIViewController {
             AuthService.shared.signInUsernameAndPassword(
                 username: textField_username.text!,
                 password: textField_password.text!,
-                onSuccess: onSignInUsernameAndPasswordSuccess(user:),
                 onError: onSignInUsernameAndPasswordError(error:)
             )
         }
@@ -91,21 +90,6 @@ extension SignInViewController: UITextFieldDelegate {
         // TODO
         
         return true
-    }
-    
-}
-
-
-
-// Extension for success handling after trying to contact the Firebase API
-extension SignInViewController {
-    
-    func onSignInUsernameAndPasswordSuccess(user: FirebaseAuth.User) {
-        App.user = User(firebaseUser: user)
-        print(App.user!.uid)
-        print(App.user!.username)
-        
-        performSegue(withIdentifier: Segues.SignIn_Home, sender: self)
     }
     
 }

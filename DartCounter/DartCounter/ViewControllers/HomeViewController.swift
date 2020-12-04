@@ -14,6 +14,13 @@ class HomeViewController: UIViewController {
     
     @IBOutlet weak var navItem: UINavigationItem!
     @IBOutlet weak var btn_Profile: UIView!
+    @IBOutlet weak var profilePictureImageView: UIImageView!
+    @IBOutlet weak var usernameLabel: UILabel!
+    @IBOutlet weak var averageLabel: UILabel!
+    @IBOutlet weak var checkoutLabel: UILabel!
+    @IBOutlet weak var winsLabel: UILabel!
+    @IBOutlet weak var defeatsLabel: UILabel!
+    
     @IBOutlet weak var btn_Online: UIView!
     @IBOutlet weak var btn_Offline: UIView!
     @IBOutlet weak var btn_SocialMedia: UIView!
@@ -28,7 +35,18 @@ class HomeViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         initView()
-        
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == Segues.Home_CreateOnlineGame, let viewController = segue.destination as? CreateOnlineGameViewController {
+            // TODO
+        } else if segue.identifier == Segues.Home_CreateOfflineGame, let viewController = segue.destination as? CreateOfflineGameViewController {
+            App.game = Game(player: Player(name: UserService.currentProfile!.username))
+        }
+    }
+    
+
+    private func initView() {
         let sideMenuController = SideMenuController()
         sideMenuController.delegate = self
         
@@ -38,18 +56,7 @@ class HomeViewController: UIViewController {
         
         SideMenuManager.default.leftMenuNavigationController = sideMenu
         SideMenuManager.default.addPanGestureToPresent(toView: self.view)
-    }
-    
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == Segues.Home_CreateOnlineGame, let viewController = segue.destination as? CreateOnlineGameViewController {
-            // TODO
-        } else if segue.identifier == Segues.Home_CreateOfflineGame, let viewController = segue.destination as? CreateOfflineGameViewController {
-            App.game = Game(player: Player(name: App.user!.username))
-        }
-    }
-    
-
-    private func initView() {
+        
         let profileTapGesture = UITapGestureRecognizer(target:self,action:#selector(self.onProfile))
         btn_Profile.addGestureRecognizer(profileTapGesture)
         
@@ -67,8 +74,33 @@ class HomeViewController: UIViewController {
         
         PlayService.delegate = self
         PlayService.connect()
+        
+        profilePictureImageView.layer.cornerRadius = profilePictureImageView.frame.height/2
+        profilePictureImageView.clipsToBounds = true
+        
+        UserService.observeUserProfile(completion: { userProfile in
+            guard let profile = userProfile else { return }
+            
+            self.usernameLabel.text = profile.username
+           
+            if let photURL = profile.photoURL {
+                UserService.getProfilePicture(withURL: photURL, completion: { profileImage in
+                     self.profilePictureImageView.image = profileImage
+                 })
+            } else {
+                self.profilePictureImageView.image = UIImage(named: "profile")
+            }
+        })
+        
+        UserService.observeCareerStats(completion: { careerStatsObject in
+            guard let stats = careerStatsObject else { return }
+            
+            self.averageLabel.text = String(stats.average)
+            self.checkoutLabel.text = String(stats.checkoutPerentage)
+            self.winsLabel.text = String(stats.wins)
+            self.defeatsLabel.text = String(stats.defeats)
+        })
     }
-
 }
 
 extension HomeViewController: PlayServiceDelegate {
@@ -121,6 +153,8 @@ extension HomeViewController: SideMenuControllerDelegate {
                 self.performSegue(withIdentifier: Segues.Home_Settings, sender: self)
             } else if index == 4 {
                 self.performSegue(withIdentifier: Segues.Home_AboutUs, sender: self)
+            } else if index == 5 {
+                AuthService.shared.signOut()
             }
         })
     }
@@ -156,13 +190,14 @@ extension HomeViewController {
 protocol SideMenuControllerDelegate {
     
     func onClick(index: Int)
+    
 }
 
 class SideMenuController: UITableViewController {
     
     var delegate: SideMenuControllerDelegate?
     
-    var items = [("user", "PROFIL"), ("invite", "EINLADUNGEN"), ("friends", "FREUNDE"), ("settings-1", "EINSTELLUNGEN"), ("info", "SONSTIGES"),]
+    var items = [("user", "PROFIL"), ("invite", "EINLADUNGEN"), ("friends", "FREUNDE"), ("settings-1", "EINSTELLUNGEN"), ("info", "SONSTIGES"), ("logout", "AUSLOGGEN"),]
     
     override func viewDidLoad() {
         super.viewDidLoad()

@@ -7,9 +7,10 @@ target 'DartCounter' do
 
   # Pods for DartCounter
   pod 'Starscream', '~> 3.0.2'
-  pod 'Firebase/Analytics'
   pod 'Firebase/Auth'
   pod 'Firebase/Firestore'
   pod 'GoogleSignIn'
+  pod 'Firebase/Database'
+  pod 'Firebase/Storage'
   pod 'SideMenu'
 end
