@@ -18,6 +18,7 @@ extension UIViewController {
         static let Home_CreateOnlineGame = "Home_CreateOnlineGame"
         static let Home_CreateOfflineGame = "Home_CreateOfflineGame"
         static let Home_Profile = "Home_Profile"
+        static let Profile_History = "Profile_History"
         static let Home_Invitations = "Home_Invitations"
         static let Home_Friends = "Home_Friends"
         static let Home_Settings = "Home_Settings"

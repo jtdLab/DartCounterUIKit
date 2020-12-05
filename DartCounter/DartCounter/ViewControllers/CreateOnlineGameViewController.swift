@@ -35,7 +35,7 @@ class CreateOnlineGameViewController: UIViewController {
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == Segues.CreateOnlineGame_InGame, let viewController = segue.destination as? InGameViewController {
-          // TODO
+            viewController.online = true
         }
     }
     
@@ -54,6 +54,8 @@ class CreateOnlineGameViewController: UIViewController {
         
         advancedSettingsTableView.dataSource = self
         advancedSettingsTableView.delegate = self
+        
+        PlayService.delegate = self
     }
     
 }
@@ -72,6 +74,7 @@ extension CreateOnlineGameViewController {
 }
 
 extension CreateOnlineGameViewController: PlayServiceDelegate {
+    
      
     func onCreateGameResponse(createGameResponse: CreateGameResponsePacket) {
         createGameResponse.successful ? print("Created game1") : print("Couldn't create game1")
@@ -82,24 +85,25 @@ extension CreateOnlineGameViewController: PlayServiceDelegate {
     }
     
     func onGameCanceled(gameCanceled: GameCanceledPacket) {
-        print("Game canceled1")
+        print("Game canceled")
     }
     
     func onGameStarted(gameStarted: GameStartedPacket) {
-        print("Game started1")
+        print("Game started")
     }
     
     func onSnapshot(snapshot: SnapshotPacket) {
+        print("Snapshot received1")
         self.snapshot = snapshot.snapshot
         playerTableView.reloadData()
     }
     
     func onPlayerExited(playerExited: PlayerExitedPacket) {
-        print(playerExited.username + " exited the game1")
+        print(playerExited.username + " exited the game")
     }
     
     func onPlayerJoined(playerJoined: PlayerJoinedPacket) {
-        print(playerJoined.username + " joined the game1")
+        print(playerJoined.username + " joined the game")
     }
     
 }

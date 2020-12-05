@@ -18,7 +18,12 @@ class ProfileViewController: UIViewController {
     @IBOutlet weak var careerStatsTableView: UITableView!
     var items = ["Karriere Average", "Karriere First 9", "Karriere Doppelquote", "Karriere Siege", "Karriere Niederlagen"]
     var careerStats: CareerStats?
-
+    
+    
+    @IBAction func onViewHistory(_ sender: UIButton) {
+        performSegue(withIdentifier: Segues.Profile_History, sender: self)
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         initView()

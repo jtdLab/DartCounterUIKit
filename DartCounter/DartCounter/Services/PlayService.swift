@@ -12,9 +12,9 @@ protocol PlayServiceDelegate {
     
     func onAuthResponse(authResponse: AuthResponsePacket)
     
-    func onCreateGameResponse(createGame: CreateGameResponsePacket)
+    func onCreateGameResponse(createGameResponse: CreateGameResponsePacket)
     
-    func onJoinGameResponse(joinGame: JoinGameResponsePacket)
+    func onJoinGameResponse(joinGameResponse: JoinGameResponsePacket)
     
     func onGameCanceled(gameCanceled: GameCanceledPacket)
     
@@ -32,9 +32,9 @@ extension PlayServiceDelegate {
     
     func onAuthResponse(authResponse: AuthResponsePacket) {}
     
-    func onCreateGameResponse(createGame: CreateGameResponsePacket) {}
+    func onCreateGameResponse(createGameResponse: CreateGameResponsePacket) {}
     
-    func onJoinGameResponse(joinGame: JoinGameResponsePacket) {}
+    func onJoinGameResponse(joinGameResponse: JoinGameResponsePacket) {}
     
     func onGameCanceled(gameCanceled: GameCanceledPacket) {}
     
@@ -55,19 +55,16 @@ class PlayService {
     private static let host = "ws://localhost"
     private static let port = 9000
     
+    private static var connected = false
+    
     private static let socket: WebSocket = {
         var request = URLRequest(url: URL(string: host + ":" + String(port))!)
         request.timeoutInterval = 5
         let ws = WebSocket(request: request)
-        ws.onConnect = {
-            // TODO read password from user
-            /*
-            sendPacket(packet: AuthRequestPacket(username: App.user!.username, password: "password"))
- */
-        }
-        
+       
         ws.onDisconnect = { (error: Error?) in
             print("websocket is disconnected: \(String(describing: error?.localizedDescription))")
+            connected = false
         }
       
         ws.onText = { (text: String) in
@@ -79,8 +76,21 @@ class PlayService {
         return ws
     }()
     
-    static func connect() {
-        socket.connect()
+    static func connect(completion: (() -> ())? = nil) {
+        if !connected {
+            socket.onConnect = {
+                guard let uid = UserService.currentProfile?.uid else { return }
+                guard let username = UserService.currentProfile?.username else { return }
+                
+                sendPacket(packet: AuthRequestPacket(uid: uid, username: username))
+                connected = true
+                
+                if let completion = completion {
+                    completion()
+                }
+            }
+            socket.connect()
+        }
     }
     
     static func cancelGame() {
@@ -112,7 +122,9 @@ class PlayService {
     }
     
     static func disconnect() {
-        socket.disconnect()
+        if connected {
+            socket.disconnect()
+        }
     }
 
     
@@ -126,9 +138,9 @@ class PlayService {
         if(packet is AuthResponsePacket) {
             delegate?.onAuthResponse(authResponse: packet as! AuthResponsePacket)
         } else if(packet is CreateGameResponsePacket) {
-            delegate?.onCreateGameResponse(createGame: packet as! CreateGameResponsePacket)
+            delegate?.onCreateGameResponse(createGameResponse: packet as! CreateGameResponsePacket)
         } else if(packet is JoinGameResponsePacket) {
-            delegate?.onJoinGameResponse(joinGame: packet as! JoinGameResponsePacket)
+            delegate?.onJoinGameResponse(joinGameResponse: packet as! JoinGameResponsePacket)
         } else if(packet is GameCanceledPacket) {
             delegate?.onGameCanceled(gameCanceled: packet as! GameCanceledPacket)
         } else if(packet is GameStartedPacket) {

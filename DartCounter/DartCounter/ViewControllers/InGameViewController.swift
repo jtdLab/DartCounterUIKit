@@ -12,6 +12,8 @@ class InGameViewController: UIViewController {
     
     var playerContainer: UIView? // TODO check if good practice
     
+    var online: Bool?
+    
     @IBOutlet weak var navItem: UINavigationItem!
     @IBOutlet weak var playerView: UIView!
     @IBOutlet weak var label_pointsScored: UILabel!

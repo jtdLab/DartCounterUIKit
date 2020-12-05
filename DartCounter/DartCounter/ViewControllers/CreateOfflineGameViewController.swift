@@ -46,8 +46,8 @@ class CreateOfflineGameViewController: UIViewController {
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == Segues.CreateOfflineGame_InGame, let viewController = segue.destination as? InGameViewController {
-            // TODO
+        if segue.identifier == Segues.CreateOnlineGame_InGame, let viewController = segue.destination as? InGameViewController {
+            viewController.online = false
         }
     }
     

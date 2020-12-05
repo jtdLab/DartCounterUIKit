@@ -25,7 +25,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             UserService.currentProfile = userProfile
         }
 
-        
         return true
     }
 

@@ -47,7 +47,6 @@ class DatabaseService {
         }
     }
     
-    
     static func updateProfileImage(_ image: UIImage, completion: @escaping (_ success: Bool) ->()) {
         
         guard let uid = Auth.auth().currentUser?.uid else { return }

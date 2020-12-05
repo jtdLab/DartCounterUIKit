@@ -23,7 +23,6 @@ class InvitationsViewController: UIViewController {
         invitationdTableView.isScrollEnabled = false
     }
 
-
 }
 
 extension InvitationsViewController: UITableViewDataSource, UITableViewDelegate {

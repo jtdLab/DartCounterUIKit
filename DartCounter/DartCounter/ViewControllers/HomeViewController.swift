@@ -72,9 +72,6 @@ class HomeViewController: UIViewController {
         let settingsTapGesture = UITapGestureRecognizer(target:self,action:#selector(self.onSettings))
         btn_Settings.addGestureRecognizer(settingsTapGesture)
         
-        PlayService.delegate = self
-        PlayService.connect()
-        
         profilePictureImageView.layer.cornerRadius = profilePictureImageView.frame.height/2
         profilePictureImageView.clipsToBounds = true
         
@@ -105,36 +102,18 @@ class HomeViewController: UIViewController {
 
 extension HomeViewController: PlayServiceDelegate {
     
-    func onAuthResponse(authResponse: AuthResponsePacket) {
-        authResponse.successful ? print("Joined server") : print("Couldn't join server")
-    }
-    
     func onCreateGameResponse(createGameResponse: CreateGameResponsePacket) {
         createGameResponse.successful ? print("Created game") : print("Couldn't create game")
+        if createGameResponse.successful {
+            self.performSegue(withIdentifier: Segues.Home_CreateOnlineGame, sender: self)
+        }
     }
     
     func onJoinGameResponse(joinGameResponse: JoinGameResponsePacket) {
         joinGameResponse.successful ? print("Joined game") : print("Couldn't join game")
-    }
-    
-    func onGameCanceled(gameCanceled: GameCanceledPacket) {
-        print("Game canceled")
-    }
-    
-    func onGameStarted(gameStarted: GameStartedPacket) {
-        print("Game started")
-    }
-    
-    func onSnapshot(snapshot: SnapshotPacket) {
-        print("Snapshot")
-    }
-    
-    func onPlayerExited(playerExited: PlayerExitedPacket) {
-        print(playerExited.username + " exited the game")
-    }
-    
-    func onPlayerJoined(playerJoined: PlayerJoinedPacket) {
-        print(playerJoined.username + " joined the game")
+        if joinGameResponse.successful {
+            self.performSegue(withIdentifier: Segues.Home_CreateOnlineGame, sender: self)
+        }
     }
     
 }
@@ -170,7 +149,10 @@ extension HomeViewController {
     }
     
     @objc func onOnline() {
-        self.performSegue(withIdentifier: Segues.Home_CreateOnlineGame, sender: self)
+        PlayService.delegate = self
+        PlayService.connect {
+            PlayService.createGame();
+        }
     }
     
     @objc func onOffline() {
@@ -178,7 +160,10 @@ extension HomeViewController {
     }
     
     @objc func onSocialMedia() {
-        // TODO
+        PlayService.delegate = self
+        PlayService.connect {
+            PlayService.joinGame(gameCode: 1000)
+        }
     }
     
     @objc func onSettings() {
