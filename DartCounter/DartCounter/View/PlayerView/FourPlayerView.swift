@@ -59,14 +59,13 @@ class FourPlayerView: UIView {
     private func initView() {
         guard let view = self.loadViewFromNib(nibName: "FourPlayerView") else { return }
         self.addSubview(view)
-        self.refreshView()
     }
     
-    func refreshView() {
-        let player1 = App.game!.getSnapshot().players[0]
-        let player2 = App.game!.getSnapshot().players[1]
-        let player3 = App.game!.getSnapshot().players[2]
-        let player4 = App.game!.getSnapshot().players[3]
+    func refreshView(snapshots: [PlayerSnapshot]) {
+        let player1 = snapshots[0]
+        let player2 = snapshots[1]
+        let player3 = snapshots[2]
+        let player4 = snapshots[3]
         
         if player1.isNext! {
             // TODO

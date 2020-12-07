@@ -18,7 +18,6 @@ class OnePlayerView: UIView {
     @IBOutlet weak var label_average: UILabel!
     @IBOutlet weak var label_checkoutPercentage: UILabel!
     
-    
     override init(frame: CGRect) {
         super.init(frame: frame)
         self.initView()
@@ -32,11 +31,10 @@ class OnePlayerView: UIView {
     private func initView() {
         guard let view = self.loadViewFromNib(nibName: "OnePlayerView") else { return }
         self.addSubview(view)
-        self.refreshView()
     }
     
-    func refreshView() {
-        let player = App.game!.getSnapshot().players[0]
+    func refreshView(snapshot: PlayerSnapshot) {
+        let player = snapshot
         label_name.text = player.name
         label_sets.text = "S: " + String(player.sets ?? -1)
         label_legs.text = "L: " + String(player.legs!)

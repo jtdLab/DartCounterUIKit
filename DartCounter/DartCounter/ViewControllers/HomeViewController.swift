@@ -10,8 +10,6 @@ import SideMenu
 
 class HomeViewController: UIViewController {
     
-    var sideMenu: SideMenuNavigationController?
-    
     @IBOutlet weak var navItem: UINavigationItem!
     @IBOutlet weak var btn_Profile: UIView!
     @IBOutlet weak var profilePictureImageView: UIImageView!
@@ -26,6 +24,7 @@ class HomeViewController: UIViewController {
     @IBOutlet weak var btn_SocialMedia: UIView!
     @IBOutlet weak var btn_Settings: UIView!
     
+    var sideMenu: SideMenuNavigationController?
     
     @IBAction func onSideMenu(_ sender: UIBarButtonItem) {
         present(sideMenu!, animated: true)
@@ -37,15 +36,7 @@ class HomeViewController: UIViewController {
         initView()
     }
     
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == Segues.Home_CreateOnlineGame, let viewController = segue.destination as? CreateOnlineGameViewController {
-            // TODO
-        } else if segue.identifier == Segues.Home_CreateOfflineGame, let viewController = segue.destination as? CreateOfflineGameViewController {
-            App.game = Game(player: Player(name: UserService.currentProfile!.username))
-        }
-    }
     
-
     private func initView() {
         let sideMenuController = SideMenuController()
         sideMenuController.delegate = self
@@ -98,6 +89,16 @@ class HomeViewController: UIViewController {
             self.defeatsLabel.text = String(stats.defeats)
         })
     }
+    
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == Segues.Home_CreateGame_offline, let viewController = segue.destination as? CreateGameViewController {
+            viewController.online = false
+        } else if segue.identifier == Segues.Home_CreateGame_online, let viewController = segue.destination as? CreateGameViewController {
+            viewController.online = true
+        }
+    }
+
 }
 
 extension HomeViewController: PlayServiceDelegate {
@@ -105,14 +106,14 @@ extension HomeViewController: PlayServiceDelegate {
     func onCreateGameResponse(createGameResponse: CreateGameResponsePacket) {
         createGameResponse.successful ? print("Created game") : print("Couldn't create game")
         if createGameResponse.successful {
-            self.performSegue(withIdentifier: Segues.Home_CreateOnlineGame, sender: self)
+            self.performSegue(withIdentifier: Segues.Home_CreateGame_online, sender: self)
         }
     }
     
     func onJoinGameResponse(joinGameResponse: JoinGameResponsePacket) {
         joinGameResponse.successful ? print("Joined game") : print("Couldn't join game")
         if joinGameResponse.successful {
-            self.performSegue(withIdentifier: Segues.Home_CreateOnlineGame, sender: self)
+            self.performSegue(withIdentifier: Segues.Home_CreateGame_online, sender: self)
         }
     }
     
@@ -156,10 +157,11 @@ extension HomeViewController {
     }
     
     @objc func onOffline() {
-        self.performSegue(withIdentifier: Segues.Home_CreateOfflineGame, sender: self)
+        self.performSegue(withIdentifier: Segues.Home_CreateGame_offline, sender: self)
     }
     
     @objc func onSocialMedia() {
+        // TODO
         PlayService.delegate = self
         PlayService.connect {
             PlayService.joinGame(gameCode: 1000)
@@ -186,9 +188,8 @@ class SideMenuController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        tableView.register(UINib(nibName: "SideMenuItemCell", bundle: nil), forCellReuseIdentifier: "SideMenuItemCell")
-        
         tableView.register(UINib(nibName: "SideMenuHeader", bundle: nil), forHeaderFooterViewReuseIdentifier: "SideMenuHeader")
+        tableView.register(UINib(nibName: "SideMenuItemCell", bundle: nil), forCellReuseIdentifier: "SideMenuItemCell")
         
         tableView.backgroundColor = .black
 

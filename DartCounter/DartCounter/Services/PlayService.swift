@@ -101,6 +101,10 @@ class PlayService {
         sendPacket(packet: CreateGamePacket())
     }
     
+    static func updateGameConfig(gameConfig: GameConfig) {
+        sendPacket(packet: UpdateGameConfigPacket(gameConfig: gameConfig))
+    }
+    
     static func exitGame() {
         sendPacket(packet: ExitGamePacket())
     }
@@ -131,6 +135,7 @@ class PlayService {
     private static func sendPacket(packet: Packet) {
         let jsonData = try! JSONEncoder().encode(PacketContainer(payload: packet))
         let json = String(data: jsonData, encoding: String.Encoding.utf8)!
+        print(json)
         socket.write(string: json)
     }
     

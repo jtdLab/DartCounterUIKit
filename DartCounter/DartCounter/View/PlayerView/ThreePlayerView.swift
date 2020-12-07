@@ -49,13 +49,12 @@ class ThreePlayerView: UIView {
     private func initView() {
         guard let view = self.loadViewFromNib(nibName: "ThreePlayerView") else { return }
         self.addSubview(view)
-        self.refreshView()
     }
     
-    func refreshView() {
-        let player1 = App.game!.getSnapshot().players[0]
-        let player2 = App.game!.getSnapshot().players[1]
-        let player3 = App.game!.getSnapshot().players[2]
+    func refreshView(snapshots: [PlayerSnapshot]) {
+        let player1 = snapshots[0]
+        let player2 = snapshots[1]
+        let player3 = snapshots[2]
         
         if player1.isNext! {
             // TODO

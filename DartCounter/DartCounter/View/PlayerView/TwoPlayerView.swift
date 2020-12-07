@@ -41,12 +41,11 @@ class TwoPlayerView: UIView {
     private func initView() {
         guard let view = self.loadViewFromNib(nibName: "TwoPlayerView") else { return }
         self.addSubview(view)
-        self.refreshView()
     }
     
-    func refreshView() {
-        let player1 =  App.game!.getSnapshot().players[0]
-        let player2 = App.game!.getSnapshot().players[1]
+    func refreshView(snapshots: [PlayerSnapshot]) {
+        let player1 = snapshots[0]
+        let player2 = snapshots[1]
         
         if player1.isNext! {
             // TODO

@@ -11,7 +11,11 @@ class GameSnapshot: Codable  {
     
     let status :GameStatus
     let config :GameConfig
-    let players  :[PlayerSnapshot]
+    let players :[PlayerSnapshot]
+    
+    var ownerUsername: String {
+        return players[0].name!
+    }
     
     private enum CodingKeys: String, CodingKey {
         case status
@@ -39,16 +43,19 @@ class GameSnapshot: Codable  {
         try container.encode(players, forKey: .players)
    }
     
-    /**
-     func getCurrentTurn() -> PlayerSnapshot? {
-         for player in players {
-             if(player.isNext!) {
-                 return player
-             }
-         }
-         return nil
-     }
-     */
+    
+    func getDescription() -> String {
+        return (config.getModeAsString() + " " + String(config.size) + " " + config.getTypeAsString()).uppercased()
+    }
+    
+    func getCurrentTurn() -> PlayerSnapshot? {
+        for player in players {
+            if(player.isNext!) {
+                return player
+            }
+        }
+        return nil
+    }
     
 }
 

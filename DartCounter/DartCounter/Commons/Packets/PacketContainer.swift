@@ -31,6 +31,7 @@ class PacketContainer : Codable {
         case authRequest
         case cancelGame
         case createGame
+        case updateGameConfig
         case exitGame
         case joinGame
         case performThrow
@@ -54,6 +55,8 @@ class PacketContainer : Codable {
             payloadType = PayloadType.cancelGame.rawValue
         } else if payload is CreateGamePacket {
             payloadType = PayloadType.createGame.rawValue
+        } else if payload is UpdateGameConfigPacket {
+            payloadType = PayloadType.updateGameConfig.rawValue
         } else if payload is ExitGamePacket {
             payloadType = PayloadType.exitGame.rawValue
         } else if payload is JoinGamePacket {
