@@ -7,13 +7,17 @@
 
 import UIKit
 
-protocol DimissManager {
-  func onDismiss()
+protocol CheckoutDetailsDismissHandler {
+    
+    func handleDismiss()
+
 }
 
 class CheckoutDetailsViewController: UIViewController {
     
-    var delegate: DimissManager?
+    var online: Bool?
+    
+    var delegate: CheckoutDetailsDismissHandler?
     var pointsLeft: Int?
     var pointsScored: Int?
     var dartsThrown: Int = 1
@@ -68,8 +72,14 @@ class CheckoutDetailsViewController: UIViewController {
     }
     
     override func viewWillDisappear(_ animated: Bool) {
-        App.game!.performThrow(t: Throw(points: pointsScored!, dartsOnDouble: dartsOnDouble, dartsThrown: dartsThrown))
-        delegate?.onDismiss()
+        guard let online = online else { return }
+        
+        if online {
+            // TODO
+        } else {
+            //App.game!.performThrow(t: Throw(points: pointsScored!, dartsOnDouble: dartsOnDouble, dartsThrown: dartsThrown))
+        }
+        delegate?.handleDismiss()
     }
     
     

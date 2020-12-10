@@ -11,7 +11,6 @@ import FirebaseAuth
 class App {
 
     static let settings = Settings()
-    static var game: Game?
     
 }
 

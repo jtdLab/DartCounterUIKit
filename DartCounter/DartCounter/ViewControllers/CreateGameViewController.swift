@@ -16,188 +16,205 @@ class CreateGameViewController: UIViewController {
     @IBOutlet weak var dartBotHeader: UIView!
     @IBOutlet weak var dartBotContent: UIView!
     @IBOutlet weak var switchDartbot: UISwitch!
-    @IBOutlet weak var dartBotView: UIView!
     @IBOutlet weak var sliderDartbotAverage: UISlider!
     @IBOutlet weak var labelDartbotAverage: UILabel!
-    @IBOutlet weak var playerTableView: UITableView!
-    @IBOutlet weak var segmentedStartingScore: UISegmentedControl!
-    var startingScoreData = [301, 501, 701]
+    @IBOutlet weak var playersTableView: UITableView!
+    @IBOutlet weak var segmentedStartingPoints: UISegmentedControl!
     @IBOutlet weak var segmentedGameMode: UISegmentedControl!
-    var gameModeData = ["FIRST TO", "BEST OF"]
     @IBOutlet weak var pickerSize: UIPickerView!
     @IBOutlet weak var segmentedGameType: UISegmentedControl!
-    var gameTypeData = ["LEGS", "SETS"]
     @IBOutlet weak var advancedSettingsTableView: UITableView!
     var advancedSettingsData = ["SPRACHEINGABE", "AVERAGE ANZEIGEN", "DOPPELQUOTE ANZEIGEN"]
     @IBOutlet weak var buttonStartGame: UIButton!
     
     
     @IBAction func onDartBotChanged(_ sender: UISwitch) {
-        onDartBotChanged(isOn: sender.isOn)
+        // show or hide the dartbot picker
+        if sender.isOn {
+            dartBotContent.isHidden = false
+        } else {
+            dartBotContent.isHidden = true
+        }
     }
     
     @IBAction func onDartBotAvgChanged(_ sender: UISlider) {
-        onDartBotAvgChanged()
+        // display average of dartbot
+        labelDartbotAverage.text = String(Int(sliderDartbotAverage.value))
     }
     
     @IBAction func onAddPlayer(_ sender: UIButton) {
-        onAddPlayer()
+        if online {
+            // TODO show invite dialog
+        } else {
+            // try add player and display new player if successful
+            if PlayOfflineService.addPlayer() {
+                playersTableView.constraints[0].constant += 50
+                playersTableView.reloadData()
+            }
+        }
     }
     
     @IBAction func onStartGame(_ sender: UIButton) {
-       onStartGame()
+        if online {
+            PlayOnlineService.startGame()
+        } else {
+            // add a dartbot to the game with average chosen by user via ui
+            let dartBotAverage = Int(labelDartbotAverage.text!) ?? 10
+            if switchDartbot.isOn {
+                PlayOfflineService.addDartbot(targetAverage: dartBotAverage)
+            }
+            
+            // update game config to current values chosen by user via ui
+            let mode = segmentedGameMode.selectedSegmentIndex == 0 ? GameMode.FIRST_TO : GameMode.BEST_OF
+            let type = segmentedGameType.selectedSegmentIndex == 0 ? GameType.LEGS : GameType.SETS
+            let size = pickerSize.selectedRow(inComponent: 0) + 1
+            let startingPoints = segmentedStartingPoints.selectedSegmentIndex == 0 ? 301 : segmentedStartingPoints.selectedSegmentIndex == 1 ? 501 : 701
+            let config = GameConfig(mode: mode, type: type, size: size, startingPoints: startingPoints)
+            PlayOfflineService.updateGameConfig(gameConfig: config )
+            
+            // try start game and go to InGameView if successful
+            if PlayOfflineService.startGame() {
+                self.performSegue(withIdentifier: Segues.CreateGame_InGame, sender: self)
+            }
+        }
     }
 
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        initView()
-    }
-    
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == Segues.CreateGame_InGame, let viewController = segue.destination as? InGameViewController {
-            viewController.snapshot = self.snapshot
-            viewController.online = online
-        }
-    }
-    
-    private func initView() {
+        
         if online {
-            PlayService.delegate = self
-            PlayService.createGame()
+            // subscribe to PlayOnlineService to receive events
+            PlayOnlineService.delegate = self
+            // create an online game
+            PlayOnlineService.createGame()
+            // hide dartbot picker because dartbot not available in an online game
             dartBotHeader.isHidden = true
             dartBotContent.isHidden = true
         } else {
-            App.game = Game(player: Player(name: UserService.currentProfile!.username))
+            // subscribe to PlayOfflineService to receive events
+            PlayOfflineService.delegate = self
+            // create an offline game
+            PlayOfflineService.createGame()
+            // hide dartBotContent as default (user needs to use the switch in the dartBotHeader to show it)
             switchDartbot.isOn = false
-            dartBotView.isHidden = true
+            dartBotContent.isHidden = true
         }
         
-        segmentedStartingScore.selectedSegmentIndex = 1
+        // default startingPoints to 501
+        segmentedStartingPoints.selectedSegmentIndex = 1
         
-        playerTableView.dataSource = self
-        playerTableView.delegate = self
-        
+        // add dataSources and delegates of tables and pickers
+        playersTableView.dataSource = self
+        playersTableView.delegate = self
         pickerSize.dataSource = self
         pickerSize.delegate = self
-        
         advancedSettingsTableView.dataSource = self
         advancedSettingsTableView.delegate = self
         
-        segmentedStartingScore.addTarget(self, action: #selector(onStartingPointsChanged), for: .valueChanged)
+        // subscribe to segmentedControl valueChanged events
+        segmentedStartingPoints.addTarget(self, action: #selector(onStartingPointsChanged), for: .valueChanged)
         segmentedGameMode.addTarget(self, action: #selector(onModeChanged), for: .valueChanged)
         segmentedGameType.addTarget(self, action: #selector(onTypeChanged), for: .valueChanged)
     }
     
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        // before going to InGameView
+        if segue.identifier == Segues.CreateGame_InGame, let destinationViewController = segue.destination as? InGameViewController {
+            // init InGameViewController
+            destinationViewController.snapshot = self.snapshot
+            destinationViewController.online = online
+        }
+    }
+    
+    
     @objc func onStartingPointsChanged(sender: UISegmentedControl) {
-        guard let config = snapshot?.config else { return }
+        // check if snapshot of current game is available
+        guard let snapshot = self.snapshot else { return }
         
-        config.startingPoints = startingScoreData[sender.selectedSegmentIndex]
+        // current gameConfig
+        let gameConfig = snapshot.config
+
+        // change startingPoints of current gameConfig
+        let startingPoints = segmentedStartingPoints.selectedSegmentIndex == 0 ? 301 : segmentedStartingPoints.selectedSegmentIndex == 1 ? 501 : 701
+        gameConfig.startingPoints = startingPoints
         
+        // update the gameConfig of the current game
         if online {
-            PlayService.updateGameConfig(gameConfig: config)
+            PlayOnlineService.updateGameConfig(gameConfig: gameConfig)
         } else {
-            // TODO
+            PlayOfflineService.updateGameConfig(gameConfig: gameConfig)
         }
       
     }
     
     @objc func onModeChanged(sender: UISegmentedControl) {
-        guard let config = snapshot?.config else { return }
+        // check if snapshot of current game is available
+        guard let snapshot = self.snapshot else { return }
         
+        // current gameConfig
+        let gameConfig = snapshot.config
+        
+        // change mode of current gameConfig
         if sender.selectedSegmentIndex == 0 {
-            config.mode = .FIRST_TO
+            gameConfig.mode = .FIRST_TO
         } else if sender.selectedSegmentIndex == 1 {
-            config.mode = .BEST_OF
+            gameConfig.mode = .BEST_OF
         }
         
+        // update the gameConfig of the current game
         if online {
-            PlayService.updateGameConfig(gameConfig: config)
+            PlayOnlineService.updateGameConfig(gameConfig: gameConfig)
         } else {
-            // TODO
+            PlayOfflineService.updateGameConfig(gameConfig: gameConfig)
         }
     }
     
     func onSizeChanged(size: Int) {
-        guard let config = snapshot?.config else { return }
+        // check if snapshot of current game is available
+        guard let snapshot = self.snapshot else { return }
         
-        config.size = size
+        // current gameConfig
+        let gameConfig = snapshot.config
         
+        // change size of current gameConfig
+        gameConfig.size = size
+        
+        // update the gameConfig of the current game
         if online {
-            PlayService.updateGameConfig(gameConfig: config)
+            PlayOnlineService.updateGameConfig(gameConfig: gameConfig)
         } else {
-            // TODO
+            PlayOfflineService.updateGameConfig(gameConfig: gameConfig)
         }
     }
     
     @objc func onTypeChanged(sender: UISegmentedControl) {
-        guard let config = snapshot?.config else { return }
+        // check if snapshot of current game is available
+        guard let snapshot = self.snapshot else { return }
         
+        // current gameConfig
+        let gameConfig = snapshot.config
+        
+        // change type of current gameConfig
         if sender.selectedSegmentIndex == 0 {
-            config.type = .LEGS
+            gameConfig.type = .LEGS
         } else if sender.selectedSegmentIndex == 1 {
-            config.type = .SETS
+            gameConfig.type = .SETS
         }
         
+        // update the gameConfig of the current game
         if online {
-            PlayService.updateGameConfig(gameConfig: config)
+            PlayOnlineService.updateGameConfig(gameConfig: gameConfig)
         } else {
-            // TODO
+            PlayOfflineService.updateGameConfig(gameConfig: gameConfig)
         }
     }
 
 }
 
-// Contains UserEventHandling
-extension CreateGameViewController {
-    
-    func onDartBotChanged(isOn: Bool) {
-        if isOn {
-            dartBotView.isHidden = false
-        } else {
-            dartBotView.isHidden = true
-        }
-    }
-    
-    func onDartBotAvgChanged() {
-        labelDartbotAverage.text = String(Int(sliderDartbotAverage.value))
-    }
-    
-    func onAddPlayer() {
-        if online {
-            // TODO
-        } else {
-            if App.game!.addPlayer() {
-                playerTableView.constraints[0].constant += 50
-                playerTableView.reloadData()
-            }
-        }
-    }
-    
-    func onStartGame() {
-        if online {
-            PlayService.startGame()
-        } else {
-            let dartBotAverage = Int(labelDartbotAverage.text!) ?? 10
-            
-            if switchDartbot.isOn {
-                App.game!.addDartBot(targetAverage: dartBotAverage)
-            }
-            let mode = segmentedGameMode.selectedSegmentIndex == 0 ? GameMode.FIRST_TO : GameMode.BEST_OF
-            let type = segmentedGameType.selectedSegmentIndex == 0 ? GameType.LEGS : GameType.SETS
-            let size = pickerSize.selectedRow(inComponent: 0) + 1
-            let startingPoints = segmentedStartingScore.selectedSegmentIndex == 0 ? 301 : segmentedStartingScore.selectedSegmentIndex == 1 ? 501 : 701
-            
-            App.game!.config = GameConfig(mode: mode, type: type, size: size, startingPoints: startingPoints)
-            if App.game!.start() {
-                self.performSegue(withIdentifier: Segues.CreateGame_InGame, sender: self)
-            }
-        }
-    }
-    
-}
 
-extension CreateGameViewController: PlayServiceDelegate {
+// handle events from PlayOffline and PlayOnlineService
+extension CreateGameViewController: PlayOfflineServiceDelegate, PlayOnlineServiceDelegate {
     
     func onCreateGameResponse(createGameResponse: CreateGameResponsePacket) {
         createGameResponse.successful ? print("Created game1") : print("Couldn't create game1")
@@ -215,43 +232,53 @@ extension CreateGameViewController: PlayServiceDelegate {
         print("Game started")
     }
     
-    func onSnapshot(snapshot: SnapshotPacket) {
-        self.snapshot = snapshot.snapshot
+    func onSnapshot(snapshot: GameSnapshot) {
         print("Snapshot received")
-        if self.snapshot?.status == .RUNNING {
+        
+        // set current snapshot to the received snapshot
+        self.snapshot = snapshot
+        
+        // if game is running
+        if snapshot.status == .RUNNING {
+            // go to InGameView
             performSegue(withIdentifier: Segues.CreateGame_InGame, sender: self)
         }
-       
-        if self.snapshot?.ownerUsername != UserService.currentProfile?.username {
-            // Disable controlls
-            segmentedStartingScore.isUserInteractionEnabled = false
+        
+        // if this client doesn't own the game
+        if snapshot.ownerUsername != UserService.currentProfile?.username {
+            // disable controlls
+            segmentedStartingPoints.isUserInteractionEnabled = false
             segmentedGameMode.isUserInteractionEnabled = false
             pickerSize.isUserInteractionEnabled = false
             segmentedGameType.isUserInteractionEnabled = false
             
+            // hide startGame button
             buttonStartGame.isHidden = true
         }
         
-        let startingPoints = self.snapshot?.config.startingPoints
+        // ** display the new config ** //
+        // display startingPoints
+        let startingPoints = snapshot.config.startingPoints
         if startingPoints == 301 {
-            segmentedStartingScore.selectedSegmentIndex = 0
+            segmentedStartingPoints.selectedSegmentIndex = 0
         } else if startingPoints == 501 {
-            segmentedStartingScore.selectedSegmentIndex = 1
+            segmentedStartingPoints.selectedSegmentIndex = 1
         } else if startingPoints == 701 {
-            segmentedStartingScore.selectedSegmentIndex = 2
+            segmentedStartingPoints.selectedSegmentIndex = 2
         }
-        
-        let mode = self.snapshot?.config.mode
+        // display mode
+        let mode = snapshot.config.mode
         if mode == .FIRST_TO {
             segmentedGameMode.selectedSegmentIndex = 0
         } else if mode == .BEST_OF {
             segmentedGameMode.selectedSegmentIndex = 1
         }
         
-        
-        let size = self.snapshot!.config.size
+        // display size
+        let size = snapshot.config.size
         pickerSize.selectRow(size-1, inComponent: 0, animated: true)
         
+        // display type
         let type = self.snapshot?.config.type
         if type == .LEGS {
             segmentedGameType.selectedSegmentIndex = 0
@@ -259,8 +286,9 @@ extension CreateGameViewController: PlayServiceDelegate {
             segmentedGameType.selectedSegmentIndex = 1
         }
         
-        playerTableView.constraints[0].constant = CGFloat(self.snapshot!.players.count * 50)
-        playerTableView.reloadData()
+        // display player
+        playersTableView.constraints[0].constant = CGFloat(self.snapshot!.players.count * 50)
+        playersTableView.reloadData()
     }
     
     func onPlayerExited(playerExited: PlayerExitedPacket) {
@@ -273,11 +301,13 @@ extension CreateGameViewController: PlayServiceDelegate {
     
 }
 
+
+// delegate and dataSource of playersTable and advancedSettingsTable
 extension CreateGameViewController: UITableViewDataSource, UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch tableView {
-        case playerTableView:
+        case playersTableView:
             return snapshot?.players.count ?? 0
         case advancedSettingsTableView:
             return advancedSettingsData.count
@@ -288,7 +318,7 @@ extension CreateGameViewController: UITableViewDataSource, UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         switch tableView {
-        case playerTableView:
+        case playersTableView:
             let cell :PlayerCell = tableView.dequeueReusableCell(withIdentifier: "playerCell", for: indexPath) as! PlayerCell
             cell.label_name.text = snapshot?.players[indexPath.row].name
             return cell
@@ -304,6 +334,8 @@ extension CreateGameViewController: UITableViewDataSource, UITableViewDelegate {
     
 }
 
+
+// delegate and dataSource of pickerSize
 extension CreateGameViewController: UIPickerViewDataSource, UIPickerViewDelegate {
     
     func numberOfComponents(in pickerView: UIPickerView) -> Int {

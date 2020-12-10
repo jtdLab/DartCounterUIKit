@@ -8,6 +8,8 @@
 import UIKit
 
 class PostGameViewController: UIViewController {
+    
+    var snapshot: GameSnapshot?
 
     @IBOutlet weak var navItem: UINavigationItem!
     @IBOutlet weak var label_winner: UILabel!
@@ -31,7 +33,9 @@ class PostGameViewController: UIViewController {
     private func initView() {
         navItem.hidesBackButton = true
         
-        label_winner.text = App.game!.getWinner()!.name + " gewinnt"
+        guard let snapshot = self.snapshot else { return }
+        
+        label_winner.text = "TODO winner name hier" + " gewinnt"
     }
     
 }

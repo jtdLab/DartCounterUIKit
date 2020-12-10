@@ -312,7 +312,7 @@
                                                     <constraint firstItem="rmm-5A-68v" firstAttribute="centerX" secondItem="rFH-a5-ZEK" secondAttribute="centerX" id="aKA-aW-tKx"/>
                                                 </constraints>
                                             </view>
-                                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="50" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="zfj-cV-ylV" userLabel="playerTable">
+                                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="50" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="zfj-cV-ylV" userLabel="playersTable">
                                                 <rect key="frame" x="0.0" y="205.5" width="414" height="50"/>
                                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                                 <constraints>
@@ -587,13 +587,12 @@
                         <outlet property="buttonStartGame" destination="Ak1-fr-SjF" id="tgp-Gc-neH"/>
                         <outlet property="dartBotContent" destination="wWr-He-x4M" id="f7X-jw-Hwk"/>
                         <outlet property="dartBotHeader" destination="XC8-le-MM7" id="tso-xE-s7h"/>
-                        <outlet property="dartBotView" destination="wWr-He-x4M" id="pj4-ak-Nwn"/>
                         <outlet property="labelDartbotAverage" destination="g9J-sL-bap" id="Aww-JU-s6x"/>
                         <outlet property="pickerSize" destination="mVe-0d-m65" id="Om3-eD-UnD"/>
-                        <outlet property="playerTableView" destination="zfj-cV-ylV" id="WxR-ab-aN5"/>
+                        <outlet property="playersTableView" destination="zfj-cV-ylV" id="Rkk-Bl-0QQ"/>
                         <outlet property="segmentedGameMode" destination="O3S-Ps-gNM" id="K9a-Gr-tmx"/>
                         <outlet property="segmentedGameType" destination="QQS-Fg-WQu" id="hjN-bV-tsB"/>
-                        <outlet property="segmentedStartingScore" destination="sqw-g9-yCj" id="qNA-Sa-QcT"/>
+                        <outlet property="segmentedStartingPoints" destination="sqw-g9-yCj" id="EcR-7A-ULd"/>
                         <outlet property="sliderDartbotAverage" destination="ZGV-cR-2pW" id="RaK-ah-4gP"/>
                         <outlet property="switchDartbot" destination="359-79-SQJ" id="zdp-WD-lc3"/>
                         <segue destination="4W9-fm-VOZ" kind="show" identifier="CreateGame_InGame" id="90u-yn-QdH"/>

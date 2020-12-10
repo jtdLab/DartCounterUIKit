@@ -57,6 +57,11 @@ class GameSnapshot: Codable  {
         return nil
     }
     
+    func getWinner() -> PlayerSnapshot? {
+        // TODO
+        return nil
+    }
+    
 }
 
 extension GameSnapshot: CustomStringConvertible {

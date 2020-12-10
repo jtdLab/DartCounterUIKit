@@ -101,7 +101,7 @@ class HomeViewController: UIViewController {
 
 }
 
-extension HomeViewController: PlayServiceDelegate {
+extension HomeViewController: PlayOnlineServiceDelegate {
     
     func onCreateGameResponse(createGameResponse: CreateGameResponsePacket) {
         createGameResponse.successful ? print("Created game") : print("Couldn't create game")
@@ -150,9 +150,9 @@ extension HomeViewController {
     }
     
     @objc func onOnline() {
-        PlayService.delegate = self
-        PlayService.connect {
-            PlayService.createGame();
+        PlayOnlineService.delegate = self
+        PlayOnlineService.connect {
+            PlayOnlineService.createGame();
         }
     }
     
@@ -162,9 +162,9 @@ extension HomeViewController {
     
     @objc func onSocialMedia() {
         // TODO
-        PlayService.delegate = self
-        PlayService.connect {
-            PlayService.joinGame(gameCode: 1000)
+        PlayOnlineService.delegate = self
+        PlayOnlineService.connect {
+            PlayOnlineService.joinGame(gameCode: 1000)
         }
     }
     

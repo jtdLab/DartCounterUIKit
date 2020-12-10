@@ -21,19 +21,46 @@ class InGameViewController: UIViewController {
     
     
     @IBAction func onExit(_ sender: UIBarButtonItem) {
-        onExit()
+        // go to HomeView
+        performSegue(withIdentifier: Segues.InGame_Home, sender: self)
     }
     
     @IBAction func onStats(_ sender: Any) {
-        onStats()
+        // go to StatsView
+        performSegue(withIdentifier: Segues.Ingame_Stats, sender: self)
     }
     
     @IBAction func onUndo(_ sender: UIButton) {
-       onUndo()
+        // undo throw
+        if online {
+            PlayOnlineService.undoThrow()
+        } else {
+            PlayOfflineService.undoThrow()
+        }
     }
     
     @IBAction func onPerform(_ sender: UIButton) {
-        onPerformThrow()
+        // check if snapshot of current game is available
+        guard let snapshot = self.snapshot else { return }
+        
+        let pointsLeft = snapshot.getCurrentTurn()!.pointsLeft!
+        let points = Int(label_pointsScored.text!)!
+        
+        // TODO rest of method
+        if ThrowValidator.isThreeDartFinish(points: pointsLeft) {
+            // TODO logic to show Details Screen
+            performSegue(withIdentifier: Segues.InGame_CheckoutDetails, sender: self)
+        } else {
+            // TODO rework playoffline performthrow
+            if online {
+                PlayOnlineService.performThrow(t: Throw(points: points, dartsOnDouble: 0, dartsThrown: 3))
+                // TODO
+            } else {
+                if PlayOfflineService.performThrow(t: Throw(points: points, dartsOnDouble: 0, dartsThrown: 3)) {
+                    refreshView()
+                }
+            }
+        }
     }
     
     @IBAction func onOne(_ sender: UIButton) {
@@ -73,7 +100,16 @@ class InGameViewController: UIViewController {
     }
     
     @IBAction func onCheck(_ sender: UIButton) {
-        onCheck()
+        // TODO whole method
+        if online {
+            // TODO
+        } else {
+            PlayOfflineService.performCheck(onSuccess: { pointsChecked in
+                self.label_pointsScored.text = String(pointsChecked)
+                // TODO logic to show Details Screen
+                self.performSegue(withIdentifier: Segues.InGame_CheckoutDetails, sender: self)
+            })
+        }
     }
     
     @IBAction func onZero(_ sender: UIButton) {
@@ -81,192 +117,143 @@ class InGameViewController: UIViewController {
     }
     
     @IBAction func onDelete(_ sender: UIButton) {
-        onDelete()
+        let currentPoints = label_pointsScored.text!
+        
+        // reset pointsScored to 0 if it contains only 1 digit
+        if currentPoints.count == 1 {
+            label_pointsScored.text = "0"
+            return
+        }
+    
+        // remove last digit from pointsScored
+        if currentPoints != "0" {
+            label_pointsScored.text = String(currentPoints.dropLast())
+        }
     }
 
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        initView()
-    }
-    
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == Segues.InGame_Home, let viewController = segue.destination as? HomeViewController {
-            // TODO
-        } else if segue.identifier == Segues.InGame_CheckoutDetails, let viewController = segue.destination as? CheckoutDetailsViewController {
-
-            viewController.delegate = self
-            viewController.pointsLeft = App.game!.getCurrentTurn().pointsLeft!
-            viewController.pointsScored = Int(label_pointsScored.text!)!
-        } else if segue.identifier == Segues.Ingame_Stats, let viewController = segue.destination as? StatsViewController {
-            // TODO
-        }
-    }
-
-    
-    private func initView() {
-        navItem.hidesBackButton = true
-        label_pointsScored.text = "0"
-        navItem.title = snapshot?.getDescription()
         
-        if !online {
-            navItem.title = App.game!.getDescription().uppercased()
-            switch App.game!.players.count {
-            case 1:
-                playerContainer = OnePlayerView()
-                playerView.addSubview(playerContainer!)
-                break
-            case 2:
-                playerContainer = TwoPlayerView()
-                playerView.addSubview(playerContainer!)
-                break
-            case 3:
-                playerContainer = ThreePlayerView()
-                playerView.addSubview(playerContainer!)
-                break
-            case 4:
-                playerContainer = FourPlayerView()
-                playerView.addSubview(playerContainer!)
-                break
-            default:
-                return
-            }
+        if online {
+            // subscribe to PlayOnlineService to receive events
+            PlayOnlineService.delegate = self
         } else {
-            PlayService.delegate = self
-            
-            switch snapshot!.players.count {
-            case 1:
-                playerContainer = OnePlayerView()
-                playerView.addSubview(playerContainer!)
-                break
-            case 2:
-                playerContainer = TwoPlayerView()
-                playerView.addSubview(playerContainer!)
-                break
-            case 3:
-                playerContainer = ThreePlayerView()
-                playerView.addSubview(playerContainer!)
-                break
-            case 4:
-                playerContainer = FourPlayerView()
-                playerView.addSubview(playerContainer!)
-                break
-            default:
-                return
-            }
+            // subscribe to PlayOfflineService to receive events
+            PlayOfflineService.delegate = self
+        }
+        
+        // dont show backButton
+        navItem.hidesBackButton = true
+        
+        // check if snapshot of current game is available
+        guard let snapshot = self.snapshot else { return }
+        
+        // init title with description
+        navItem.title = snapshot.getDescription().uppercased()
+        
+        switch snapshot.players.count {
+        case 1:
+            playerContainer = OnePlayerView()
+            playerView.addSubview(playerContainer!)
+            break
+        case 2:
+            playerContainer = TwoPlayerView()
+            playerView.addSubview(playerContainer!)
+            break
+        case 3:
+            playerContainer = ThreePlayerView()
+            playerView.addSubview(playerContainer!)
+            break
+        case 4:
+            playerContainer = FourPlayerView()
+            playerView.addSubview(playerContainer!)
+            break
+        default:
+            return
         }
         
         refreshView()
     }
-
-    private func refreshView() {
-        label_pointsScored.text = "0"
-        navItem.title = snapshot?.getDescription()
-        
-        if !online {
-            if App.game!.getWinner() != nil {
-                performSegue(withIdentifier: Segues.InGame_PostGame, sender: self)
-                return
-            }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        // before going to HomeView
+        if segue.identifier == Segues.InGame_Home, let destinationViewController  = segue.destination as? HomeViewController {
+            // TODO
+        }
+        // before going to CheckoutDetailsView
+        else if segue.identifier == Segues.InGame_CheckoutDetails, let destinationViewController  = segue.destination as? CheckoutDetailsViewController {
+            // init CheckoutDetailsViewController
+            destinationViewController.online = online
             
-            switch App.game!.players.count {
-            case 1:
-                (playerContainer as! OnePlayerView).refreshView(snapshot: self.snapshot!.players[0])
-                break
-            case 2:
-                (playerContainer as! TwoPlayerView).refreshView(snapshots: snapshot!.players)
-                break
-            case 3:
-                (playerContainer as! ThreePlayerView).refreshView(snapshots: snapshot!.players)
-                break
-            case 4:
-                (playerContainer as! FourPlayerView).refreshView(snapshots: snapshot!.players)
-                break
-            default:
-                return
-            }
-        } else {
-            if self.snapshot?.status == .FINISHED {
-                performSegue(withIdentifier: Segues.InGame_PostGame, sender: self)
-                return
-            }
-            
-            switch self.snapshot?.players.count {
-            case 2:
-                (playerContainer as! TwoPlayerView).refreshView(snapshots: snapshot!.players)
-                break
-            case 3:
-                (playerContainer as! ThreePlayerView).refreshView(snapshots: snapshot!.players)
-                break
-            case 4:
-                (playerContainer as! FourPlayerView).refreshView(snapshots: snapshot!.players)
-                break
-            default:
-                return
-            }
-        }
-    }
-    
-}
-
-
-// Contains UserEventHandling
-extension InGameViewController {
-    
-    func onExit() {
-        performSegue(withIdentifier: Segues.InGame_Home, sender: self)
-    }
-    
-    func onStats() {
-        performSegue(withIdentifier: Segues.Ingame_Stats, sender: self)
-    }
-    
-    func onUndo() {
-        /*
-        if App.game!.undoThrow() {
-            refreshView()
-        }
-        */
-    }
-    
-    func onPerformThrow() {
-        var pointsLeft: Int
-        var points: Int
-        
-        if online {
-            pointsLeft = snapshot!.getCurrentTurn()!.pointsLeft!
-            points = Int(label_pointsScored.text!)!
-        } else {
-            pointsLeft = App.game!.getCurrentTurn().pointsLeft!
-            points = Int(label_pointsScored.text!)!
-        }
-        
-        
-        if ThrowValidator.isThreeDartFinish(points: pointsLeft) {
-            // TODO logic to show Details Screen
-            performSegue(withIdentifier: Segues.InGame_CheckoutDetails, sender: self)
-        } else {
             if online {
-                PlayService.performThrow(t: Throw(points: points, dartsOnDouble: 0, dartsThrown: 3))
+                // TODO
             } else {
-                if App.game!.performThrow(t: Throw(points: points, dartsOnDouble: 0, dartsThrown: 3)) {
-                    refreshView()
-                }
+                // TODO
+                //destinationViewController.delegate = self
+                //destinationViewController.pointsLeft = 301 //App.game!.getCurrentTurn().pointsLeft!
+                //destinationViewController.pointsScored = Int(label_pointsScored.text!)!
             }
+        }
+        // before going to StatsView
+        else if segue.identifier == Segues.Ingame_Stats, let destinationViewController  = segue.destination as? StatsViewController {
+            // TODO
+        }
+        // before going to PostGameView
+        else if segue.identifier == Segues.InGame_PostGame, let destinationViewController  = segue.destination as? PostGameViewController {
+            // init PostGameViewController
+            // send winner to postgameview
+            //destinationViewController.snapshot = self.snapshot
+        }
+    }
+
+    func refreshView() {
+        // reset pointScored to 0
+        label_pointsScored.text = "0"
+        
+        // check if snapshot of current game is available
+        guard let snapshot = self.snapshot else { return }
+        
+        // if game is finished
+        if snapshot.status == .FINISHED {
+            performSegue(withIdentifier: Segues.InGame_PostGame, sender: self)
+            return
+        }
+        
+        // display players
+        switch snapshot.players.count {
+        // display one player
+        case 1:
+            (playerContainer as! OnePlayerView).refreshView(snapshot: snapshot.players[0])
+            break
+        // display two player
+        case 2:
+            (playerContainer as! TwoPlayerView).refreshView(snapshots: snapshot.players)
+            break
+        // display three player
+        case 3:
+            (playerContainer as! ThreePlayerView).refreshView(snapshots: snapshot.players)
+            break
+        // display four player
+        case 4:
+            (playerContainer as! FourPlayerView).refreshView(snapshots: snapshot.players)
+            break
+        default:
+            return
         }
     }
     
     func onDigit(digit: Int) {
-        var pointsLeft: Int
-        if online {
-            pointsLeft = snapshot!.getCurrentTurn()!.pointsLeft!
-        } else {
-            pointsLeft = App.game!.getCurrentTurn().pointsLeft!
-        }
-       
-        let currentPoints = label_pointsScored.text!
+        // check if snapshot of current game is available
+        guard let snapshot = self.snapshot else { return }
+        
+        // the points the current player has left
+        let pointsLeft = snapshot.getCurrentTurn()!.pointsLeft!
+        // the points the player wants to perform a throw with
+        let pointsScored = label_pointsScored.text!
     
-        if currentPoints == "0" {
+        // if pointsScord is 0 set pointsScored to digit
+        if pointsScored == "0" {
             switch digit {
                 case 1:
                     label_pointsScored.text = "1"
@@ -301,51 +288,41 @@ extension InGameViewController {
             }
         }
         
-        let nextPointsString = label_pointsScored.text! + String(digit)
-        let nextPoints = Int(nextPointsString)!
+        // temp var containing the number which pointsScored would contain if the digit would be appended
+        let nextPoints = Int(label_pointsScored.text! + String(digit))!
         
-        if nextPoints > 180 || ((pointsLeft - nextPoints) < 2 && pointsLeft != nextPoints) {
-            return
-        }
-        
-        label_pointsScored.text = nextPointsString
-    }
-    
-    func onCheck() {
-        let pointsLeft = App.game!.getCurrentTurn().pointsLeft!
-        if ThrowValidator.isThreeDartFinish(points: pointsLeft) {
-            label_pointsScored.text = String(pointsLeft)
-            // TODO logic to show Details Screen
-            performSegue(withIdentifier: Segues.InGame_CheckoutDetails, sender: self)
-        }
-    }
-    
-    func onDelete() {
-        let currentPoints = label_pointsScored.text!
-        
-        if currentPoints.count == 1 {
-            label_pointsScored.text = "0"
-            return
-        }
-    
-        if currentPoints != "0" {
-            label_pointsScored.text = String(currentPoints.dropLast())
+        // validate nextPoints if valid set pointsScored to nextPoints
+        if !(nextPoints > 180 || ((pointsLeft - nextPoints) < 2 && pointsLeft != nextPoints)) {
+            label_pointsScored.text = String(nextPoints)
         }
     }
     
 }
 
-extension InGameViewController: PlayServiceDelegate {
+
+// handle events from PlayOffline and PlayOnlineService
+extension InGameViewController: PlayOfflineServiceDelegate, PlayOnlineServiceDelegate {
     
-    func onSnapshot(snapshot: SnapshotPacket) {
-        self.snapshot = snapshot.snapshot
+    func onSnapshot(snapshot: GameSnapshot) {
+        print("Snapshot received")
+        
+        // set current snapshot to the received snapshot
+        self.snapshot = snapshot
+        
+        // if game is finished go to PostGameView
+        if snapshot.status == .FINISHED {
+            performSegue(withIdentifier: Segues.InGame_PostGame, sender: self)
+        }
+        
+        // refresh the ui
         refreshView()
     }
 }
 
-extension InGameViewController: DimissManager {
+extension InGameViewController: CheckoutDetailsDismissHandler {
     
-    func onDismiss() {
+    func handleDismiss() {
+        // refresh the ui
         refreshView()
     }
 

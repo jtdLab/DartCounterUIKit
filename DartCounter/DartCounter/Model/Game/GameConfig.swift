@@ -48,7 +48,7 @@ class GameConfig: Codable {
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(getModeAsString(), forKey: .mode)
-        try container.encode(getTypeAsString(), forKey: .type)
+        try container.encode(getTypeAsString(false), forKey: .type)
         try container.encode(size, forKey: .size)
         try container.encode(startingPoints, forKey: .startingPoints)
    }
@@ -62,16 +62,20 @@ class GameConfig: Codable {
         }
     }
     
-    func getTypeAsString() -> String {
+    func getTypeAsString(_ singular: Bool = true) -> String {
         switch type {
             case .LEGS:
-                if size == 1 {
-                    return "leg"
+                if singular {
+                    if size == 1 {
+                        return "leg"
+                    }
                 }
                 return "legs"
             case .SETS:
-                if size == 1 {
-                    return "set"
+                if singular {
+                    if size == 1 {
+                        return "set"
+                    }
                 }
                 return "sets"
         }

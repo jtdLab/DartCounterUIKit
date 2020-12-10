@@ -1,5 +1,5 @@
 //
-//  PlayService.swift
+//  PlayOnlineService.swift
 //  DartCounter
 //
 //  Created by Jonas Schlauch on 25.10.20.
@@ -8,7 +8,7 @@
 import Foundation
 import Starscream
 
-protocol PlayServiceDelegate {
+protocol PlayOnlineServiceDelegate {
     
     func onAuthResponse(authResponse: AuthResponsePacket)
     
@@ -20,7 +20,7 @@ protocol PlayServiceDelegate {
     
     func onGameStarted(gameStarted: GameStartedPacket)
     
-    func onSnapshot(snapshot: SnapshotPacket)
+    func onSnapshot(snapshot: GameSnapshot)
     
     func onPlayerExited(playerExited: PlayerExitedPacket)
     
@@ -28,7 +28,7 @@ protocol PlayServiceDelegate {
     
 }
 
-extension PlayServiceDelegate {
+extension PlayOnlineServiceDelegate {
     
     func onAuthResponse(authResponse: AuthResponsePacket) {}
     
@@ -40,7 +40,7 @@ extension PlayServiceDelegate {
     
     func onGameStarted(gameStarted: GameStartedPacket) {}
     
-    func onSnapshot(snapshot: SnapshotPacket) {}
+    func onSnapshot(snapshot: GameSnapshot) {}
     
     func onPlayerExited(playerExited: PlayerExitedPacket) {}
     
@@ -48,9 +48,9 @@ extension PlayServiceDelegate {
     
 }
 
-class PlayService {
+class PlayOnlineService {
     
-    static var delegate: PlayServiceDelegate?
+    static var delegate: PlayOnlineServiceDelegate?
     
     private static let host = "ws://localhost"
     private static let port = 9000
@@ -151,7 +151,7 @@ class PlayService {
         } else if(packet is GameStartedPacket) {
             delegate?.onGameStarted(gameStarted: packet as! GameStartedPacket)
         } else if(packet is SnapshotPacket) {
-            delegate?.onSnapshot(snapshot: packet as! SnapshotPacket)
+            delegate?.onSnapshot(snapshot: (packet as! SnapshotPacket).snapshot)
         } else if(packet is PlayerExitedPacket) {
             delegate?.onPlayerExited(playerExited: packet as! PlayerExitedPacket)
         } else if(packet is PlayerJoinedPacket) {
