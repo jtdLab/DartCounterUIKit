@@ -152,6 +152,7 @@ class InGameViewController: UIViewController {
         // init title with description
         navItem.title = snapshot.getDescription().uppercased()
         
+        // init player views
         switch snapshot.players.count {
         case 1:
             playerContainer = OnePlayerView()
