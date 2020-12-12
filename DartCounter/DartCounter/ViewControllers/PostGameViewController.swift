@@ -26,11 +26,8 @@ class PostGameViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        initView()
-    }
-    
-    
-    private func initView() {
+        
+        // dont show backButton
         navItem.hidesBackButton = true
         
         guard let snapshot = self.snapshot else { return }

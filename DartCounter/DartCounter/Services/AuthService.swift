@@ -13,13 +13,7 @@ import FirebaseAuth.FIRAuthErrors
 
 public class AuthService {
     
-    static let shared = AuthService()
-    
-    private init() {
-        
-    }
-    
-    func signUpUsernameAndPassword(username :String, password :String, onError: @escaping (NSError) -> Void) {
+    static func signUpUsernameAndPassword(username :String, password :String, onError: @escaping (NSError) -> Void) {
         Auth.auth().createUser(withEmail: username + "@username.com", password: password) { authResult, error in
             if error == nil {
                 guard let newUser = authResult?.user else { return }
@@ -32,7 +26,7 @@ public class AuthService {
         }
     }
     
-    func signInUsernameAndPassword(username :String, password :String, onError: @escaping (NSError) -> Void) {
+    static func signInUsernameAndPassword(username :String, password :String, onError: @escaping (NSError) -> Void) {
         Auth.auth().signIn(withEmail: username + "@username.com", password: password) { authResult, error in
             if error != nil {
                 onError(error! as NSError)
@@ -40,19 +34,19 @@ public class AuthService {
         }
     }
     
-    func signInFacebook(onError: @escaping (NSError) -> Void) {
+    static func signInFacebook(onError: @escaping (NSError) -> Void) {
         // TODO
     }
     
-    func signInGoogle(onError: @escaping (NSError) -> Void) {
+    static func signInGoogle(onError: @escaping (NSError) -> Void) {
         // TODO
     }
     
-    func signInInstagram(onError: @escaping (NSError) -> Void) {
+    static func signInInstagram(onError: @escaping (NSError) -> Void) {
         // TODO
     }
     
-    func signOut() {
+    static func signOut() {
         do {
           try Auth.auth().signOut()
         } catch let signOutError as NSError {

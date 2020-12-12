@@ -10,5 +10,6 @@ import Foundation
 public enum GameStatus: String {
     case PENDING
     case RUNNING
+    case CANCELLED
     case FINISHED
 }

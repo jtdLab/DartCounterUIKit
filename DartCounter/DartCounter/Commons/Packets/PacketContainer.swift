@@ -40,9 +40,9 @@ class PacketContainer : Codable {
         
         case authResponse
         case createGameResponse
+        case startGameResponse
         case joinGameResponse
         case gameCanceled
-        case gameStarted
         case snapshot
         case playerExited
         case playerJoined
@@ -68,7 +68,7 @@ class PacketContainer : Codable {
         } else if payload is UndoThrowPacket {
             payloadType = PayloadType.undoThrow.rawValue
         } else {
-            payloadType = "unknwon"
+            payloadType = "unknown"
         }
         
         self.payload = payload
@@ -88,8 +88,8 @@ class PacketContainer : Codable {
             self.payload = try container.decode(JoinGameResponsePacket.self, forKey: .payload)
         case PayloadType.gameCanceled.rawValue:
             self.payload = try container.decode(GameCanceledPacket.self, forKey: .payload)
-        case PayloadType.gameStarted.rawValue:
-            self.payload = try container.decode(GameStartedPacket.self, forKey: .payload)
+        case PayloadType.startGameResponse.rawValue:
+            self.payload = try container.decode(StartGameResponsePacket.self, forKey: .payload)
         case PayloadType.snapshot.rawValue:
             self.payload = try container.decode(SnapshotPacket.self, forKey: .payload)
         case PayloadType.playerExited.rawValue:

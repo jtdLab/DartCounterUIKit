@@ -1,13 +1,13 @@
 //
-//  JoinGameResponsePacket.swift
+//  StartGameResponsePacket.swift
 //  DartCounter
 //
-//  Created by Jonas Schlauch on 25.10.20.
+//  Created by Jonas Schlauch on 11.12.20.
 //
 
 import Foundation
 
-class JoinGameResponsePacket: Packet {
+class StartGameResponsePacket: Packet {
     
     var successful: Bool
     

@@ -10,6 +10,10 @@ import SideMenu
 
 class HomeViewController: UIViewController {
     
+    var sideMenu: SideMenuNavigationController?
+    
+    var snapshot: GameSnapshot?
+    
     @IBOutlet weak var navItem: UINavigationItem!
     @IBOutlet weak var btn_Profile: UIView!
     @IBOutlet weak var profilePictureImageView: UIImageView!
@@ -24,20 +28,20 @@ class HomeViewController: UIViewController {
     @IBOutlet weak var btn_SocialMedia: UIView!
     @IBOutlet weak var btn_Settings: UIView!
     
-    var sideMenu: SideMenuNavigationController?
     
     @IBAction func onSideMenu(_ sender: UIBarButtonItem) {
+        // show the sidemenu
         present(sideMenu!, animated: true)
     }
     
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        initView()
-    }
-    
-    
-    private func initView() {
+        
+        // set navbar title
+        self.navigationItem.title = "Home"
+        
+        // setup sidemenu
         let sideMenuController = SideMenuController()
         sideMenuController.delegate = self
         
@@ -48,6 +52,7 @@ class HomeViewController: UIViewController {
         SideMenuManager.default.leftMenuNavigationController = sideMenu
         SideMenuManager.default.addPanGestureToPresent(toView: self.view)
         
+        // add on click to buttons
         let profileTapGesture = UITapGestureRecognizer(target:self,action:#selector(self.onProfile))
         btn_Profile.addGestureRecognizer(profileTapGesture)
         
@@ -63,9 +68,11 @@ class HomeViewController: UIViewController {
         let settingsTapGesture = UITapGestureRecognizer(target:self,action:#selector(self.onSettings))
         btn_Settings.addGestureRecognizer(settingsTapGesture)
         
+        // rounded image in profileButton
         profilePictureImageView.layer.cornerRadius = profilePictureImageView.frame.height/2
         profilePictureImageView.clipsToBounds = true
         
+        // 
         UserService.observeUserProfile(completion: { userProfile in
             guard let profile = userProfile else { return }
             
@@ -90,118 +97,151 @@ class HomeViewController: UIViewController {
         })
     }
     
-    
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == Segues.Home_CreateGame_offline, let viewController = segue.destination as? CreateGameViewController {
-            viewController.online = false
-        } else if segue.identifier == Segues.Home_CreateGame_online, let viewController = segue.destination as? CreateGameViewController {
-            viewController.online = true
+        if segue.identifier == Segues.Home_CreateGame_offline, let destinationViewController = segue.destination as? CreateGameViewController {
+            // init CreateGameViewController
+            destinationViewController.online = false
+            destinationViewController.snapshot = self.snapshot
+        } else if segue.identifier == Segues.Home_CreateGame_online, let destinationViewController = segue.destination as? CreateGameViewController {
+            // init CreateGameViewController
+            destinationViewController.online = true
+            destinationViewController.snapshot = self.snapshot
         }
     }
-
+    
+    
+    @objc func onProfile() {
+        // go to ProfileView
+        self.performSegue(withIdentifier: Segues.Home_Profile, sender: self)
+    }
+    
+    @objc func onOnline() {
+        // subscribe to PlayOnlineService to receive events
+        PlayOnlineService.delegate = self
+        // try to connect to PlayOnlineService -> if successful PlayOnlineServiceDelegate onConnect will fire
+        PlayOnlineService.connect()
+    }
+    
+    @objc func onOffline() {
+        // subscribe to PlayOnlineService to receive events
+        PlayOfflineService.delegate = self
+        // try to create an offline game
+        PlayOfflineService.createGame()
+    }
+    
+    @objc func onSocialMedia() {
+        // TODO
+    }
+    
+    @objc func onSettings() {
+        // go to SettingsView
+        self.performSegue(withIdentifier: Segues.Home_Settings, sender: self)
+    }
+    
 }
 
+// handle events from PlayOfflineService
+extension HomeViewController: PlayOfflineServiceDelegate {
+    
+    func onSnapshot(snapshot: GameSnapshot) {
+        self.snapshot = snapshot
+        self.performSegue(withIdentifier: Segues.Home_CreateGame_offline, sender: self)
+    }
+    
+}
+
+
+// handle events from PlayOffline and PlayOnlineService
 extension HomeViewController: PlayOnlineServiceDelegate {
     
-    func onCreateGameResponse(createGameResponse: CreateGameResponsePacket) {
-        createGameResponse.successful ? print("Created game") : print("Couldn't create game")
-        if createGameResponse.successful {
-            self.performSegue(withIdentifier: Segues.Home_CreateGame_online, sender: self)
+    func onConnect(successful: Bool) {
+        successful ? print("Connected to PlayOnlineService") : print("Couldn't connect to PlayOnlineService")
+        if successful {
+            PlayOnlineService.createGame()
         }
     }
     
-    func onJoinGameResponse(joinGameResponse: JoinGameResponsePacket) {
-        joinGameResponse.successful ? print("Joined game") : print("Couldn't join game")
-        if joinGameResponse.successful {
+    func onCreateGameResponse(successful: Bool, snapshot: GameSnapshot) {
+        successful ? print("Created game") : print("Couldn't create game")
+        if successful {
+            self.snapshot = snapshot
             self.performSegue(withIdentifier: Segues.Home_CreateGame_online, sender: self)
         }
     }
     
 }
 
+
+// handle events from sidemenu
 extension HomeViewController: SideMenuControllerDelegate {
     
-    func onClick(index: Int) {
+    func onItemClicked(index: Int) {
+        // TODO
+        // close the sidemenu and perform action depending on the item clicked
         sideMenu?.dismiss(animated: false, completion: {
             if index == 0 {
+                // go to HomeView
                 self.performSegue(withIdentifier: Segues.Home_Profile, sender: self)
             } else if index == 1 {
+                // go to InvitationsView
                 self.performSegue(withIdentifier: Segues.Home_Invitations, sender: self)
             } else if index == 2 {
+                // go to FriendsView
                 self.performSegue(withIdentifier: Segues.Home_Friends, sender: self)
             } else if index == 3 {
+                // go to SettingsView
                 self.performSegue(withIdentifier: Segues.Home_Settings, sender: self)
             } else if index == 4 {
+                // go to AboutUsView
                 self.performSegue(withIdentifier: Segues.Home_AboutUs, sender: self)
             } else if index == 5 {
-                AuthService.shared.signOut()
+                // log out 
+                AuthService.signOut()
             }
         })
     }
     
 }
 
-
-// Contains UserEventHandling
-extension HomeViewController {
-    
-    @objc func onProfile() {
-        self.performSegue(withIdentifier: Segues.Home_Profile, sender: self)
-    }
-    
-    @objc func onOnline() {
-        PlayOnlineService.delegate = self
-        PlayOnlineService.connect {
-            PlayOnlineService.createGame();
-        }
-    }
-    
-    @objc func onOffline() {
-        self.performSegue(withIdentifier: Segues.Home_CreateGame_offline, sender: self)
-    }
-    
-    @objc func onSocialMedia() {
-        // TODO
-        PlayOnlineService.delegate = self
-        PlayOnlineService.connect {
-            PlayOnlineService.joinGame(gameCode: 1000)
-        }
-    }
-    
-    @objc func onSettings() {
-        self.performSegue(withIdentifier: Segues.Home_Settings, sender: self)
-    }
-    
-}
-
+// sidemenu delegate
 protocol SideMenuControllerDelegate {
     
-    func onClick(index: Int)
+    func onItemClicked(index: Int)
     
 }
 
+// the sidemenu is reperesentated by a customized tableview with one section (one section contains one header and n rows)
+// the header is a customized view representing the top part of sidemenu
+// one row represents one sidemenu item which is part of the bottom part of the sidemenu
 class SideMenuController: UITableViewController {
     
     var delegate: SideMenuControllerDelegate?
     
-    var items = [("user", "PROFIL"), ("invite", "EINLADUNGEN"), ("friends", "FREUNDE"), ("settings-1", "EINSTELLUNGEN"), ("info", "SONSTIGES"), ("logout", "AUSLOGGEN"),]
+    // sidemenu item content: tuples of (icon_asset_name, title)
+    var items = [("user", "PROFIL"), ("invite", "EINLADUNGEN"), ("friends", "FREUNDE"), ("settings-1", "EINSTELLUNGEN"), ("info", "SONSTIGES"), ("logout", "AUSLOGGEN")]
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        // register cells of sidemenu
         tableView.register(UINib(nibName: "SideMenuHeader", bundle: nil), forHeaderFooterViewReuseIdentifier: "SideMenuHeader")
         tableView.register(UINib(nibName: "SideMenuItemCell", bundle: nil), forCellReuseIdentifier: "SideMenuItemCell")
         
+        // set sidemenu background color to black
         tableView.backgroundColor = .black
-
+        
+        tableView.isScrollEnabled = false
     }
     
     override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        // specify height of header
         return 400
     }
 
     override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        // specify view of header
         let headerView = self.tableView.dequeueReusableHeaderFooterView(withIdentifier: "SideMenuHeader" ) as! SideMenuHeader
         
+        // set backround color of header to black
         var backgroundConfig = UIBackgroundConfiguration.listPlainHeaderFooter()
         backgroundConfig.backgroundColor = .black
         headerView.backgroundConfiguration = backgroundConfig
@@ -210,23 +250,29 @@ class SideMenuController: UITableViewController {
     }
     
     override func numberOfSections(in tableView: UITableView) -> Int {
+        // specify number of sections
         return 1
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        // specify number of sidemenu items
         return items.count
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        // specify view of sidemenu item
         let cell = tableView.dequeueReusableCell(withIdentifier: "SideMenuItemCell", for: indexPath) as! SideMenuItemCell
+        // set icon sidemenu item
         cell.iconImageView.image = UIImage(named: items[indexPath.row].0)
+        // set title of sidemenu item
         cell.titleLabel.text = items[indexPath.row].1
         
         return cell
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        delegate?.onClick(index: indexPath.row)
+        // call delegate if item gets selected/clicked
+        delegate?.onItemClicked(index: indexPath.row)
     }
 
 }

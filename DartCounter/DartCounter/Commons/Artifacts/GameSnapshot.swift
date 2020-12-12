@@ -66,9 +66,14 @@ class GameSnapshot: Codable  {
 
 extension GameSnapshot: CustomStringConvertible {
     public var description: String {
-        var statusString = "pending"
-        if status == .RUNNING {
+        var statusString: String
+        
+        if status == .PENDING {
             statusString = "running"
+        } else if status == .RUNNING {
+            statusString = "running"
+        } else if status == .CANCELLED {
+            statusString = "cancelled"
         } else {
             statusString = "finished"
         }

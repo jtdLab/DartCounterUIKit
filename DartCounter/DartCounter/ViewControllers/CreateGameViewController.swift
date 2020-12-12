@@ -48,7 +48,6 @@ class CreateGameViewController: UIViewController {
         } else {
             // try add player and display new player if successful
             if PlayOfflineService.addPlayer() {
-                playersTableView.constraints[0].constant += 50
                 playersTableView.reloadData()
             }
         }
@@ -71,11 +70,7 @@ class CreateGameViewController: UIViewController {
             let startingPoints = segmentedStartingPoints.selectedSegmentIndex == 0 ? 301 : segmentedStartingPoints.selectedSegmentIndex == 1 ? 501 : 701
             let config = GameConfig(mode: mode, type: type, size: size, startingPoints: startingPoints)
             PlayOfflineService.updateGameConfig(gameConfig: config )
-            
-            // try start game and go to InGameView if successful
-            if PlayOfflineService.startGame() {
-                self.performSegue(withIdentifier: Segues.CreateGame_InGame, sender: self)
-            }
+            PlayOfflineService.startGame()
         }
     }
 
@@ -86,16 +81,12 @@ class CreateGameViewController: UIViewController {
         if online {
             // subscribe to PlayOnlineService to receive events
             PlayOnlineService.delegate = self
-            // create an online game
-            PlayOnlineService.createGame()
             // hide dartbot picker because dartbot not available in an online game
             dartBotHeader.isHidden = true
             dartBotContent.isHidden = true
         } else {
             // subscribe to PlayOfflineService to receive events
             PlayOfflineService.delegate = self
-            // create an offline game
-            PlayOfflineService.createGame()
             // hide dartBotContent as default (user needs to use the switch in the dartBotHeader to show it)
             switchDartbot.isOn = false
             dartBotContent.isHidden = true
@@ -103,6 +94,10 @@ class CreateGameViewController: UIViewController {
         
         // default startingPoints to 501
         segmentedStartingPoints.selectedSegmentIndex = 1
+        
+        // default gameType to singular
+        segmentedGameType.setTitle("LEG", forSegmentAt: 0)
+        segmentedGameType.setTitle("SET", forSegmentAt: 1)
         
         // add dataSources and delegates of tables and pickers
         playersTableView.dataSource = self
@@ -180,6 +175,15 @@ class CreateGameViewController: UIViewController {
         // change size of current gameConfig
         gameConfig.size = size
         
+        // set segmented type titles to singular
+        if size == 1 {
+            segmentedGameType.setTitle("LEG", forSegmentAt: 0)
+            segmentedGameType.setTitle("SET", forSegmentAt: 1)
+        } else {
+            segmentedGameType.setTitle("LEGS", forSegmentAt: 0)
+            segmentedGameType.setTitle("SETS", forSegmentAt: 1)
+        }
+        
         // update the gameConfig of the current game
         if online {
             PlayOnlineService.updateGameConfig(gameConfig: gameConfig)
@@ -226,10 +230,6 @@ extension CreateGameViewController: PlayOfflineServiceDelegate, PlayOnlineServic
     
     func onGameCanceled(gameCanceled: GameCanceledPacket) {
         print("Game canceled")
-    }
-    
-    func onGameStarted(gameStarted: GameStartedPacket) {
-        print("Game started")
     }
     
     func onSnapshot(snapshot: GameSnapshot) {

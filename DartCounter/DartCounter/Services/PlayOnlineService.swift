@@ -10,41 +10,41 @@ import Starscream
 
 protocol PlayOnlineServiceDelegate {
     
-    func onAuthResponse(authResponse: AuthResponsePacket)
+    func onConnect(successful: Bool)
     
-    func onCreateGameResponse(createGameResponse: CreateGameResponsePacket)
+    func onCreateGameResponse(successful: Bool, snapshot: GameSnapshot)
     
-    func onJoinGameResponse(joinGameResponse: JoinGameResponsePacket)
+    func onJoinGameResponse(successful: Bool, snapshot: GameSnapshot)
     
-    func onGameCanceled(gameCanceled: GameCanceledPacket)
+    func onStartGameResponse(successful: Bool, snapshot: GameSnapshot)
     
-    func onGameStarted(gameStarted: GameStartedPacket)
+    func onGameCanceled()
     
     func onSnapshot(snapshot: GameSnapshot)
     
-    func onPlayerExited(playerExited: PlayerExitedPacket)
+    func onPlayerExited(username: String)
     
-    func onPlayerJoined(playerJoined: PlayerJoinedPacket)
+    func onPlayerJoined(username: String)
     
 }
 
 extension PlayOnlineServiceDelegate {
     
-    func onAuthResponse(authResponse: AuthResponsePacket) {}
+    func onConnect(successful: Bool) {}
     
-    func onCreateGameResponse(createGameResponse: CreateGameResponsePacket) {}
+    func onCreateGameResponse(successful: Bool, snapshot: GameSnapshot) {}
     
-    func onJoinGameResponse(joinGameResponse: JoinGameResponsePacket) {}
+    func onJoinGameResponse(successful: Bool, snapshot: GameSnapshot) {}
     
-    func onGameCanceled(gameCanceled: GameCanceledPacket) {}
+    func onStartGameResponse(successful: Bool, snapshot: GameSnapshot) {}
     
-    func onGameStarted(gameStarted: GameStartedPacket) {}
+    func onGameCanceled() {}
     
     func onSnapshot(snapshot: GameSnapshot) {}
     
-    func onPlayerExited(playerExited: PlayerExitedPacket) {}
+    func onPlayerExited(username: String) {}
     
-    func onPlayerJoined(playerJoined: PlayerJoinedPacket) {}
+    func onPlayerJoined(username: String) {}
     
 }
 
@@ -55,46 +55,53 @@ class PlayOnlineService {
     private static let host = "ws://localhost"
     private static let port = 9000
     
-    private static var connected = false
+    private static var isConnected = false
     
     private static let socket: WebSocket = {
         var request = URLRequest(url: URL(string: host + ":" + String(port))!)
         request.timeoutInterval = 5
         let ws = WebSocket(request: request)
-       
-        ws.onDisconnect = { (error: Error?) in
-            print("websocket is disconnected: \(String(describing: error?.localizedDescription))")
-            connected = false
-        }
-      
-        ws.onText = { (text: String) in
-            // add error handling make more robust
-            let packetContainer = try! JSONDecoder().decode(PacketContainer.self, from: text.data(using: .utf8)!)
-            onPacket(packet: packetContainer.payload!)
-        }
+        
+        ws.onEvent = { event in
+            
+            switch event {
+                case .connected(let headers):
+                    isConnected = true
+                    guard let uid = UserService.currentProfile?.uid else { return }
+                    guard let username = UserService.currentProfile?.username else { return }
+                    sendPacket(packet: AuthRequestPacket(uid: uid, username: username))
+                case .disconnected(let reason, let code):
+                    isConnected = false
+                    print("websocket is disconnected: \(reason) with code: \(code)")
+                case .text(let string):
+                    // TODO add error handling make more robust
+                    let packetContainer = try! JSONDecoder().decode(PacketContainer.self, from: string.data(using: .utf8)!)
+                    onPacket(packet: packetContainer.payload!)
+                case .binary(let data):
+                    break
+                case .ping(_):
+                    break
+                case .pong(_):
+                    break
+                case .viabilityChanged(_):
+                    break
+                case .reconnectSuggested(_):
+                    break
+                case .cancelled:
+                    isConnected = false
+                case .error(let error):
+                    isConnected = false
+                   // TODO handle error
+                }
+            }
         
         return ws
     }()
     
-    static func connect(completion: (() -> ())? = nil) {
-        if !connected {
-            socket.onConnect = {
-                guard let uid = UserService.currentProfile?.uid else { return }
-                guard let username = UserService.currentProfile?.username else { return }
-                
-                sendPacket(packet: AuthRequestPacket(uid: uid, username: username))
-                connected = true
-                
-                if let completion = completion {
-                    completion()
-                }
-            }
+    static func connect() {
+        if !isConnected {
             socket.connect()
         }
-    }
-    
-    static func cancelGame() {
-        sendPacket(packet: CancelGamePacket())
     }
     
     static func createGame() {
@@ -105,57 +112,62 @@ class PlayOnlineService {
         sendPacket(packet: UpdateGameConfigPacket(gameConfig: gameConfig))
     }
     
-    static func exitGame() {
-        sendPacket(packet: ExitGamePacket())
-    }
-    
     static func joinGame(gameCode: Int) {
         sendPacket(packet: JoinGamePacket(gameCode: gameCode))
-    }
-    
-    static func performThrow(t: Throw) {
-        sendPacket(packet: PerformThrowPacket(t: t))
     }
     
     static func startGame() {
         sendPacket(packet: StartGamePacket())
     }
     
+    static func performThrow(t: Throw) {
+        sendPacket(packet: PerformThrowPacket(t: t))
+    }
+    
     static func undoThrow() {
         sendPacket(packet: UndoThrowPacket())
     }
     
+    static func cancelGame() {
+        sendPacket(packet: CancelGamePacket())
+    }
+    
+    static func exitGame() {
+        sendPacket(packet: ExitGamePacket())
+    }
+    
     static func disconnect() {
-        if connected {
+        if isConnected {
             socket.disconnect()
         }
     }
 
-    
     private static func sendPacket(packet: Packet) {
         let jsonData = try! JSONEncoder().encode(PacketContainer(payload: packet))
         let json = String(data: jsonData, encoding: String.Encoding.utf8)!
-        print(json)
         socket.write(string: json)
     }
     
     private static func onPacket(packet: Packet) {
         if(packet is AuthResponsePacket) {
-            delegate?.onAuthResponse(authResponse: packet as! AuthResponsePacket)
+            delegate?.onConnect(successful: (packet as! AuthResponsePacket).successful)
         } else if(packet is CreateGameResponsePacket) {
-            delegate?.onCreateGameResponse(createGameResponse: packet as! CreateGameResponsePacket)
+            let packet = (packet as! CreateGameResponsePacket)
+            delegate?.onCreateGameResponse(successful: packet.successful, snapshot: packet.snapshot)
         } else if(packet is JoinGameResponsePacket) {
-            delegate?.onJoinGameResponse(joinGameResponse: packet as! JoinGameResponsePacket)
-        } else if(packet is GameCanceledPacket) {
-            delegate?.onGameCanceled(gameCanceled: packet as! GameCanceledPacket)
-        } else if(packet is GameStartedPacket) {
-            delegate?.onGameStarted(gameStarted: packet as! GameStartedPacket)
+            let packet = (packet as! JoinGameResponsePacket)
+            delegate?.onJoinGameResponse(successful: packet.successful, snapshot: packet.snapshot)
+        } else if(packet is StartGameResponsePacket) {
+            let packet = (packet as! StartGameResponsePacket)
+            delegate?.onStartGameResponse(successful: packet.successful, snapshot: packet.snapshot)
         } else if(packet is SnapshotPacket) {
             delegate?.onSnapshot(snapshot: (packet as! SnapshotPacket).snapshot)
+        } else if(packet is GameCanceledPacket) {
+            delegate?.onGameCanceled()
         } else if(packet is PlayerExitedPacket) {
-            delegate?.onPlayerExited(playerExited: packet as! PlayerExitedPacket)
+            delegate?.onPlayerExited(username: (packet as! PlayerExitedPacket).username)
         } else if(packet is PlayerJoinedPacket) {
-            delegate?.onPlayerJoined(playerJoined: packet as! PlayerJoinedPacket)
+            delegate?.onPlayerJoined(username: (packet as! PlayerJoinedPacket).username)
         }
     }
 }

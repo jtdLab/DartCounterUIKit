@@ -213,11 +213,12 @@
                     <navigationItem key="navigationItem" id="7P3-Ca-Gug"/>
                     <connections>
                         <outlet property="invitationdTableView" destination="PJu-eH-MBM" id="shR-Iz-dQd"/>
+                        <segue destination="dMP-t6-5S2" kind="show" identifier="Invitations_CreateGame" id="24O-8r-TuN"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="9Rs-A5-Vmj" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-2971" y="1921"/>
+            <point key="canvasLocation" x="-2890" y="1921"/>
         </scene>
         <!--CreateOfflineGameViewController-->
         <scene sceneID="fKZ-AK-3P4">
@@ -420,8 +421,8 @@
                                                     <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="QQS-Fg-WQu">
                                                         <rect key="frame" x="25" y="308" width="364" height="32"/>
                                                         <segments>
-                                                            <segment title="LEGS"/>
-                                                            <segment title="SETS"/>
+                                                            <segment title="LEG"/>
+                                                            <segment title="SET"/>
                                                         </segments>
                                                     </segmentedControl>
                                                 </subviews>
@@ -2220,9 +2221,8 @@ Media</string>
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="90u-yn-QdH"/>
         <segue reference="4db-I8-Led"/>
-        <segue reference="yCH-9i-6Ka"/>
+        <segue reference="ZAb-V4-Oah"/>
         <segue reference="2uY-Lj-iHe"/>
     </inferredMetricsTieBreakers>
     <resources>

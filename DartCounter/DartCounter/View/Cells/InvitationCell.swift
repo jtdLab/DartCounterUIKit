@@ -13,8 +13,20 @@ class InvitationCell: UITableViewCell {
     
     
     @IBAction func onAccept(_ sender: UIButton) {
+        PlayOnlineService.joinGame(gameCode: 1000)
     }
     
     @IBAction func onDecline(_ sender: UIButton) {
     }
+}
+extension InvitationCell: PlayOnlineServiceDelegate {
+    
+    func onJoinGameResponse(successful: Bool, snapshot: GameSnapshot) {
+        successful ? print("Joined game") : print("Couldn't join game")
+        if successful {
+            // go to IngameView
+            // TODO
+        }
+    }
+    
 }

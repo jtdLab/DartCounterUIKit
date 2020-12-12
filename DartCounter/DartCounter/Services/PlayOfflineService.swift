@@ -89,16 +89,13 @@ class PlayOfflineService {
         
     }
     
-    static func startGame() -> Bool {
-        guard let game = game else { return false }
+    static func startGame() {
+        guard let game = game else { return }
         
-        let successful = game.start()
-        
-        if successful {
+        if game.start() {
             delegate?.onSnapshot(snapshot: game.getSnapshot())
         }
         
-        return successful
     }
     
     static func undoThrow() {

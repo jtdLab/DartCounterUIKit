@@ -17,8 +17,8 @@ class SignInViewController: UIViewController {
     
     
     @IBAction func onSignInUsernameAndPassword(_ sender: UIButton) {
-        if(validate()) {
-            AuthService.shared.signInUsernameAndPassword(
+        if(validateTextfields()) {
+            AuthService.signInUsernameAndPassword(
                 username: textField_username.text!,
                 password: textField_password.text!,
                 onError: onSignInUsernameAndPasswordError(error:)
@@ -27,15 +27,15 @@ class SignInViewController: UIViewController {
     }
     
     @IBAction func onSignInFacebook(_ sender: UIButton) {
-        AuthService.shared.signInFacebook(onError: onSignInFacebookError(error:))
+        AuthService.signInFacebook(onError: onSignInFacebookError(error:))
     }
     
     @IBAction func onSignInGoogle(_ sender: UIButton) {
-        AuthService.shared.signInGoogle(onError: onSignInGoogleError(error:))
+        AuthService.signInGoogle(onError: onSignInGoogleError(error:))
     }
     
     @IBAction func onSignInInstagram(_ sender: UIButton) {
-        AuthService.shared.signInInstagram(onError: onSignInInstagramError(error:))
+        AuthService.signInInstagram(onError: onSignInInstagramError(error:))
     }
     
     @IBAction func onGotoSignUp(_ sender: UIButton) {
@@ -45,44 +45,20 @@ class SignInViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        initView()
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
+       
+        // hide navbar
         self.navigationController?.isNavigationBarHidden = true
-    }
-    
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        self.navigationController?.isNavigationBarHidden = false
-    }
-    
-    
-    private func initView() {
+        
+        // hide keyboard if touched screen somewhere outside of keyboard area
         self.hideKeyboardWhenTappedAround()
     
+        // subscribe to textfields to receive events
         self.textField_username.delegate = self
         self.textField_password.delegate = self
     }
-
-}
-
-extension SignInViewController: UITextFieldDelegate {
     
-    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        switch textField {
-        case textField_username:
-            textField_password.becomeFirstResponder()
-            break
-        default:
-            textField_password.resignFirstResponder()
-        }
-        
-        return true
-    }
-    
-    func validate() -> Bool {
+    // TODO refactor
+    func validateTextfields() -> Bool {
         if textField_username.text == nil || textField_password.text == nil {
             return false
         }
@@ -91,10 +67,31 @@ extension SignInViewController: UITextFieldDelegate {
         
         return true
     }
+
+}
+
+
+// handle events from textfields
+extension SignInViewController: UITextFieldDelegate {
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        switch textField {
+        // if username textfield is focused and return gets pressed focus password textfield
+        case textField_username:
+            textField_password.becomeFirstResponder()
+            break
+        // if password textfield is focused and return gets pressed hide keyboard and unfocus password textfield
+        default:
+            textField_password.resignFirstResponder()
+        }
+
+        return true
+    }
     
 }
 
-// Extension for error handling after trying to contact the Firebase API
+// TODO refactor
+// extension for error handling after trying to contact the Firebase API
 extension SignInViewController {
     
     func onSignInUsernameAndPasswordError(error: NSError) {

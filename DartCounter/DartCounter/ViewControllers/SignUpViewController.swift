@@ -18,8 +18,8 @@ class SignUpViewController: UIViewController {
     
     @IBAction func onSignUp(_ sender: UIButton) {
         label_error.isHidden = true
-        if(validate()) {
-            AuthService.shared.signUpUsernameAndPassword(
+        if(validateTextfields()) {
+            AuthService.signUpUsernameAndPassword(
                 username: textField_username.text!,
                 password: textField_password.text!,
                 onError: onSignUpError(error:)
@@ -37,47 +37,21 @@ class SignUpViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        initView()
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
+        
+        // hide navbar
         self.navigationController?.isNavigationBarHidden = true
-    }
-    
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        self.navigationController?.isNavigationBarHidden = false
-    }
-
-    
-    private func initView() {
+        
+        // hide keyboard if touched screen somewhere outside of keyboard area
         self.hideKeyboardWhenTappedAround()
         
+        // subscribe to textfields to receive events
         self.textField_username.delegate = self
         self.textField_password.delegate = self
         self.textField_passwordAgain.delegate = self
-
     }
     
-}
-
-extension SignUpViewController: UITextFieldDelegate {
-    
-    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        switch textField {
-        case textField_username:
-            textField_password.becomeFirstResponder()
-        case textField_password:
-            textField_passwordAgain.becomeFirstResponder()
-        default:
-            textField_passwordAgain.resignFirstResponder()
-        }
-        
-        return true
-    }
-    
-    func validate() -> Bool {
+    // TODO refactor
+    func validateTextfields() -> Bool {
         if textField_username.text == nil || textField_password.text == nil || textField_passwordAgain.text == nil {
             return false
         }
@@ -86,7 +60,6 @@ extension SignUpViewController: UITextFieldDelegate {
             label_error.isHidden = false
             label_error.text = "Passwords do not match"
             return false
-            
         }
         
         // TODO
@@ -96,7 +69,30 @@ extension SignUpViewController: UITextFieldDelegate {
     
 }
 
-// Extension for error handling after trying to contact the Firebase API
+
+// handle events from textfields
+extension SignUpViewController: UITextFieldDelegate {
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        switch textField {
+        // if username textfield is focused and return gets pressed focus password textfield
+        case textField_username:
+            textField_password.becomeFirstResponder()
+        // if username password is focused and return gets pressed focus passwordAgain textfield
+        case textField_password:
+            textField_passwordAgain.becomeFirstResponder()
+        // if passwordAgain textfield is focused and return gets pressed hide keyboard and unfocus passwordAgain textfield
+        default:
+            textField_passwordAgain.resignFirstResponder()
+        }
+        
+        return true
+    }
+    
+}
+
+// TODO refactor
+// extension for error handling after trying to contact the Firebase API
 extension SignUpViewController {
     
     func onSignUpError(error: NSError) {
@@ -118,7 +114,7 @@ extension SignUpViewController {
             default:
                 print(error.code)
          }
-         
+        
     }
     
 }
