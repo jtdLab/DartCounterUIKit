@@ -18,6 +18,9 @@ class FriendsViewController: UIViewController {
     }
     
     private func initView() {
+        // register FriendCell to FriendsTable
+        friendsTableView.register(UINib(nibName: "FriendCell", bundle: nil), forCellReuseIdentifier: "FriendCell")
+        
         friendsTableView.dataSource = self
         friendsTableView.delegate = self
         friendsTableView.isScrollEnabled = false
@@ -34,7 +37,7 @@ extension FriendsViewController: UITableViewDataSource, UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "FriendCell", for: indexPath) as! FriendCell
-        cell.nameLabel.text = items[indexPath.row]
+        cell.label_name.text = items[indexPath.row]
         return cell
     }
 }

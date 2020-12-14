@@ -11,22 +11,14 @@ import SideMenu
 class HomeViewController: UIViewController {
     
     var sideMenu: SideMenuNavigationController?
-    
     var snapshot: GameSnapshot?
     
     @IBOutlet weak var navItem: UINavigationItem!
-    @IBOutlet weak var btn_Profile: UIView!
-    @IBOutlet weak var profilePictureImageView: UIImageView!
-    @IBOutlet weak var usernameLabel: UILabel!
-    @IBOutlet weak var averageLabel: UILabel!
-    @IBOutlet weak var checkoutLabel: UILabel!
-    @IBOutlet weak var winsLabel: UILabel!
-    @IBOutlet weak var defeatsLabel: UILabel!
-    
-    @IBOutlet weak var btn_Online: UIView!
-    @IBOutlet weak var btn_Offline: UIView!
-    @IBOutlet weak var btn_SocialMedia: UIView!
-    @IBOutlet weak var btn_Settings: UIView!
+    @IBOutlet weak var profileButton: ProfileButton!
+    @IBOutlet weak var playOfflineButton: PlayOfflineButton!
+    @IBOutlet weak var socialMediaButton: SocialMediaButton!
+    @IBOutlet weak var settingsButton: SettingsButton!
+    @IBOutlet weak var playOnlineButton: PlayOnlineButton!
     
     
     @IBAction func onSideMenu(_ sender: UIBarButtonItem) {
@@ -54,46 +46,48 @@ class HomeViewController: UIViewController {
         
         // add on click to buttons
         let profileTapGesture = UITapGestureRecognizer(target:self,action:#selector(self.onProfile))
-        btn_Profile.addGestureRecognizer(profileTapGesture)
+        profileButton.addGestureRecognizer(profileTapGesture)
         
-        let onlineTapGesture = UITapGestureRecognizer(target:self,action:#selector(self.onOnline))
-        btn_Online.addGestureRecognizer(onlineTapGesture)
+        let offlineTapGesture = UITapGestureRecognizer(target:self,action:#selector(self.onPlayOffline))
+        playOfflineButton.addGestureRecognizer(offlineTapGesture)
         
-        let offlineTapGesture = UITapGestureRecognizer(target:self,action:#selector(self.onOffline))
-        btn_Offline.addGestureRecognizer(offlineTapGesture)
+        let onlineTapGesture = UITapGestureRecognizer(target:self,action:#selector(self.onPlayOnline))
+        playOnlineButton.addGestureRecognizer(onlineTapGesture)
         
         let socialMediaTapGesture = UITapGestureRecognizer(target:self,action:#selector(self.onSocialMedia))
-        btn_SocialMedia.addGestureRecognizer(socialMediaTapGesture)
+        socialMediaButton.addGestureRecognizer(socialMediaTapGesture)
         
         let settingsTapGesture = UITapGestureRecognizer(target:self,action:#selector(self.onSettings))
-        btn_Settings.addGestureRecognizer(settingsTapGesture)
+        settingsButton.addGestureRecognizer(settingsTapGesture)
         
-        // rounded image in profileButton
-        profilePictureImageView.layer.cornerRadius = profilePictureImageView.frame.height/2
-        profilePictureImageView.clipsToBounds = true
+      
         
-        // 
+        // observe changes of user profile
         UserService.observeUserProfile(completion: { userProfile in
             guard let profile = userProfile else { return }
             
-            self.usernameLabel.text = profile.username
+            // display username in profileButton
+            self.profileButton.setName(name: profile.username)
            
             if let photURL = profile.photoURL {
                 UserService.getProfilePicture(withURL: photURL, completion: { profileImage in
-                     self.profilePictureImageView.image = profileImage
+                    // display profilePicture in profileButton
+                    self.profileButton.setProfilePicture(image: profileImage)
                  })
             } else {
-                self.profilePictureImageView.image = UIImage(named: "profile")
+                // display a placeholder if no profilePicture available
+                self.profileButton.setProfilePicture(image: UIImage(named: "profile"))
             }
         })
         
+        // observe changes of career stats
         UserService.observeCareerStats(completion: { careerStatsObject in
             guard let stats = careerStatsObject else { return }
-            
-            self.averageLabel.text = String(stats.average)
-            self.checkoutLabel.text = String(stats.checkoutPerentage)
-            self.winsLabel.text = String(stats.wins)
-            self.defeatsLabel.text = String(stats.defeats)
+            // display career stats in profileButton
+            self.profileButton.setAverage(average: stats.average)
+            self.profileButton.setCheckout(checkout: stats.checkoutPerentage)
+            self.profileButton.setWins(wins: stats.wins)
+            self.profileButton.setDefeats(defeats: stats.defeats)
         })
     }
     
@@ -115,18 +109,18 @@ class HomeViewController: UIViewController {
         self.performSegue(withIdentifier: Segues.Home_Profile, sender: self)
     }
     
-    @objc func onOnline() {
-        // subscribe to PlayOnlineService to receive events
-        PlayOnlineService.delegate = self
-        // try to connect to PlayOnlineService -> if successful PlayOnlineServiceDelegate onConnect will fire
-        PlayOnlineService.connect()
-    }
-    
-    @objc func onOffline() {
+    @objc func onPlayOffline() {
         // subscribe to PlayOnlineService to receive events
         PlayOfflineService.delegate = self
         // try to create an offline game
         PlayOfflineService.createGame()
+    }
+    
+    @objc func onPlayOnline() {
+        // subscribe to PlayOnlineService to receive events
+        PlayOnlineService.delegate = self
+        // try to connect to PlayOnlineService -> if successful PlayOnlineServiceDelegate onConnect will fire
+        PlayOnlineService.connect()
     }
     
     @objc func onSocialMedia() {
@@ -263,9 +257,9 @@ class SideMenuController: UITableViewController {
         // specify view of sidemenu item
         let cell = tableView.dequeueReusableCell(withIdentifier: "SideMenuItemCell", for: indexPath) as! SideMenuItemCell
         // set icon sidemenu item
-        cell.iconImageView.image = UIImage(named: items[indexPath.row].0)
+        cell.imageView_icon.image = UIImage(named: items[indexPath.row].0)
         // set title of sidemenu item
-        cell.titleLabel.text = items[indexPath.row].1
+        cell.label_title.text = items[indexPath.row].1
         
         return cell
     }

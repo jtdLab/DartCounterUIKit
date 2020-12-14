@@ -7,7 +7,7 @@
 
 import UIKit
 
-class TwoPlayerView: UIView {
+class TwoPlayerView: UIView, NibLoadable {
     
     @IBOutlet weak var label_player1_name: UILabel!
     @IBOutlet weak var label_player1_sets: UILabel!
@@ -30,17 +30,12 @@ class TwoPlayerView: UIView {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        self.initView()
+        setupFromNib()
     }
     
     required init?(coder: NSCoder) {
         super.init(coder: coder)
-        self.initView()
-    }
-    
-    private func initView() {
-        guard let view = self.loadViewFromNib(nibName: "TwoPlayerView") else { return }
-        self.addSubview(view)
+        setupFromNib()
     }
     
     func refreshView(snapshots: [PlayerSnapshot]) {

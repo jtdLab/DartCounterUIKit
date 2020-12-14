@@ -9,7 +9,7 @@ import UIKit
 
 class CareerCell: UITableViewCell {
     
-    @IBOutlet weak var keyLabel: UILabel!
-    @IBOutlet weak var valueLabel: UILabel!
+    @IBOutlet weak var label_key: UILabel!
+    @IBOutlet weak var label_value: UILabel!
     
 }

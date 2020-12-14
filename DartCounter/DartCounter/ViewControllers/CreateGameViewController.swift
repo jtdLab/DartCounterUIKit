@@ -92,6 +92,13 @@ class CreateGameViewController: UIViewController {
             dartBotContent.isHidden = true
         }
         
+        // register PlayerCell to PlayersTable
+        playersTableView.register(UINib(nibName: "PlayerCell", bundle: nil), forCellReuseIdentifier: "PlayerCell")
+        
+        // register AdvancedSettingsCell to AdvancedSettingsTable
+        advancedSettingsTableView.register(UINib(nibName: "AdvancedSettingsCell", bundle: nil), forCellReuseIdentifier: "AdvancedSettingsCell")
+        
+
         // default startingPoints to 501
         segmentedStartingPoints.selectedSegmentIndex = 1
         
@@ -319,13 +326,13 @@ extension CreateGameViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         switch tableView {
         case playersTableView:
-            let cell :PlayerCell = tableView.dequeueReusableCell(withIdentifier: "playerCell", for: indexPath) as! PlayerCell
+            let cell :PlayerCell = tableView.dequeueReusableCell(withIdentifier: "PlayerCell", for: indexPath) as! PlayerCell
             cell.label_name.text = snapshot?.players[indexPath.row].name
             return cell
         case advancedSettingsTableView:
             let property = advancedSettingsData[indexPath.row]
-            let cell = tableView.dequeueReusableCell(withIdentifier: "advancedSettingsCell", for: indexPath) as! AdvancedSettingsCell
-            cell.propertyLabel.text = property
+            let cell = tableView.dequeueReusableCell(withIdentifier: "AdvancedSettingsCell", for: indexPath) as! AdvancedSettingsCell
+            cell.label_property.text = property
             return cell
         default:
             return UITableViewCell()

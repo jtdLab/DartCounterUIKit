@@ -7,9 +7,9 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
-        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="SideMenuItemCell" customModule="DartCounter" customModuleProvider="target"/>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
-        <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="KGk-i7-Jjw" customClass="SideMenuItemCell" customModule="DartCounter" customModuleProvider="target">
+        <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="SideMenuItemCell" id="KGk-i7-Jjw" customClass="SideMenuItemCell" customModule="DartCounter" customModuleProvider="target">
             <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="KGk-i7-Jjw" id="H2p-sc-9uM">
@@ -40,8 +40,8 @@
             </tableViewCellContentView>
             <viewLayoutGuide key="safeArea" id="njF-e1-oar"/>
             <connections>
-                <outlet property="iconImageView" destination="SNz-DR-fSu" id="lFR-W4-Ydm"/>
-                <outlet property="titleLabel" destination="pyH-aw-f2V" id="2Rh-kG-t2k"/>
+                <outlet property="imageView_icon" destination="SNz-DR-fSu" id="iP5-tJ-Tqm"/>
+                <outlet property="label_title" destination="pyH-aw-f2V" id="JZ0-fO-ZHA"/>
             </connections>
             <point key="canvasLocation" x="-197.10144927536234" y="69.642857142857139"/>
         </tableViewCell>

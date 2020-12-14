@@ -7,7 +7,7 @@
 
 import UIKit
 
-class OnePlayerView: UIView {
+class OnePlayerView: UIView, NibLoadable {
     
     @IBOutlet weak var label_name: UILabel!
     @IBOutlet weak var label_sets: UILabel!
@@ -20,18 +20,14 @@ class OnePlayerView: UIView {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        self.initView()
+        setupFromNib()
     }
     
     required init?(coder: NSCoder) {
         super.init(coder: coder)
-        self.initView()
+        setupFromNib()
     }
     
-    private func initView() {
-        guard let view = self.loadViewFromNib(nibName: "OnePlayerView") else { return }
-        self.addSubview(view)
-    }
     
     func refreshView(snapshot: PlayerSnapshot) {
         let player = snapshot

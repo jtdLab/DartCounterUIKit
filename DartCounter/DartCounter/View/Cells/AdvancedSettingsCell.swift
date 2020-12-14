@@ -2,25 +2,14 @@
 //  AdvancedSettingsCell.swift
 //  DartCounter
 //
-//  Created by Jonas Schlauch on 25.10.20.
+//  Created by Jonas Schlauch on 13.12.20.
 //
 
 import UIKit
 
 class AdvancedSettingsCell: UITableViewCell {
 
-    @IBOutlet weak var propertyLabel: UILabel!
-    @IBOutlet weak var `switch`: UISwitch!
+    @IBOutlet weak var label_property: UILabel!
+    @IBOutlet weak var switch_isActivated: UISwitch!
     
-    
-    override func awakeFromNib() {
-        super.awakeFromNib()
-        // Initialization code
-    }
-
-    override func setSelected(_ selected: Bool, animated: Bool) {
-        super.setSelected(selected, animated: animated)
-
-        // Configure the view for the selected state
-    }
 }

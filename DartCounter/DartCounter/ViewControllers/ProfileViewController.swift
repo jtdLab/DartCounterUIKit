@@ -30,6 +30,10 @@ class ProfileViewController: UIViewController {
     }
     
     private func initView() {
+
+        // register PlayerCell to PlayerTable
+        careerStatsTableView.register(UINib(nibName: "CareerCell", bundle: nil), forCellReuseIdentifier: "CareerCell")
+        
         careerStatsTableView.dataSource = self
         careerStatsTableView.delegate = self
         careerStatsTableView.isScrollEnabled = false
@@ -83,32 +87,32 @@ extension ProfileViewController: UITableViewDataSource, UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "CareerCell", for: indexPath) as! CareerCell
-        cell.keyLabel.text = items[indexPath.row]
+        cell.label_key.text = items[indexPath.row]
         
         let index = indexPath.row
         if let stats = self.careerStats {
             if index == 0 {
-                cell.valueLabel.text = String(stats.average)
+                cell.label_value.text = String(stats.average)
             } else if index == 1 {
-                cell.valueLabel.text = String(stats.firstNine)
+                cell.label_value.text = String(stats.firstNine)
             } else if index == 2 {
-                cell.valueLabel.text = String(stats.checkoutPerentage)
+                cell.label_value.text = String(stats.checkoutPerentage)
             } else if index == 3 {
-                cell.valueLabel.text = String(stats.wins)
+                cell.label_value.text = String(stats.wins)
             } else if index == 4 {
-                cell.valueLabel.text = String(stats.defeats)
+                cell.label_value.text = String(stats.defeats)
             }
         } else {
             if index == 0 {
-                cell.valueLabel.text = "0.00"
+                cell.label_value.text = "0.00"
             } else if index == 1 {
-                cell.valueLabel.text = "0.00"
+                cell.label_value.text = "0.00"
             } else if index == 2 {
-                cell.valueLabel.text = "0.00"
+                cell.label_value.text = "0.00"
             } else if index == 3 {
-                cell.valueLabel.text = "0"
+                cell.label_value.text = "0"
             } else if index == 4 {
-                cell.valueLabel.text = "0"
+                cell.label_value.text = "0"
             }
         }
         

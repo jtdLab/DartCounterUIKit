@@ -7,7 +7,7 @@
 
 import UIKit
 
-class FourPlayerView: UIView {
+class FourPlayerView: UIView, NibLoadable {
     
     @IBOutlet weak var label_player1_name: UILabel!
     @IBOutlet weak var label_player1_sets: UILabel!
@@ -48,18 +48,14 @@ class FourPlayerView: UIView {
 
     override init(frame: CGRect) {
         super.init(frame: frame)
-        self.initView()
+        setupFromNib()
     }
     
     required init?(coder: NSCoder) {
         super.init(coder: coder)
-        self.initView()
+        setupFromNib()
     }
     
-    private func initView() {
-        guard let view = self.loadViewFromNib(nibName: "FourPlayerView") else { return }
-        self.addSubview(view)
-    }
     
     func refreshView(snapshots: [PlayerSnapshot]) {
         let player1 = snapshots[0]

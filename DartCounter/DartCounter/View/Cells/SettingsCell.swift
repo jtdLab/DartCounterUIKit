@@ -9,6 +9,8 @@ import UIKit
 
 class SettingsCell: UITableViewCell {
 
-    @IBOutlet weak var titleLable: UILabel!
+    
+    @IBOutlet weak var label_title: UILabel!
+    @IBOutlet weak var imageView_icon: UIImageView!
     
 }

@@ -9,8 +9,11 @@ import UIKit
 
 class FriendCell: UITableViewCell {
 
-    @IBOutlet weak var profileIconImageView: UIImageView!
-    @IBOutlet weak var nameLabel: UILabel!
-    @IBAction func onMore(_ sender: UIButton) {
-    }
+    @IBOutlet weak var imageView_profileIcon: UIImageView!
+    @IBOutlet weak var label_name: UILabel!
+   
+    /**
+     @IBAction func onMore(_ sender: UIButton) {
+     }
+     */
 }

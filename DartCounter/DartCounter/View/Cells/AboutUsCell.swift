@@ -8,7 +8,7 @@
 import UIKit
 
 class AboutUsCell: UITableViewCell {
-
-    @IBOutlet weak var titleLabel: UILabel!
+    
+    @IBOutlet weak var label_title: UILabel!
     
 }

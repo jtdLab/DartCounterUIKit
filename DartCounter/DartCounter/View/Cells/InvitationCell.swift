@@ -9,16 +9,22 @@ import UIKit
 
 class InvitationCell: UITableViewCell {
 
-    @IBOutlet weak var nameLabel: UILabel!
+    @IBOutlet weak var label_name: UILabel!
     
     
-    @IBAction func onAccept(_ sender: UIButton) {
-        PlayOnlineService.joinGame(gameCode: 1000)
-    }
+    /**
+     @IBAction func onAccept(_ sender: UIButton) {
+         PlayOnlineService.joinGame(gameCode: 1000)
+     }
+     
+     @IBAction func onDecline(_ sender: UIButton) {
+         
+     }
+     */
     
-    @IBAction func onDecline(_ sender: UIButton) {
-    }
 }
+
+
 extension InvitationCell: PlayOnlineServiceDelegate {
     
     func onJoinGameResponse(successful: Bool, snapshot: GameSnapshot) {

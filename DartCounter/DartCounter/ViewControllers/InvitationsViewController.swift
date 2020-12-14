@@ -9,7 +9,8 @@ import UIKit
 
 class InvitationsViewController: UIViewController {
 
-    @IBOutlet weak var invitationdTableView: UITableView!
+    @IBOutlet weak var invitationsTableView: UITableView!
+    
     var items = ["ONLINE SPIELER 1", "ONLINE SPIELER 2"]
 
     override func viewDidLoad() {
@@ -18,9 +19,12 @@ class InvitationsViewController: UIViewController {
     }
     
     private func initView() {
-        invitationdTableView.dataSource = self
-        invitationdTableView.delegate = self
-        invitationdTableView.isScrollEnabled = false
+        // register InvitationCell to InvitationsTable
+        invitationsTableView.register(UINib(nibName: "InvitationCell", bundle: nil), forCellReuseIdentifier: "InvitationCell")
+        
+        invitationsTableView.dataSource = self
+        invitationsTableView.delegate = self
+        invitationsTableView.isScrollEnabled = false
     }
 
 }
@@ -33,7 +37,7 @@ extension InvitationsViewController: UITableViewDataSource, UITableViewDelegate 
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "InvitationCell", for: indexPath) as! InvitationCell
-        cell.nameLabel.text = items[indexPath.row]
+        cell.label_name.text = items[indexPath.row]
         return cell
     }
 }
