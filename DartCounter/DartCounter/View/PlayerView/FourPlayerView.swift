@@ -57,11 +57,11 @@ class FourPlayerView: UIView, NibLoadable {
     }
     
     
-    func refreshView(snapshots: [PlayerSnapshot]) {
-        let player1 = snapshots[0]
-        let player2 = snapshots[1]
-        let player3 = snapshots[2]
-        let player4 = snapshots[3]
+    func refresh(players: [PlayerSnapshot]) {
+        let player1 = players[0]
+        let player2 = players[1]
+        let player3 = players[2]
+        let player4 = players[3]
         
         if player1.isNext! {
             // TODO

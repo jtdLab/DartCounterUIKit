@@ -443,7 +443,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="842"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="b27-n6-9hh" userLabel="players">
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="b27-n6-9hh" userLabel="players" customClass="PlayerView" customModule="DartCounter" customModuleProvider="target">
                                 <rect key="frame" x="8" y="6" width="398" height="398"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                             </view>
@@ -796,7 +796,7 @@
                     <connections>
                         <outlet property="label_pointsScored" destination="FDJ-z7-Va3" id="xlo-t2-LvA"/>
                         <outlet property="navItem" destination="h8B-Ub-eEK" id="t01-fa-o4q"/>
-                        <outlet property="playerView" destination="b27-n6-9hh" id="xcj-yG-iRH"/>
+                        <outlet property="playerView" destination="b27-n6-9hh" id="dD4-CV-dKb"/>
                         <segue destination="NGg-6x-OoO" kind="presentation" identifier="InGame_CheckoutDetails" id="cVf-Qe-jmD"/>
                         <segue destination="xZZ-yJ-kGe" kind="show" identifier="InGame_PostGame" id="OpP-xP-0XU"/>
                         <segue destination="HUj-ua-tmK" kind="show" identifier="InGame_Home" id="yix-1d-mgK"/>
@@ -1769,9 +1769,10 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
+        <segue reference="90u-yn-QdH"/>
         <segue reference="yix-1d-mgK"/>
         <segue reference="yCH-9i-6Ka"/>
-        <segue reference="24O-8r-TuN"/>
+        <segue reference="2uY-Lj-iHe"/>
     </inferredMetricsTieBreakers>
     <resources>
         <image name="adBanner" width="156" height="80"/>

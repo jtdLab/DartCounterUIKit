@@ -10,15 +10,12 @@ import Starscream
 
 class InGameViewController: UIViewController {
     
-    var playerContainer: UIView? // TODO check if good practice
-    
     var online: Bool = false
     var snapshot: GameSnapshot?
     
     @IBOutlet weak var navItem: UINavigationItem!
-    @IBOutlet weak var playerView: UIView!
     @IBOutlet weak var label_pointsScored: UILabel!
-    
+    @IBOutlet weak var playerView: PlayerView!
     
     @IBAction func onExit(_ sender: UIBarButtonItem) {
         // go to HomeView
@@ -56,9 +53,7 @@ class InGameViewController: UIViewController {
                 PlayOnlineService.performThrow(t: Throw(points: points, dartsOnDouble: 0, dartsThrown: 3))
                 // TODO
             } else {
-                if PlayOfflineService.performThrow(t: Throw(points: points, dartsOnDouble: 0, dartsThrown: 3)) {
-                    refreshView()
-                }
+                PlayOfflineService.performThrow(t: Throw(points: points, dartsOnDouble: 0, dartsThrown: 3))
             }
         }
     }
@@ -130,7 +125,6 @@ class InGameViewController: UIViewController {
             label_pointsScored.text = String(currentPoints.dropLast())
         }
     }
-
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -152,28 +146,11 @@ class InGameViewController: UIViewController {
         // init title with description
         navItem.title = snapshot.getDescription().uppercased()
         
-        // init player views
-        switch snapshot.players.count {
-        case 1:
-            playerContainer = OnePlayerView()
-            playerView.addSubview(playerContainer!)
-            break
-        case 2:
-            playerContainer = TwoPlayerView()
-            playerView.addSubview(playerContainer!)
-            break
-        case 3:
-            playerContainer = ThreePlayerView()
-            playerView.addSubview(playerContainer!)
-            break
-        case 4:
-            playerContainer = FourPlayerView()
-            playerView.addSubview(playerContainer!)
-            break
-        default:
-            return
-        }
+        // initt playerView
+        playerView.players = snapshot.players
+        playerView.setup()
         
+        // refresh playerView
         refreshView()
     }
     
@@ -222,26 +199,8 @@ class InGameViewController: UIViewController {
         }
         
         // display players
-        switch snapshot.players.count {
-        // display one player
-        case 1:
-            (playerContainer as! OnePlayerView).refreshView(snapshot: snapshot.players[0])
-            break
-        // display two player
-        case 2:
-            (playerContainer as! TwoPlayerView).refreshView(snapshots: snapshot.players)
-            break
-        // display three player
-        case 3:
-            (playerContainer as! ThreePlayerView).refreshView(snapshots: snapshot.players)
-            break
-        // display four player
-        case 4:
-            (playerContainer as! FourPlayerView).refreshView(snapshots: snapshot.players)
-            break
-        default:
-            return
-        }
+        playerView.players = snapshot.players
+        playerView.refresh()
     }
     
     func onDigit(digit: Int) {

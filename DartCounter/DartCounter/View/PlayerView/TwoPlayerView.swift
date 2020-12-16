@@ -38,9 +38,9 @@ class TwoPlayerView: UIView, NibLoadable {
         setupFromNib()
     }
     
-    func refreshView(snapshots: [PlayerSnapshot]) {
-        let player1 = snapshots[0]
-        let player2 = snapshots[1]
+    func refresh(players: [PlayerSnapshot]) {
+        let player1 = players[0]
+        let player2 = players[1]
         
         if player1.isNext! {
             // TODO

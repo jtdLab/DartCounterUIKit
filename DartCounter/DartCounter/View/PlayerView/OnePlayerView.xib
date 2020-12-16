@@ -7,6 +7,11 @@
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="OnePlayerView" customModule="DartCounter" customModuleProvider="target">
+            <userDefinedRuntimeAttributes>
+                <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                    <real key="value" value="15"/>
+                </userDefinedRuntimeAttribute>
+            </userDefinedRuntimeAttributes>
             <connections>
                 <outlet property="label_average" destination="Rt4-Xu-YvM" id="qtL-S0-tfB"/>
                 <outlet property="label_checkoutPercentage" destination="pgs-lM-6pV" id="e9V-1H-gzd"/>
@@ -19,7 +24,7 @@
             </connections>
         </placeholder>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
-        <view contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="2ca-sc-e2H">
+        <view contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="2ca-sc-e2H" userLabel="OnePlayerView">
             <rect key="frame" x="0.0" y="0.0" width="398" height="364"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <subviews>

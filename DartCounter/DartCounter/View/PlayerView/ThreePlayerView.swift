@@ -47,10 +47,10 @@ class ThreePlayerView: UIView, NibLoadable {
     }
     
     
-    func refreshView(snapshots: [PlayerSnapshot]) {
-        let player1 = snapshots[0]
-        let player2 = snapshots[1]
-        let player3 = snapshots[2]
+    func refresh(players: [PlayerSnapshot]) {
+        let player1 = players[0]
+        let player2 = players[1]
+        let player3 = players[2]
         
         if player1.isNext! {
             // TODO
