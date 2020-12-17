@@ -52,10 +52,10 @@ class PlayOnlineService {
     
     static var delegate: PlayOnlineServiceDelegate?
     
-    private static let host = "ws://46.101.130.16"
+    private static let host = "ws://127.0.0.1" //"ws://46.101.130.16"
     private static let port = 9000
     
-    private static var isConnected = false
+    static var isConnected = false
     
     private static let socket: WebSocket = {
         var request = URLRequest(url: URL(string: host + ":" + String(port))!)
@@ -112,6 +112,10 @@ class PlayOnlineService {
         sendPacket(packet: UpdateGameConfigPacket(gameConfig: gameConfig))
     }
     
+    static func inviteToGame(uid: String, username: String) {
+        sendPacket(packet: InviteToGamePacket(uid: uid, username: username))
+    }
+    
     static func joinGame(gameCode: Int) {
         sendPacket(packet: JoinGamePacket(gameCode: gameCode))
     }
@@ -160,6 +164,8 @@ class PlayOnlineService {
         } else if(packet is StartGameResponsePacket) {
             let packet = (packet as! StartGameResponsePacket)
             delegate?.onStartGameResponse(successful: packet.successful, snapshot: packet.snapshot)
+        } else if(packet is InviteToGameResponse) {
+            // TODO
         } else if(packet is SnapshotPacket) {
             delegate?.onSnapshot(snapshot: (packet as! SnapshotPacket).snapshot)
         } else if(packet is GameCanceledPacket) {

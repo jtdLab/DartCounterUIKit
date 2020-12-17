@@ -28,8 +28,7 @@ class DatabaseService {
         }
     }
     
-    static func createCareerStats(uid: String, username: String, onError: @escaping (NSError) -> Void) {
-        
+    static func createCareerStats(uid: String, onError: @escaping (NSError) -> Void) {
         let databaseReference = Database.database().reference().child("users/careerStats/\(uid)")
         
         let careerStatsObject = [

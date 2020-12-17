@@ -19,7 +19,8 @@ public class AuthService {
                 guard let newUser = authResult?.user else { return }
                 
                 DatabaseService.createProfile(uid: newUser.uid, username: username, onError: onError)
-                DatabaseService.createCareerStats(uid: newUser.uid, username: username, onError: onError)
+                DatabaseService.createCareerStats(uid: newUser.uid, onError: onError)
+                
             } else {
                 onError(error! as NSError)
             }

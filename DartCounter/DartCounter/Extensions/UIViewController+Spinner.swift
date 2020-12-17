@@ -8,24 +8,26 @@
 import Foundation
 import UIKit
 
+fileprivate var aView: UIView?
+
 extension UIViewController {
     
-    func createSpinnerView() {
-        let child = SpinnerViewController()
-
-        // add the spinner view controller
-        addChild(child)
-        child.view.frame = view.frame
-        view.addSubview(child.view)
-        child.didMove(toParent: self)
-
-        // wait two seconds to simulate some work happening
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-            // then remove the spinner view controller
-            child.willMove(toParent: nil)
-            child.view.removeFromSuperview()
-            child.removeFromParent()
-        }
+    func showSpinner() {
+        aView = UIView(frame: self.view.bounds)
+        aView?.backgroundColor = UIColor.init(red: 0.5, green: 0.5, blue: 0.5, alpha: 0.8)
+        
+        let activityIndicator = UIActivityIndicatorView(style: UIActivityIndicatorView.Style.large)
+        activityIndicator.center = aView!.center
+        activityIndicator.startAnimating()
+        aView?.addSubview(activityIndicator)
+        self.view.addSubview(aView!)
+        
+        // TODO add timeout
+    }
+    
+    func removeSpinner() {
+        aView?.removeFromSuperview()
+        aView = nil
     }
     
 }

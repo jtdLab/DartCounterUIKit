@@ -47,6 +47,42 @@ class UserService {
         })
     }
     
+    static func observeInvitations(completion: @escaping ((_ invitations: [Invitation]?) ->())) {
+        guard let uid = currentProfile?.uid else { return }
+        
+        let invitationsReference = Firestore.firestore().collection("users").document(uid)
+        
+        invitationsReference
+            .addSnapshotListener { documentSnapshot, error in
+                guard let document = documentSnapshot else {
+                  print("Error fetching document: \(error!)")
+                  return
+                }
+              
+                guard let data = document.data() else {
+                  print("Document data was empty.")
+                  return
+                }
+                
+                var invitations: [Invitation]?
+                
+                let invitationsObject = data["invitations"] as! NSArray
+                
+                if invitationsObject.count > 0 {
+                    invitations = []
+                }
+                
+                for invitation in invitationsObject {
+                    let dict = invitation as! [String:Any]
+                    if let temp = Invitation.fromDict(dict: dict) {
+                        invitations?.append(temp)
+                    }
+                }
+                
+                completion(invitations)
+            }
+    }
+    
     
     static func updateProfileImage(_ image: UIImage, completion: @escaping (_ success: Bool) ->()) {
         DatabaseService.updateProfileImage(image, completion: completion)

@@ -44,7 +44,8 @@ class CreateGameViewController: UIViewController {
     
     @IBAction func onAddPlayer(_ sender: UIButton) {
         if online {
-            // TODO show invite dialog
+            PlayOnlineService.inviteToGame(uid: "dmnaOOEf3ydld42aVggf0fExHv72", username: "needs00")
+            //performSegue(withIdentifier: Segues.CreateGame_AddFriend, sender: self)
         } else {
             // try add player and display new player if successful
             if PlayOfflineService.addPlayer() {

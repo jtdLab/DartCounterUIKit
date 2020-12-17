@@ -89,6 +89,11 @@ class HomeViewController: UIViewController {
             self.profileButton.setWins(wins: stats.wins)
             self.profileButton.setDefeats(defeats: stats.defeats)
         })
+        
+        // observe changes of invitations
+        UserService.observeInvitations(completion: { invitations in
+            // TODO set number of sidemenu
+        })
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -117,10 +122,17 @@ class HomeViewController: UIViewController {
     }
     
     @objc func onPlayOnline() {
+        //showSpinner()
+  
         // subscribe to PlayOnlineService to receive events
         PlayOnlineService.delegate = self
         // try to connect to PlayOnlineService -> if successful PlayOnlineServiceDelegate onConnect will fire
-        PlayOnlineService.connect()
+        if PlayOnlineService.isConnected {
+            PlayOnlineService.createGame()
+        } else {
+            PlayOnlineService.connect()
+        }
+        
     }
     
     @objc func onSocialMedia() {
@@ -145,7 +157,7 @@ extension HomeViewController: PlayOfflineServiceDelegate {
 }
 
 
-// handle events from PlayOffline and PlayOnlineService
+// handle events from PlayOnlineService
 extension HomeViewController: PlayOnlineServiceDelegate {
     
     func onConnect(successful: Bool) {
@@ -223,7 +235,7 @@ class SideMenuController: UITableViewController {
         // set sidemenu background color to black
         tableView.backgroundColor = .black
         
-        tableView.isScrollEnabled = false
+        tableView.isScrollEnabled = true
     }
     
     override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {

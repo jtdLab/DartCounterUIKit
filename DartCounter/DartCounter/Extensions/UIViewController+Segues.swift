@@ -26,6 +26,7 @@ extension UIViewController {
         static let Home_AboutUs = "Home_AboutUs"
         //static let CreateOnlineGame_InGame = "CreateOnlineGame_InGame"
         static let CreateGame_InGame = "CreateGame_InGame"
+        static let CreateGame_AddFriend = "CreateGame_AddFriend"
         static let InGame_CheckoutDetails = "InGame_CheckoutDetails"
         static let InGame_Home = "InGame_Home"
         static let Ingame_Stats = "Ingame_Stats"
