@@ -34,6 +34,11 @@ class ProfileViewController: UIViewController {
         // register PlayerCell to PlayerTable
         careerStatsTableView.register(UINib(nibName: "CareerCell", bundle: nil), forCellReuseIdentifier: "CareerCell")
         
+        UserService.delegate = self
+        if UserService.currentProfile != nil {
+            self.onProfileChanged(profile: UserService.currentProfile!)
+        }
+        
         careerStatsTableView.dataSource = self
         careerStatsTableView.delegate = self
         careerStatsTableView.isScrollEnabled = false
@@ -48,39 +53,34 @@ class ProfileViewController: UIViewController {
         
         profilePictureImageView.layer.masksToBounds = true
         profilePictureImageView.layer.cornerRadius = profilePictureImageView.bounds.width / 2
-       
-        UserService.observeUserProfile(completion: { userProfileObject in
-            guard let profile = userProfileObject else { return }
-           
-            self.usernameLabel.text = profile.username
-            
-            if let photURL = profile.photoURL {
-                UserService.getProfilePicture(withURL: photURL, completion: { profileImage in
-                     self.profilePictureImageView.image = profileImage
-                 })
-            } else {
-                self.profilePictureImageView.image = UIImage(named: "profile")
-            }
-        })
+    }
+
+}
+
+// handle events from UserService
+extension ProfileViewController: UserServiceDelegate {
+    
+    func onProfileChanged(profile: UserProfile) {
+        self.usernameLabel.text = profile.username
         
-        UserService.observeCareerStats(completion: { careerStatsObject in
-            guard let stats = careerStatsObject else { return }
-            self.careerStats = stats
-            self.careerStatsTableView.reloadData()
-        })
+        if let photURL = profile.photoURL {
+            UserService.getProfilePicture(withURL: photURL, completion: { profileImage in
+                 self.profilePictureImageView.image = profileImage
+             })
+        } else {
+            self.profilePictureImageView.image = UIImage(named: "profile")
+        }
+    }
+    
+    func onCareerStatsChanged(stats: CareerStats) {
+        self.careerStats = stats
+        self.careerStatsTableView.reloadData()
     }
 
 }
 
 extension ProfileViewController: UITableViewDataSource, UITableViewDelegate {
     
-   /**
-     override func viewDidLoad() {
-         super.viewDidLoad()
-         tableView.register(UINib(nibName: "CareerCell", bundle: nil), forCellReuseIdentifier: "CareerCell")
-     }
-     
-     */
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return items.count
     }
@@ -129,10 +129,11 @@ extension ProfileViewController: UIImagePickerControllerDelegate, UINavigationCo
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         
         if let pickedImage = info[UIImagePickerController.InfoKey.editedImage] as? UIImage {
-            self.profilePictureImageView.image = pickedImage
+            self.profilePictureImageView.image = pickedImage // TODO update from cahceh and service
             UserService.updateProfileImage(pickedImage) { success in
-                // TODO
-                print("ProfilePicture update: " + String(success))
+                if success {
+                    
+                }
             }
         }
         

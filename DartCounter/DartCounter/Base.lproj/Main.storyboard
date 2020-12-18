@@ -1605,7 +1605,7 @@
                                     <constraint firstItem="tIw-t6-t97" firstAttribute="centerY" secondItem="WP5-wp-87g" secondAttribute="centerY" id="vpy-Td-5Ws"/>
                                 </constraints>
                             </view>
-                            <imageView clipsSubviews="YES" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="profile" translatesAutoresizingMaskIntoConstraints="NO" id="0Wn-cP-ecs">
+                            <imageView clipsSubviews="YES" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="profile" translatesAutoresizingMaskIntoConstraints="NO" id="0Wn-cP-ecs">
                                 <rect key="frame" x="107" y="30" width="200" height="200"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="200" id="arC-mD-PhY"/>
@@ -1817,7 +1817,7 @@
             <size key="intrinsicContentSize" width="236" height="48"/>
         </designable>
         <designable name="W3e-jZ-Wnw">
-            <size key="intrinsicContentSize" width="66" height="18.5"/>
+            <size key="intrinsicContentSize" width="86" height="18.5"/>
         </designable>
         <designable name="ba6-tK-k3Q">
             <size key="intrinsicContentSize" width="119" height="40"/>
@@ -1826,13 +1826,13 @@
             <size key="intrinsicContentSize" width="151" height="48"/>
         </designable>
         <designable name="fkU-kD-Ypd">
-            <size key="intrinsicContentSize" width="62.5" height="17"/>
+            <size key="intrinsicContentSize" width="82.5" height="17"/>
         </designable>
     </designables>
     <inferredMetricsTieBreakers>
         <segue reference="yix-1d-mgK"/>
         <segue reference="yCH-9i-6Ka"/>
-        <segue reference="24O-8r-TuN"/>
+        <segue reference="2uY-Lj-iHe"/>
     </inferredMetricsTieBreakers>
     <resources>
         <image name="adBanner" width="156" height="80"/>

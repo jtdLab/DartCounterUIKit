@@ -39,13 +39,13 @@ class OnePlayerView: UIView, NibLoadable {
         label_lastThrow.text = String(player.lastThrow ?? -1)
         label_dartsThrown.text = String(player.dartsThrown!)
         
-        if App.settings.showAverage {
+        if SettingsService.settings.showAverage {
             label_average.text = String(player.average!)
         } else {
             label_average.isHidden = true
         }
         
-        if App.settings.showCheckoutPercentage {
+        if SettingsService.settings.showCheckoutPercentage {
             label_checkoutPercentage.text = String(player.checkoutPercentage!)
         } else {
             label_checkoutPercentage.isHidden = true

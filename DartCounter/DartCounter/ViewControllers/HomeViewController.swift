@@ -44,6 +44,11 @@ class HomeViewController: UIViewController {
         SideMenuManager.default.leftMenuNavigationController = sideMenu
         SideMenuManager.default.addPanGestureToPresent(toView: self.view)
         
+        UserService.delegate = self
+        if UserService.currentProfile != nil {
+            self.onProfileChanged(profile: UserService.currentProfile!)
+        }
+        
         // add on click to buttons
         let profileTapGesture = UITapGestureRecognizer(target:self,action:#selector(self.onProfile))
         profileButton.addGestureRecognizer(profileTapGesture)
@@ -60,40 +65,15 @@ class HomeViewController: UIViewController {
         let settingsTapGesture = UITapGestureRecognizer(target:self,action:#selector(self.onSettings))
         settingsButton.addGestureRecognizer(settingsTapGesture)
         
-      
-        
-        // observe changes of user profile
-        UserService.observeUserProfile(completion: { userProfile in
-            guard let profile = userProfile else { return }
-            
-            // display username in profileButton
-            self.profileButton.setName(name: profile.username)
-           
-            if let photURL = profile.photoURL {
-                UserService.getProfilePicture(withURL: photURL, completion: { profileImage in
-                    // display profilePicture in profileButton
-                    self.profileButton.setProfilePicture(image: profileImage)
-                 })
-            } else {
-                // display a placeholder if no profilePicture available
-                self.profileButton.setProfilePicture(image: UIImage(named: "profile"))
-            }
-        })
-        
-        // observe changes of career stats
-        UserService.observeCareerStats(completion: { careerStatsObject in
-            guard let stats = careerStatsObject else { return }
-            // display career stats in profileButton
-            self.profileButton.setAverage(average: stats.average)
-            self.profileButton.setCheckout(checkout: stats.checkoutPerentage)
-            self.profileButton.setWins(wins: stats.wins)
-            self.profileButton.setDefeats(defeats: stats.defeats)
-        })
-        
         // observe changes of invitations
         UserService.observeInvitations(completion: { invitations in
             // TODO set number of sidemenu
         })
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        guard let userProfile = UserService.currentProfile else { return }
+        onProfileChanged(profile: userProfile)
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -107,7 +87,6 @@ class HomeViewController: UIViewController {
             destinationViewController.snapshot = self.snapshot
         }
     }
-    
     
     @objc func onProfile() {
         // go to ProfileView
@@ -144,6 +123,45 @@ class HomeViewController: UIViewController {
         self.performSegue(withIdentifier: Segues.Home_Settings, sender: self)
     }
     
+}
+
+
+// handle events from UserService
+extension HomeViewController: UserServiceDelegate {
+    
+    func onProfileChanged(profile: UserProfile) {
+        //let sideMenuController = sideMenu?.viewControllers[0] as! SideMenuController
+        //let sideMenuHeader = sideMenuController.tableView.headerView(forSection: 0) as! SideMenuHeader
+        
+        // display username in profileButton
+        self.profileButton.setName(name: profile.username)
+        // display username in sidemenu
+        //sideMenuHeader.setName(name: profile.username)
+       
+        if let photURL = profile.photoURL {
+            UserService.getProfilePicture(withURL: photURL, completion: { profileImage in
+                // display profilePicture in profileButton
+                self.profileButton.setProfilePicture(image: profileImage)
+                // display profilePicture in sidemenu
+                //sideMenuHeader.setProfilePicture(image: profileImage)
+             })
+        } else {
+            // display a placeholder if no profilePicture available in profileButton
+            self.profileButton.setProfilePicture(image: UIImage(named: "profile"))
+            // display a placeholder if no profilePicture available in sidemenu
+            //sideMenuHeader.setProfilePicture(image: UIImage(named: "profile"))
+        }
+        
+    }
+    
+    func onCareerStatsChanged(stats: CareerStats) {
+        // display career stats in profileButton
+        self.profileButton.setAverage(average: stats.average)
+        self.profileButton.setCheckout(checkout: stats.checkoutPerentage)
+        self.profileButton.setWins(wins: stats.wins)
+        self.profileButton.setDefeats(defeats: stats.defeats)
+    }
+
 }
 
 // handle events from PlayOfflineService
@@ -238,6 +256,10 @@ class SideMenuController: UITableViewController {
         tableView.isScrollEnabled = true
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        tableView.reloadData()
+    }
+    
     override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         // specify height of header
         return 400
@@ -252,6 +274,15 @@ class SideMenuController: UITableViewController {
         backgroundConfig.backgroundColor = .black
         headerView.backgroundConfiguration = backgroundConfig
 
+        
+        guard let profile = UserService.currentProfile else { return headerView }
+        headerView.setName(name: profile.username)
+        
+        guard let url = profile.photoURL else { return headerView }
+        UserService.getProfilePicture(withURL: url, completion: { profileImage in
+            headerView.setProfilePicture(image: profileImage)
+        })
+        
         return headerView
     }
     

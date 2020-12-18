@@ -116,7 +116,7 @@ class FourPlayerView: UIView, NibLoadable {
         label_player4_dartsThrown.text = String(player4.dartsThrown!)
         
         
-        if App.settings.showAverage {
+        if SettingsService.settings.showAverage {
             label_player1_average.text = String(player1.average!)
             label_player2_average.text = String(player2.average!)
             label_player3_average.text = String(player3.average!)
@@ -128,7 +128,7 @@ class FourPlayerView: UIView, NibLoadable {
             label_player4_average.isHidden = true
         }
         
-        if App.settings.showCheckoutPercentage {
+        if SettingsService.settings.showCheckoutPercentage {
             label_player1_checkoutPercentage.text = String(player1.checkoutPercentage!)
             label_player2_checkoutPercentage.text = String(player2.checkoutPercentage!)
             label_player3_checkoutPercentage.text = String(player3.checkoutPercentage!)

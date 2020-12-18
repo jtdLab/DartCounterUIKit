@@ -15,7 +15,7 @@ class DatabaseService {
     
     static func createProfile(uid: String, username: String, onError: @escaping (NSError) -> Void) {
         
-        let databaseReference = Database.database().reference().child("users/profile/\(uid)")
+        let databaseReference = Database.database().reference().child("users/\(uid)/profile")
         
         let userObject = [
             "username": username,
@@ -29,7 +29,7 @@ class DatabaseService {
     }
     
     static func createCareerStats(uid: String, onError: @escaping (NSError) -> Void) {
-        let databaseReference = Database.database().reference().child("users/careerStats/\(uid)")
+        let databaseReference = Database.database().reference().child("users/\(uid)/careerStats")
         
         let careerStatsObject = [
             "average": "0.00",
@@ -67,7 +67,9 @@ class DatabaseService {
                         
                         changeRequest?.commitChanges { error in
                             if error == nil {
-                                let databaseReference = Database.database().reference().child("users/profile/\(uid)/photoURL").setValue(url?.absoluteString)
+                                profileImageCache.setObject(image, forKey: url!.absoluteString as NSString)
+                                
+                                let databaseReference = Database.database().reference().child("users/\(uid)/profile/photoURL").setValue(url?.absoluteString)
                             }
                         }
                     }

@@ -14,17 +14,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         FirebaseApp.configure()
-        
-        let userProfile: UserProfile?
-        
-        
-        let currentUser = Auth.auth().currentUser
-        
-        if currentUser != nil {
-            userProfile = UserProfile(uid: currentUser!.uid, username: "TODO NAME", photoURL: currentUser!.photoURL)
-            UserService.currentProfile = userProfile
-        }
-
         return true
     }
 

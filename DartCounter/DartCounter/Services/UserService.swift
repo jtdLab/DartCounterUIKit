@@ -10,14 +10,32 @@ import UIKit
 import Firebase
 import FirebaseDatabase
 
+protocol UserServiceDelegate {
+    
+    func onProfileChanged(profile: UserProfile)
+    
+    func onCareerStatsChanged(stats: CareerStats)
+    
+}
+
+extension UserServiceDelegate {
+    
+    func onProfileChanged(profile: UserProfile) {}
+    
+    func onCareerStatsChanged(stats: CareerStats) {}
+    
+}
+
 class UserService {
     
-    static var currentProfile: UserProfile?
+    static var delegate: UserServiceDelegate?
     
-    static func observeUserProfile(completion: @escaping ((_ userProfile: UserProfile?) ->())) {
-        guard let uid = currentProfile?.uid else { return }
-        
-        let userReference = Database.database().reference().child("/users/profile/\(uid)")
+    static var currentProfile: UserProfile?
+    static var currentCareerStats: CareerStats?
+    
+    
+    static func observeUserProfile(uid: String) {
+        let userReference = Database.database().reference().child("/users/\(uid)/profile")
         
         userReference.observe(.value, with: { snapshot in
             var userProfile: UserProfile?
@@ -26,15 +44,17 @@ class UserService {
                 userProfile = UserProfile.fromDict(uid: uid, dict: dict)
             }
             
-            completion(userProfile)
+            if userProfile != nil {
+                delegate?.onProfileChanged(profile: userProfile!)
+                currentProfile = userProfile
+            }
+            
         })
     }
     
     
-    static func observeCareerStats(completion: @escaping ((_ careerStats: CareerStats?) ->())) {
-        guard let uid = currentProfile?.uid else { return }
-        
-        let userReference = Database.database().reference().child("/users/careerStats/\(uid)")
+    static func observeCareerStats(uid: String) {
+        let userReference = Database.database().reference().child("/users/\(uid)/careerStats")
         
         userReference.observe(.value, with: { snapshot in
             var careerStats: CareerStats?
@@ -43,7 +63,11 @@ class UserService {
                 careerStats = CareerStats.fromDict(dict: dict)
             }
             
-            completion(careerStats)
+            if careerStats != nil {
+                delegate?.onCareerStatsChanged(stats: careerStats!)
+                currentCareerStats = careerStats
+            }
+            
         })
     }
     

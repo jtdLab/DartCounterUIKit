@@ -24,9 +24,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             
             if user != nil {
                 // signed in
-                UserService.observeUserProfile() { userProfile in
-                    UserService.currentProfile = userProfile
-                }
+                let uid = user!.uid
+                UserService.observeUserProfile(uid: uid)
+                UserService.observeCareerStats(uid: uid)
                 
                 let rootViewController = storyboard.instantiateViewController(identifier: UIStoryboard.Identifiers.HomeViewController)
                 let navigationController = UINavigationController(rootViewController: rootViewController)
