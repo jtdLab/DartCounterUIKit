@@ -438,7 +438,13 @@
                             <constraint firstItem="5Wf-NR-JEY" firstAttribute="leading" secondItem="LTX-ri-lpu" secondAttribute="leading" id="bjk-eA-VMl"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" title="SPIEL ERSTELLEN" id="sH7-5j-a3H"/>
+                    <navigationItem key="navigationItem" title="Spiel erstellen" id="sH7-5j-a3H">
+                        <barButtonItem key="leftBarButtonItem" title="Item" image="close" id="GCI-Yy-ke8">
+                            <connections>
+                                <action selector="onExit:" destination="dMP-t6-5S2" id="Cur-mE-PZe"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                     <connections>
                         <outlet property="advancedSettingsTableView" destination="hBK-h4-I6C" id="fzI-rH-6fk"/>
                         <outlet property="buttonStartGame" destination="Ak1-fr-SjF" id="tgp-Gc-neH"/>
@@ -908,6 +914,7 @@
                     </view>
                     <navigationItem key="navigationItem" id="h32-0K-72e"/>
                     <connections>
+                        <outlet property="imageView_WinOrLoose" destination="qRn-bu-dSD" id="jLu-Jh-Llr"/>
                         <outlet property="label_winner" destination="kd9-EO-gFf" id="pTR-ye-xZZ"/>
                         <outlet property="navItem" destination="h32-0K-72e" id="R4a-dU-H9Z"/>
                         <segue destination="HUj-ua-tmK" kind="show" identifier="PostGame_Home" id="4db-I8-Led"/>
@@ -1830,8 +1837,8 @@
         </designable>
     </designables>
     <inferredMetricsTieBreakers>
-        <segue reference="yix-1d-mgK"/>
-        <segue reference="yCH-9i-6Ka"/>
+        <segue reference="4db-I8-Led"/>
+        <segue reference="ZAb-V4-Oah"/>
         <segue reference="2uY-Lj-iHe"/>
     </inferredMetricsTieBreakers>
     <resources>

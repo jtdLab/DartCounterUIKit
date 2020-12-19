@@ -58,7 +58,80 @@ class GameSnapshot: Codable  {
     }
     
     func getWinner() -> PlayerSnapshot? {
-        // TODO
+        if status == .CANCELLED {
+            if config.type == .LEGS {
+                let l = players.map { $0.legs! }
+                let max = l.max()!
+                let firstIndex = l.firstIndex(of: max)!
+                let lastIndex = l.lastIndex(of: max)!
+                
+                if firstIndex == lastIndex {
+                    // winner found
+                    return players[lastIndex]
+                } else {
+                    // points left decide
+                    var ps: PlayerSnapshot?
+                    for p in players {
+                        if p.legs == max {
+                            if ps == nil {
+                                ps = p
+                                continue
+                            }
+                            
+                            if p.pointsLeft! < ps!.pointsLeft! {
+                                ps = p
+                            }
+                        }
+                    }
+                    return ps
+                }
+            } else {
+                let s = players.map { $0.sets! }
+                let sMax = s.max()!
+                let firstIndex = s.firstIndex(of: sMax)!
+                let lastIndex = s.lastIndex(of: sMax)!
+                
+                if firstIndex == lastIndex {
+                    // winner found
+                    return players[lastIndex]
+                } else {
+                    // legs decide
+                    var ps: PlayerSnapshot?
+                    for p in players {
+                        if p.sets! == sMax {
+                            if ps == nil {
+                                ps = p
+                                continue
+                            }
+                            
+                            if p.legs! > ps!.legs! {
+                                ps = p
+                            } else if p.legs! == ps!.legs! {
+                                if p.pointsLeft! < ps!.pointsLeft! {
+                                    ps = p
+                                }
+                            }
+                        }
+                    }
+                    return ps
+                }
+            }
+        } else if status == .FINISHED {
+            if config.type == .LEGS {
+                for player in players {
+                    if player.legs! == config.size {
+                        return player
+                    }
+                }
+            } else {
+                for player in players {
+                    if player.sets! == config.size {
+                        return player
+                    }
+                }
+            }
+        }
+        
         return nil
     }
     

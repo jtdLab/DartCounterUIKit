@@ -10,7 +10,7 @@ import Starscream
 
 protocol PlayOnlineServiceDelegate {
     
-    func onConnect(successful: Bool)
+    func onAuthResponse(successful: Bool)
     
     func onCreateGameResponse(successful: Bool, snapshot: GameSnapshot)
     
@@ -30,7 +30,7 @@ protocol PlayOnlineServiceDelegate {
 
 extension PlayOnlineServiceDelegate {
     
-    func onConnect(successful: Bool) {}
+    func onAuthResponse(successful: Bool) {}
     
     func onCreateGameResponse(successful: Bool, snapshot: GameSnapshot) {}
     
@@ -66,7 +66,6 @@ class PlayOnlineService {
             
             switch event {
                 case .connected(let headers):
-                    isConnected = true
                     guard let uid = UserService.currentProfile?.uid else { return }
                     guard let username = UserService.currentProfile?.username else { return }
                     sendPacket(packet: AuthRequestPacket(uid: uid, username: username))
@@ -132,10 +131,6 @@ class PlayOnlineService {
         sendPacket(packet: UndoThrowPacket())
     }
     
-    static func cancelGame() {
-        sendPacket(packet: CancelGamePacket())
-    }
-    
     static func exitGame() {
         sendPacket(packet: ExitGamePacket())
     }
@@ -154,7 +149,9 @@ class PlayOnlineService {
     
     private static func onPacket(packet: Packet) {
         if(packet is AuthResponsePacket) {
-            delegate?.onConnect(successful: (packet as! AuthResponsePacket).successful)
+            let packet = (packet as! AuthResponsePacket)
+            delegate?.onAuthResponse(successful: packet.successful)
+            isConnected = packet.successful
         } else if(packet is CreateGameResponsePacket) {
             let packet = (packet as! CreateGameResponsePacket)
             delegate?.onCreateGameResponse(successful: packet.successful, snapshot: packet.snapshot)
@@ -168,8 +165,6 @@ class PlayOnlineService {
             // TODO
         } else if(packet is SnapshotPacket) {
             delegate?.onSnapshot(snapshot: (packet as! SnapshotPacket).snapshot)
-        } else if(packet is GameCanceledPacket) {
-            delegate?.onGameCanceled()
         } else if(packet is PlayerExitedPacket) {
             delegate?.onPlayerExited(username: (packet as! PlayerExitedPacket).username)
         } else if(packet is PlayerJoinedPacket) {

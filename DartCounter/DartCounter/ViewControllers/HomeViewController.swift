@@ -29,7 +29,6 @@ class HomeViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         // set navbar title
         self.navigationItem.title = "Home"
         
@@ -44,7 +43,6 @@ class HomeViewController: UIViewController {
         SideMenuManager.default.leftMenuNavigationController = sideMenu
         SideMenuManager.default.addPanGestureToPresent(toView: self.view)
         
-        UserService.delegate = self
         if UserService.currentProfile != nil {
             self.onProfileChanged(profile: UserService.currentProfile!)
         }
@@ -69,6 +67,15 @@ class HomeViewController: UIViewController {
         UserService.observeInvitations(completion: { invitations in
             // TODO set number of sidemenu
         })
+        
+        // subscirbe to service events
+        PlayOfflineService.delegate = self
+        PlayOnlineService.delegate = self
+        UserService.delegate = self
+        
+        if UserService.currentProfile == nil || !PlayOnlineService.isConnected {
+            showSpinner()
+        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -94,28 +101,16 @@ class HomeViewController: UIViewController {
     }
     
     @objc func onPlayOffline() {
-        // subscribe to PlayOnlineService to receive events
-        PlayOfflineService.delegate = self
         // try to create an offline game
         PlayOfflineService.createGame()
     }
     
     @objc func onPlayOnline() {
-        //showSpinner()
-  
-        // subscribe to PlayOnlineService to receive events
-        PlayOnlineService.delegate = self
-        // try to connect to PlayOnlineService -> if successful PlayOnlineServiceDelegate onConnect will fire
-        if PlayOnlineService.isConnected {
-            PlayOnlineService.createGame()
-        } else {
-            PlayOnlineService.connect()
-        }
-        
+        PlayOnlineService.createGame()
     }
     
     @objc func onSocialMedia() {
-        // TODO
+        PlayOnlineService.joinGame(gameCode: 1000)
     }
     
     @objc func onSettings() {
@@ -130,28 +125,22 @@ class HomeViewController: UIViewController {
 extension HomeViewController: UserServiceDelegate {
     
     func onProfileChanged(profile: UserProfile) {
-        //let sideMenuController = sideMenu?.viewControllers[0] as! SideMenuController
-        //let sideMenuHeader = sideMenuController.tableView.headerView(forSection: 0) as! SideMenuHeader
-        
         // display username in profileButton
         self.profileButton.setName(name: profile.username)
-        // display username in sidemenu
-        //sideMenuHeader.setName(name: profile.username)
-       
+
         if let photURL = profile.photoURL {
             UserService.getProfilePicture(withURL: photURL, completion: { profileImage in
                 // display profilePicture in profileButton
                 self.profileButton.setProfilePicture(image: profileImage)
-                // display profilePicture in sidemenu
-                //sideMenuHeader.setProfilePicture(image: profileImage)
              })
         } else {
             // display a placeholder if no profilePicture available in profileButton
             self.profileButton.setProfilePicture(image: UIImage(named: "profile"))
-            // display a placeholder if no profilePicture available in sidemenu
-            //sideMenuHeader.setProfilePicture(image: UIImage(named: "profile"))
         }
         
+        if UserService.currentProfile != nil {
+            PlayOnlineService.connect()
+        }
     }
     
     func onCareerStatsChanged(stats: CareerStats) {
@@ -167,6 +156,12 @@ extension HomeViewController: UserServiceDelegate {
 // handle events from PlayOfflineService
 extension HomeViewController: PlayOfflineServiceDelegate {
     
+    func onAuthResponse(successful: Bool) {
+        if successful {
+           removeSpinner()
+        }
+    }
+    
     func onSnapshot(snapshot: GameSnapshot) {
         self.snapshot = snapshot
         self.performSegue(withIdentifier: Segues.Home_CreateGame_offline, sender: self)
@@ -178,15 +173,16 @@ extension HomeViewController: PlayOfflineServiceDelegate {
 // handle events from PlayOnlineService
 extension HomeViewController: PlayOnlineServiceDelegate {
     
-    func onConnect(successful: Bool) {
-        successful ? print("Connected to PlayOnlineService") : print("Couldn't connect to PlayOnlineService")
+    func onCreateGameResponse(successful: Bool, snapshot: GameSnapshot) {
+        successful ? print("Created game") : print("Couldn't create game")
         if successful {
-            PlayOnlineService.createGame()
+            self.snapshot = snapshot
+            self.performSegue(withIdentifier: Segues.Home_CreateGame_online, sender: self)
         }
     }
     
-    func onCreateGameResponse(successful: Bool, snapshot: GameSnapshot) {
-        successful ? print("Created game") : print("Couldn't create game")
+    func onJoinGameResponse(successful: Bool, snapshot: GameSnapshot) {
+        successful ? print("Joined game") : print("Couldn't join game")
         if successful {
             self.snapshot = snapshot
             self.performSegue(withIdentifier: Segues.Home_CreateGame_online, sender: self)
@@ -219,7 +215,8 @@ extension HomeViewController: SideMenuControllerDelegate {
                 // go to AboutUsView
                 self.performSegue(withIdentifier: Segues.Home_AboutUs, sender: self)
             } else if index == 5 {
-                // log out 
+                // log out
+                PlayOnlineService.disconnect()
                 AuthService.signOut()
             }
         })

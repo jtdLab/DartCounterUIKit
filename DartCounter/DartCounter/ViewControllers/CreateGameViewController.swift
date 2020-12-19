@@ -28,6 +28,13 @@ class CreateGameViewController: UIViewController {
     @IBOutlet weak var buttonStartGame: UIButton!
     
     
+    @IBAction func onExit(_ sender: UIBarButtonItem) {
+        if online {
+            PlayOnlineService.exitGame()
+        }
+        navigationController?.popViewController(animated: true)
+    }
+    
     @IBAction func onDartBotChanged(_ sender: UISwitch) {
         // show or hide the dartbot picker
         if sender.isOn {
@@ -44,7 +51,8 @@ class CreateGameViewController: UIViewController {
     
     @IBAction func onAddPlayer(_ sender: UIButton) {
         if online {
-            PlayOnlineService.inviteToGame(uid: "dmnaOOEf3ydld42aVggf0fExHv72", username: "needs00")
+            //PlayOnlineService.inviteToGame(uid: "dmnaOOEf3ydld42aVggf0fExHv72", username: "needs00")
+             
             //performSegue(withIdentifier: Segues.CreateGame_AddFriend, sender: self)
         } else {
             // try add player and display new player if successful

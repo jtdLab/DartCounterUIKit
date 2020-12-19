@@ -19,7 +19,9 @@ class InGameViewController: UIViewController {
     
     @IBAction func onExit(_ sender: UIBarButtonItem) {
         // go to HomeView
-        performSegue(withIdentifier: Segues.InGame_Home, sender: self)
+        if online {
+            PlayOnlineService.exitGame()
+        }
     }
     
     @IBAction func onStats(_ sender: Any) {
@@ -181,7 +183,7 @@ class InGameViewController: UIViewController {
         else if segue.identifier == Segues.InGame_PostGame, let destinationViewController  = segue.destination as? PostGameViewController {
             // init PostGameViewController
             // send winner to postgameview
-            //destinationViewController.snapshot = self.snapshot
+            destinationViewController.snapshot = self.snapshot
         }
     }
 
@@ -270,7 +272,7 @@ extension InGameViewController: PlayOfflineServiceDelegate, PlayOnlineServiceDel
         self.snapshot = snapshot
         
         // if game is finished go to PostGameView
-        if snapshot.status == .FINISHED {
+        if snapshot.status == .FINISHED || snapshot.status == .CANCELLED {
             performSegue(withIdentifier: Segues.InGame_PostGame, sender: self)
         }
         

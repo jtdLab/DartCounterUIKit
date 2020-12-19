@@ -45,8 +45,8 @@ class UserService {
             }
             
             if userProfile != nil {
-                delegate?.onProfileChanged(profile: userProfile!)
                 currentProfile = userProfile
+                delegate?.onProfileChanged(profile: userProfile!)
             }
             
         })

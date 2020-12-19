@@ -12,6 +12,7 @@ class PostGameViewController: UIViewController {
     var snapshot: GameSnapshot?
 
     @IBOutlet weak var navItem: UINavigationItem!
+    @IBOutlet weak var imageView_WinOrLoose: UIImageView!
     @IBOutlet weak var label_winner: UILabel!
     
     
@@ -29,10 +30,28 @@ class PostGameViewController: UIViewController {
         
         // dont show backButton
         navItem.hidesBackButton = true
-        
+
         guard let snapshot = self.snapshot else { return }
         
-        label_winner.text = "TODO winner name hier" + " gewinnt"
+        guard let winner = snapshot.getWinner() else { return }
+        
+        guard let username = UserService.currentProfile?.username else { return }
+        
+        let won = username == winner.name!
+        
+        imageView_WinOrLoose.image = won ? UIImage(named: "winner") : UIImage(named: "defeat")
+        
+        label_winner.text = won ? "Gewonnen" : "Verloren"
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        navigationController?.setNavigationBarHidden(true, animated: false)
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        navigationController?.setNavigationBarHidden(false, animated: false)
     }
     
 }
