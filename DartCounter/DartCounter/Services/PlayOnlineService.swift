@@ -52,7 +52,7 @@ class PlayOnlineService {
     
     static var delegate: PlayOnlineServiceDelegate?
     
-    private static let host = "ws://127.0.0.1" //"ws://46.101.130.16"
+    private static let host = "ws://127.0.0.1" // "ws://46.101.130.16"
     private static let port = 9000
     
     static var isConnected = false

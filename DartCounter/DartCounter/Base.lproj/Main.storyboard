@@ -52,9 +52,16 @@
                             <constraint firstItem="H9G-PQ-zAn" firstAttribute="trailing" secondItem="Cfy-PS-GD4" secondAttribute="trailing" id="yXA-Au-BmE"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" id="hmx-lV-HDB"/>
+                    <navigationItem key="navigationItem" id="hmx-lV-HDB">
+                        <barButtonItem key="rightBarButtonItem" title="Add Friend" image="person.fill.badge.plus" catalog="system" id="sld-34-S0L">
+                            <connections>
+                                <action selector="onAddFriend:" destination="NOT-IR-VGG" id="ufA-sa-s4L"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                     <connections>
                         <outlet property="friendsTableView" destination="FxX-Dh-hjh" id="u28-Jc-cTu"/>
+                        <segue destination="bIQ-Mi-ZuU" kind="presentation" identifier="Friends_SearchUser" id="R0T-rN-N9A"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Eu9-au-fqX" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -115,7 +122,7 @@
         <!--Add Friend View Controller-->
         <scene sceneID="erO-K4-ItE">
             <objects>
-                <viewController id="yVh-B0-RLl" customClass="AddFriendViewController" customModule="DartCounter" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="AddFriendToGame" id="yVh-B0-RLl" customClass="AddFriendViewController" customModule="DartCounter" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8HX-f6-b4w">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="842"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -126,12 +133,43 @@
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Search" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="lvs-2E-1Dn" userLabel="username" customClass="StandardTextField" customModule="DartCounter" customModuleProvider="target">
+                                <rect key="frame" x="25" y="25" width="364" height="44"/>
+                                <color key="backgroundColor" systemColor="systemGray5Color"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="44" id="DCH-LI-r88"/>
+                                </constraints>
+                                <color key="textColor" systemColor="systemGrayColor"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" returnKeyType="next"/>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                        <real key="value" value="22"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="height">
+                                        <real key="value" value="50"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                            </textField>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="50" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="m2C-lF-VvC">
+                                <rect key="frame" x="0.0" y="94" width="414" height="200"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="200" id="3Q2-Rd-z5z"/>
+                                </constraints>
+                            </tableView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="qcE-u9-h3V"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
+                            <constraint firstItem="lvs-2E-1Dn" firstAttribute="leading" secondItem="qcE-u9-h3V" secondAttribute="leading" constant="25" id="4m4-QQ-Ky4"/>
                             <constraint firstItem="zsS-ps-PEU" firstAttribute="centerX" secondItem="8HX-f6-b4w" secondAttribute="centerX" id="IPm-lF-6eZ"/>
                             <constraint firstItem="zsS-ps-PEU" firstAttribute="centerY" secondItem="8HX-f6-b4w" secondAttribute="centerY" id="O7Y-we-Oa3"/>
+                            <constraint firstItem="m2C-lF-VvC" firstAttribute="top" secondItem="lvs-2E-1Dn" secondAttribute="bottom" constant="25" id="Qs9-UA-cVk"/>
+                            <constraint firstAttribute="trailing" secondItem="m2C-lF-VvC" secondAttribute="trailing" id="XP2-8S-2RY"/>
+                            <constraint firstItem="m2C-lF-VvC" firstAttribute="leading" secondItem="qcE-u9-h3V" secondAttribute="leading" id="bmA-nH-HpD"/>
+                            <constraint firstItem="lvs-2E-1Dn" firstAttribute="top" secondItem="qcE-u9-h3V" secondAttribute="top" constant="25" id="cOJ-jS-pvT"/>
+                            <constraint firstItem="qcE-u9-h3V" firstAttribute="trailing" secondItem="lvs-2E-1Dn" secondAttribute="trailing" constant="25" id="oCI-zg-jx9"/>
                         </constraints>
                     </view>
                 </viewController>
@@ -459,7 +497,7 @@
                         <outlet property="sliderDartbotAverage" destination="ZGV-cR-2pW" id="RaK-ah-4gP"/>
                         <outlet property="switchDartbot" destination="359-79-SQJ" id="zdp-WD-lc3"/>
                         <segue destination="4W9-fm-VOZ" kind="show" identifier="CreateGame_InGame" id="90u-yn-QdH"/>
-                        <segue destination="yVh-B0-RLl" kind="presentation" identifier="CreateGame_AddFriend" id="Uen-df-ZdI"/>
+                        <segue destination="yVh-B0-RLl" kind="presentation" identifier="CreateGame_AddFriendToGame" id="Uen-df-ZdI"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="1V5-GX-JsX" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -1815,6 +1853,64 @@
             </objects>
             <point key="canvasLocation" x="-5420" y="1921"/>
         </scene>
+        <!--Add Friend View Controller-->
+        <scene sceneID="blp-Aj-Qlm">
+            <objects>
+                <viewController storyboardIdentifier="SearchUserViewController" id="bIQ-Mi-ZuU" customClass="AddFriendViewController" customModule="DartCounter" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="mAW-b5-wXe">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="842"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="SearchUser" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pQk-Yz-9Vq">
+                                <rect key="frame" x="162.5" y="410.5" width="89" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Search" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="cLA-up-bob" userLabel="username" customClass="StandardTextField" customModule="DartCounter" customModuleProvider="target">
+                                <rect key="frame" x="25" y="25" width="364" height="44"/>
+                                <color key="backgroundColor" systemColor="systemGray5Color"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="44" id="OfM-Ok-UnZ"/>
+                                </constraints>
+                                <color key="textColor" systemColor="systemGrayColor"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" returnKeyType="next"/>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                        <real key="value" value="22"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="height">
+                                        <real key="value" value="50"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                            </textField>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="50" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="j7f-Vh-UCp">
+                                <rect key="frame" x="0.0" y="94" width="414" height="200"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="200" id="O24-sr-UQy"/>
+                                </constraints>
+                            </tableView>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="bMx-O7-kRu"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstAttribute="trailing" secondItem="j7f-Vh-UCp" secondAttribute="trailing" id="0TH-M3-ORp"/>
+                            <constraint firstItem="cLA-up-bob" firstAttribute="top" secondItem="bMx-O7-kRu" secondAttribute="top" constant="25" id="CNf-OR-D8D"/>
+                            <constraint firstItem="bMx-O7-kRu" firstAttribute="trailing" secondItem="cLA-up-bob" secondAttribute="trailing" constant="25" id="GzA-xI-BgD"/>
+                            <constraint firstItem="cLA-up-bob" firstAttribute="leading" secondItem="bMx-O7-kRu" secondAttribute="leading" constant="25" id="H8x-nS-tJ3"/>
+                            <constraint firstItem="pQk-Yz-9Vq" firstAttribute="centerY" secondItem="mAW-b5-wXe" secondAttribute="centerY" id="Na0-bj-2aA"/>
+                            <constraint firstItem="j7f-Vh-UCp" firstAttribute="top" secondItem="cLA-up-bob" secondAttribute="bottom" constant="25" id="aHA-i0-gr3"/>
+                            <constraint firstItem="pQk-Yz-9Vq" firstAttribute="centerX" secondItem="mAW-b5-wXe" secondAttribute="centerX" id="ooU-Kt-C0P"/>
+                            <constraint firstItem="j7f-Vh-UCp" firstAttribute="leading" secondItem="bMx-O7-kRu" secondAttribute="leading" id="pxg-zF-pqi"/>
+                        </constraints>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="ahF-ZH-Fgg" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-3788.4057971014495" y="2663.8392857142858"/>
+        </scene>
     </scenes>
     <designables>
         <designable name="BVw-Z2-qgB">
@@ -1832,14 +1928,20 @@
         <designable name="bhP-Df-COu">
             <size key="intrinsicContentSize" width="151" height="48"/>
         </designable>
+        <designable name="cLA-up-bob">
+            <size key="intrinsicContentSize" width="65" height="18.5"/>
+        </designable>
         <designable name="fkU-kD-Ypd">
             <size key="intrinsicContentSize" width="82.5" height="17"/>
+        </designable>
+        <designable name="lvs-2E-1Dn">
+            <size key="intrinsicContentSize" width="65" height="18.5"/>
         </designable>
     </designables>
     <inferredMetricsTieBreakers>
         <segue reference="4db-I8-Led"/>
         <segue reference="ZAb-V4-Oah"/>
-        <segue reference="2uY-Lj-iHe"/>
+        <segue reference="24O-8r-TuN"/>
     </inferredMetricsTieBreakers>
     <resources>
         <image name="adBanner" width="156" height="80"/>
@@ -1852,6 +1954,7 @@
         <image name="google" width="48" height="48"/>
         <image name="instagram" width="48" height="48"/>
         <image name="logo" width="251" height="251"/>
+        <image name="person.fill.badge.plus" catalog="system" width="128" height="124"/>
         <image name="profile" width="88" height="89"/>
         <image name="stats" width="40" height="40"/>
         <image name="winner" width="192" height="192"/>

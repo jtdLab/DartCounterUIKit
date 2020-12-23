@@ -53,7 +53,7 @@ class CreateGameViewController: UIViewController {
         if online {
             //PlayOnlineService.inviteToGame(uid: "dmnaOOEf3ydld42aVggf0fExHv72", username: "needs00")
              
-            //performSegue(withIdentifier: Segues.CreateGame_AddFriend, sender: self)
+            performSegue(withIdentifier: Segues.CreateGame_AddFriend, sender: self)
         } else {
             // try add player and display new player if successful
             if PlayOfflineService.addPlayer() {

@@ -11,6 +11,10 @@ class FriendsViewController: UIViewController {
     
     @IBOutlet weak var friendsTableView: UITableView!
     var items = ["ONLINE SPIELER 1", "ONLINE SPIELER 2"]
+    
+    @IBAction func onAddFriend(_ sender: UIBarButtonItem) {
+        performSegue(withIdentifier: Segues.Friends_SearchUser, sender: self)
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
