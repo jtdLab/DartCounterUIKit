@@ -8,6 +8,10 @@
 import UIKit
 
 class SearchUserViewController: UIViewController {
+    
+    @IBOutlet weak var textField_search: StandardTextField!
+    
+    @IBOutlet weak var tableView_friends: UITableView!
 
     override func viewDidLoad() {
         super.viewDidLoad()

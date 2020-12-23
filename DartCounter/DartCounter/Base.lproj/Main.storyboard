@@ -172,6 +172,10 @@
                             <constraint firstItem="qcE-u9-h3V" firstAttribute="trailing" secondItem="lvs-2E-1Dn" secondAttribute="trailing" constant="25" id="oCI-zg-jx9"/>
                         </constraints>
                     </view>
+                    <connections>
+                        <outlet property="tableView_friends" destination="m2C-lF-VvC" id="pUO-zx-sZH"/>
+                        <outlet property="textField_search" destination="lvs-2E-1Dn" id="2gg-OV-lLw"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="obF-Uj-tft" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
@@ -1853,10 +1857,10 @@
             </objects>
             <point key="canvasLocation" x="-5420" y="1921"/>
         </scene>
-        <!--Add Friend View Controller-->
+        <!--Search User View Controller-->
         <scene sceneID="blp-Aj-Qlm">
             <objects>
-                <viewController storyboardIdentifier="SearchUserViewController" id="bIQ-Mi-ZuU" customClass="AddFriendViewController" customModule="DartCounter" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="SearchUserViewController" id="bIQ-Mi-ZuU" customClass="SearchUserViewController" customModule="DartCounter" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="mAW-b5-wXe">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="842"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -1906,6 +1910,10 @@
                             <constraint firstItem="j7f-Vh-UCp" firstAttribute="leading" secondItem="bMx-O7-kRu" secondAttribute="leading" id="pxg-zF-pqi"/>
                         </constraints>
                     </view>
+                    <connections>
+                        <outlet property="tableView_friends" destination="j7f-Vh-UCp" id="ePC-lo-f6h"/>
+                        <outlet property="textField_search" destination="cLA-up-bob" id="k4I-hG-J0P"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ahF-ZH-Fgg" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>

@@ -9,6 +9,10 @@ import UIKit
 
 class AddFriendViewController: UIViewController {
     
+    @IBOutlet weak var textField_search: StandardTextField!
+    
+    @IBOutlet weak var tableView_friends: UITableView!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
