@@ -11,7 +11,7 @@ import Firebase
 // Bridge to Storage (Firebase)
 class Storage {
     
-    static let profileImageCache = NSCache<NSString, UIImage>()
+    static let imageCache = NSCache<NSString, UIImage>()
     
     static func updateProfileImage(_ image: UIImage, completion: @escaping (_ success: Bool) -> Void) {
         
@@ -34,7 +34,7 @@ class Storage {
                         
                         changeRequest?.commitChanges { error in
                             if error == nil {
-                                profileImageCache.setObject(image, forKey: url!.absoluteString as NSString)
+                                imageCache.setObject(image, forKey: url!.absoluteString as NSString)
                                 
                                 let databaseReference = Database.database().reference().child("users/\(uid)/profile/photoURL").setValue(url?.absoluteString)
                             }
@@ -54,7 +54,7 @@ class Storage {
             }
             
             if downloadedImage != nil {
-                profileImageCache.setObject(downloadedImage!, forKey: url.absoluteString as NSString)
+                imageCache.setObject(downloadedImage!, forKey: url.absoluteString as NSString)
             }
             
             DispatchQueue.main.async {

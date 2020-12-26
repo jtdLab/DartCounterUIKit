@@ -10,7 +10,7 @@ import UIKit
 class FriendsViewController: UIViewController {
     
     @IBOutlet weak var tableView_friends: ContentSizedTableView!
-    var friends: [String]?
+    var friends: [Friend]?
     
     @IBAction func onAddFriend(_ sender: UIBarButtonItem) {
         performSegue(withIdentifier: Segues.Friends_SearchUser, sender: self)
@@ -55,7 +55,7 @@ extension FriendsViewController: UITableViewDataSource, UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "FriendCell", for: indexPath) as! FriendCell
-        cell.label_name.text = friends?[indexPath.row]
+        cell.label_name.text = friends?[indexPath.row].profile.username
         return cell
     }
 }

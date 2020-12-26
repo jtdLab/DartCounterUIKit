@@ -62,6 +62,14 @@ class RealtimeDatabase {
             
         })
     }
+    
+    static func getData(pathString: String) {
+        let ref = Database.database().reference().child(pathString)
+        
+        ref.observeSingleEvent(of: .value, with: { snapshot in
+            
+        })
+    }
 
  /**
      static func createProfile(uid: String, username: String, onError: @escaping (NSError) -> Void) {

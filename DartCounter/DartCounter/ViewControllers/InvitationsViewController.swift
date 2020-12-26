@@ -76,7 +76,7 @@ extension InvitationsViewController: UITableViewDataSource, UITableViewDelegate 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "InvitationCell", for: indexPath) as! InvitationCell
         
-        cell.label_name.text = invitations![indexPath.row].inviter
+        cell.label_name.text = invitations![indexPath.row].inviterName
         
         return cell
     }

@@ -95,7 +95,7 @@ class UserService {
     
     
     static func getProfilePicture(withURL url:URL, completion: @escaping (_ image: UIImage?) ->()) {
-        if let image = Storage.profileImageCache.object(forKey: url.absoluteString as NSString) {
+        if let image = Storage.imageCache.object(forKey: url.absoluteString as NSString) {
             completion(image)
         } else {
             Storage.downloadProfileImage(withURL: url, completion: completion)

@@ -53,20 +53,5 @@ class Profile {
             "isOnline": isOnline
         ]
     }
-    
-    static func fromDict(dict: [String:Any]) -> Profile? {
-        if let un = dict["username"] as? String {
-            if let iO = dict["isOnline"] as?  Bool {
-                if let p = dict["photoURL"] as? String {
-                    return Profile(username: un, photoURL: URL(string: p), isOnline: iO)
-                } else {
-                    return Profile(username: un, photoURL: nil, isOnline: iO)
-                }
-            }
-       
-        }
-        
-        return nil
-    }
 
 }

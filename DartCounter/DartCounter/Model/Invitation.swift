@@ -9,13 +9,15 @@ import Foundation
 
 class Invitation {
     
-    var inviter: String
+    var inviterUid: String
+    var inviterName: String
     var gameCode: Int
     
-    init(dict: [String:Any]) throws {
-        if let i = dict["inviter"] as? String,
+    init(inviterUid: String, dict: [String:Any]) throws {
+        self.inviterUid = inviterUid
+        if let iN = dict["inviterName"] as? String,
            let g = dict["gameCode"] as? Int {
-            self.inviter = i
+            self.inviterName = iN
             self.gameCode = g
             return
         }
@@ -23,19 +25,22 @@ class Invitation {
         throw Errors.GeneralError.initError("Can't construct Invitation from given dict")
     }
     
-    init(inviter: String, gameCode: Int) {
-        self.inviter = inviter
+    init(inviterUid: String, inviterName: String, gameCode: Int) {
+        self.inviterUid = inviterUid
+        self.inviterName = inviterName
         self.gameCode = gameCode
     }
     
     init() {
-        self.inviter = "TEST"
+        self.inviterUid = "TEST UID"
+        self.inviterName = "TEST"
         self.gameCode = 8888
     }
     
     var dict: [String:Any] {
         return [
-            "inviter": inviter,
+            "inviterUid": inviterUid,
+            "inviterName": inviterName,
             "gameCode": gameCode,
         ]
     }
