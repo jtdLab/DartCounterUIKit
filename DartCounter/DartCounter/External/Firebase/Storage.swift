@@ -1,56 +1,23 @@
 //
-//  DatabaseService.swift
+//  Storage.swift
 //  DartCounter
 //
-//  Created by Jonas Schlauch on 04.12.20.
+//  Created by Jonas Schlauch on 25.12.20.
 //
 
 import Foundation
 import Firebase
-import FirebaseDatabase
 
-class DatabaseService {
+// Bridge to Storage (Firebase)
+class Storage {
     
     static let profileImageCache = NSCache<NSString, UIImage>()
     
-    static func createProfile(uid: String, username: String, onError: @escaping (NSError) -> Void) {
-        
-        let databaseReference = Database.database().reference().child("users/\(uid)/profile")
-        
-        let userObject = [
-            "username": username,
-        ] as [String:Any]
-        
-        databaseReference.setValue(userObject) { error, ref in
-            if error != nil {
-                onError(error! as NSError)
-            }
-        }
-    }
-    
-    static func createCareerStats(uid: String, onError: @escaping (NSError) -> Void) {
-        let databaseReference = Database.database().reference().child("users/\(uid)/careerStats")
-        
-        let careerStatsObject = [
-            "average": "0.00",
-            "firstNine": "0.00",
-            "checkoutPerentage": "0.00",
-            "wins": "0",
-            "defeats": "0"
-        ] as [String:Any]
-        
-        databaseReference.setValue(careerStatsObject) { error, ref in
-            if error != nil {
-                onError(error! as NSError)
-            }
-        }
-    }
-    
-    static func updateProfileImage(_ image: UIImage, completion: @escaping (_ success: Bool) ->()) {
+    static func updateProfileImage(_ image: UIImage, completion: @escaping (_ success: Bool) -> Void) {
         
         guard let uid = Auth.auth().currentUser?.uid else { return }
         
-        let storageReference = Storage.storage().reference().child("user/\(uid)")
+        let storageReference = Firebase.Storage.storage().reference().child("user/\(uid)")
         
         guard let imageData = image.jpegData(compressionQuality: 0.75) else { return }
         
@@ -78,7 +45,7 @@ class DatabaseService {
         }
     }
     
-    static func downloadProfileImage(withURL url:URL, completion: @escaping (_ image: UIImage?) ->()) {
+    static func downloadProfileImage(withURL url:URL, completion: @escaping (_ image: UIImage?) -> Void) {
         
         let dataTask = URLSession.shared.dataTask(with: url) { data, responseUrl, error in
             var downloadedImage: UIImage?
@@ -97,4 +64,5 @@ class DatabaseService {
         dataTask.resume()
     }
 
+    
 }

@@ -19,7 +19,7 @@ class SignUpViewController: UIViewController {
     @IBAction func onSignUp(_ sender: UIButton) {
         label_error.isHidden = true
         if(validateTextfields()) {
-            AuthService.signUpUsernameAndPassword(
+            AuthenticationService.signUpUsernameAndPassword(
                 username: textField_username.text!,
                 password: textField_password.text!,
                 onError: onSignUpError(error:)

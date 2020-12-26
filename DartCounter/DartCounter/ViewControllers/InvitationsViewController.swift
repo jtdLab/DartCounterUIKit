@@ -9,7 +9,7 @@ import UIKit
 
 class InvitationsViewController: UIViewController {
 
-    @IBOutlet weak var invitationsTableView: UITableView!
+    @IBOutlet weak var tableView_invitations: ContentSizedTableView!
     
     var snapshot: GameSnapshot?
     
@@ -19,22 +19,19 @@ class InvitationsViewController: UIViewController {
         super.viewDidLoad()
         
         // register InvitationCell to InvitationsTable
-        invitationsTableView.register(UINib(nibName: "InvitationCell", bundle: nil), forCellReuseIdentifier: "InvitationCell")
+        tableView_invitations.register(UINib(nibName: "InvitationCell", bundle: nil), forCellReuseIdentifier: "InvitationCell")
         
-        invitationsTableView.dataSource = self
-        invitationsTableView.delegate = self
-        invitationsTableView.isScrollEnabled = false
+        tableView_invitations.dataSource = self
+        tableView_invitations.delegate = self
+        tableView_invitations.isScrollEnabled = false
         
         PlayOnlineService.delegate = self
         PlayOnlineService.connect()
-        // TODO
         
-        UserService.observeInvitations(completion: { invitationsObject in
-            guard let invitations = invitationsObject else { return }
-            
-            self.invitations = invitations
-            self.invitationsTableView.reloadData()
-        })
+        UserService.delegate = self
+        
+        guard let user = UserService.user else { return }
+        onUserChanged(user: user)
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -45,6 +42,17 @@ class InvitationsViewController: UIViewController {
         }
     }
 
+}
+
+// handle events from UserService
+extension InvitationsViewController: UserServiceDelegate {
+    
+    func onUserChanged(user: User) {
+        self.invitations = user.invitations
+    
+        tableView_invitations.reloadData()
+    }
+    
 }
 
 // handle events from PlayOnlineService
@@ -69,7 +77,7 @@ extension InvitationsViewController: UITableViewDataSource, UITableViewDelegate 
         let cell = tableView.dequeueReusableCell(withIdentifier: "InvitationCell", for: indexPath) as! InvitationCell
         
         cell.label_name.text = invitations![indexPath.row].inviter
-    
+        
         return cell
     }
     

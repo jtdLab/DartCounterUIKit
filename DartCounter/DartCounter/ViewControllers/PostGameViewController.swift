@@ -35,7 +35,7 @@ class PostGameViewController: UIViewController {
         
         guard let winner = snapshot.getWinner() else { return }
         
-        guard let username = UserService.currentProfile?.username else { return }
+        guard let username = UserService.user?.profile.username else { return }
         
         let won = username == winner.name!
         

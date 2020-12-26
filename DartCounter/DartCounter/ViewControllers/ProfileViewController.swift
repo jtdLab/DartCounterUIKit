@@ -35,8 +35,8 @@ class ProfileViewController: UIViewController {
         careerStatsTableView.register(UINib(nibName: "CareerCell", bundle: nil), forCellReuseIdentifier: "CareerCell")
         
         UserService.delegate = self
-        if UserService.currentProfile != nil {
-            self.onProfileChanged(profile: UserService.currentProfile!)
+        if let user = UserService.user {
+            self.onUserChanged(user: user)
         }
         
         careerStatsTableView.dataSource = self
@@ -60,7 +60,9 @@ class ProfileViewController: UIViewController {
 // handle events from UserService
 extension ProfileViewController: UserServiceDelegate {
     
-    func onProfileChanged(profile: UserProfile) {
+    func onUserChanged(user: User) {
+        let profile = user.profile
+        
         self.usernameLabel.text = profile.username
         
         if let photURL = profile.photoURL {
@@ -70,10 +72,8 @@ extension ProfileViewController: UserServiceDelegate {
         } else {
             self.profilePictureImageView.image = UIImage(named: "profile")
         }
-    }
-    
-    func onCareerStatsChanged(stats: CareerStats) {
-        self.careerStats = stats
+        
+        self.careerStats = user.careerStats
         self.careerStatsTableView.reloadData()
     }
 

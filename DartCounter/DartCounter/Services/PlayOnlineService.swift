@@ -66,8 +66,8 @@ class PlayOnlineService {
             
             switch event {
                 case .connected(let headers):
-                    guard let uid = UserService.currentProfile?.uid else { return }
-                    guard let username = UserService.currentProfile?.username else { return }
+                    guard let username = UserService.user?.profile.username else { return }
+                    guard let uid = UserService.user?.uid else { return }
                     sendPacket(packet: AuthRequestPacket(uid: uid, username: username))
                 case .disconnected(let reason, let code):
                     isConnected = false

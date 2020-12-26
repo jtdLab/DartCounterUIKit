@@ -21,7 +21,7 @@ class AddFriendViewController: UIViewController {
     
 
     override func viewWillDisappear(_ animated: Bool) {
-        FriendService.addFriend(uid: "DAVID")
+        // TODO add friend
        
     }
 

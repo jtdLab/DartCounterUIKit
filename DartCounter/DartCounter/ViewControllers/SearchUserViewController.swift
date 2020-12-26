@@ -10,24 +10,21 @@ import UIKit
 class SearchUserViewController: UIViewController {
     
     @IBOutlet weak var textField_search: StandardTextField!
-    
     @IBOutlet weak var tableView_friends: UITableView!
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // Do any additional setup after loading the view.
+        // hide keyboard if touched screen somewhere outside of keyboard area
+        self.hideKeyboardWhenTappedAround()
+        
+        textField_search.addTarget(self, action: #selector(onEditingChanged), for: .editingChanged)
     }
     
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
+    @objc func onEditingChanged(sender: UITextField) {
+        guard let text = sender.text else { return }
+        
+        // TODO search users in db and display them depending on text
     }
-    */
 
 }

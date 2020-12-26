@@ -93,7 +93,7 @@
                                     <constraint firstItem="lDB-jw-XXA" firstAttribute="centerY" secondItem="jUq-He-zZq" secondAttribute="centerY" id="omr-HJ-2I8"/>
                                 </constraints>
                             </view>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" placeholderIntrinsicWidth="414" placeholderIntrinsicHeight="150" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="50" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="PJu-eH-MBM" customClass="ContentSizedTableView" customModule="DartCounter" customModuleProvider="target">
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" placeholderIntrinsicWidth="414" placeholderIntrinsicHeight="150" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="50" estimatedRowHeight="50" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="PJu-eH-MBM" customClass="ContentSizedTableView" customModule="DartCounter" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="50" width="414" height="150"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                             </tableView>
@@ -111,7 +111,7 @@
                     </view>
                     <navigationItem key="navigationItem" id="7P3-Ca-Gug"/>
                     <connections>
-                        <outlet property="invitationsTableView" destination="PJu-eH-MBM" id="bzu-kZ-Pim"/>
+                        <outlet property="tableView_invitations" destination="PJu-eH-MBM" id="rfw-z1-P2X"/>
                         <segue destination="dMP-t6-5S2" kind="show" identifier="Invitations_CreateGame" id="24O-8r-TuN"/>
                     </connections>
                 </viewController>

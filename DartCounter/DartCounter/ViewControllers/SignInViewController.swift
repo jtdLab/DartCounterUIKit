@@ -18,7 +18,7 @@ class SignInViewController: UIViewController {
     
     @IBAction func onSignInUsernameAndPassword(_ sender: UIButton) {
         if(validateTextfields()) {
-            AuthService.signInUsernameAndPassword(
+            AuthenticationService.signInUsernameAndPassword(
                 username: textField_username.text!,
                 password: textField_password.text!,
                 onError: onSignInUsernameAndPasswordError(error:)
@@ -27,15 +27,15 @@ class SignInViewController: UIViewController {
     }
     
     @IBAction func onSignInFacebook(_ sender: UIButton) {
-        AuthService.signInFacebook(onError: onSignInFacebookError(error:))
+        AuthenticationService.signInFacebook(onError: onSignInFacebookError(error:))
     }
     
     @IBAction func onSignInGoogle(_ sender: UIButton) {
-        AuthService.signInGoogle(onError: onSignInGoogleError(error:))
+        AuthenticationService.signInGoogle(onError: onSignInGoogleError(error:))
     }
     
     @IBAction func onSignInInstagram(_ sender: UIButton) {
-        AuthService.signInInstagram(onError: onSignInInstagramError(error:))
+        AuthenticationService.signInInstagram(onError: onSignInInstagramError(error:))
     }
     
     @IBAction func onGotoSignUp(_ sender: UIButton) {

@@ -43,8 +43,8 @@ class HomeViewController: UIViewController {
         SideMenuManager.default.leftMenuNavigationController = sideMenu
         SideMenuManager.default.addPanGestureToPresent(toView: self.view)
         
-        if UserService.currentProfile != nil {
-            self.onProfileChanged(profile: UserService.currentProfile!)
+        if UserService.user != nil {
+            self.onUserChanged(user: UserService.user!)
         }
         
         // add on click to buttons
@@ -63,24 +63,27 @@ class HomeViewController: UIViewController {
         let settingsTapGesture = UITapGestureRecognizer(target:self,action:#selector(self.onSettings))
         settingsButton.addGestureRecognizer(settingsTapGesture)
         
-        // observe changes of invitations
-        UserService.observeInvitations(completion: { invitations in
-            // TODO set number of sidemenu
-        })
+       /**
+         // observe changes of invitations
+         try! UserService.observeInvitations(completion: { invitations in
+             // TODO set number of sidemenu
+         })
+         */
         
         // subscirbe to service events
         PlayOfflineService.delegate = self
         PlayOnlineService.delegate = self
         UserService.delegate = self
         
-        if UserService.currentProfile == nil || !PlayOnlineService.isConnected {
+        if UserService.user == nil || !PlayOnlineService.isConnected {
             showSpinner()
         }
+        
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        guard let userProfile = UserService.currentProfile else { return }
-        onProfileChanged(profile: userProfile)
+        guard let user = UserService.user else { return }
+        onUserChanged(user: user)
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -124,10 +127,19 @@ class HomeViewController: UIViewController {
 // handle events from UserService
 extension HomeViewController: UserServiceDelegate {
     
-    func onProfileChanged(profile: UserProfile) {
+    func onUserChanged(user: User) {
+        let profile = user.profile
+        let careerStats = user.careerStats
+        
         // display username in profileButton
         self.profileButton.setName(name: profile.username)
 
+        // display careerStats
+        self.profileButton.setAverage(average: careerStats.average)
+        self.profileButton.setCheckout(checkout: careerStats.checkoutPerentage)
+        self.profileButton.setWins(wins: careerStats.wins)
+        self.profileButton.setDefeats(defeats: careerStats.defeats)
+        
         if let photURL = profile.photoURL {
             UserService.getProfilePicture(withURL: photURL, completion: { profileImage in
                 // display profilePicture in profileButton
@@ -138,19 +150,12 @@ extension HomeViewController: UserServiceDelegate {
             self.profileButton.setProfilePicture(image: UIImage(named: "profile"))
         }
         
-        if UserService.currentProfile != nil {
+        if !PlayOnlineService.isConnected {
             PlayOnlineService.connect()
         }
+        
     }
     
-    func onCareerStatsChanged(stats: CareerStats) {
-        // display career stats in profileButton
-        self.profileButton.setAverage(average: stats.average)
-        self.profileButton.setCheckout(checkout: stats.checkoutPerentage)
-        self.profileButton.setWins(wins: stats.wins)
-        self.profileButton.setDefeats(defeats: stats.defeats)
-    }
-
 }
 
 // handle events from PlayOfflineService
@@ -217,7 +222,7 @@ extension HomeViewController: SideMenuControllerDelegate {
             } else if index == 5 {
                 // log out
                 PlayOnlineService.disconnect()
-                AuthService.signOut()
+                AuthenticationService.signOut()
             }
         })
     }
@@ -271,8 +276,8 @@ class SideMenuController: UITableViewController {
         backgroundConfig.backgroundColor = .black
         headerView.backgroundConfiguration = backgroundConfig
 
-        
-        guard let profile = UserService.currentProfile else { return headerView }
+        guard let user = UserService.user else { return headerView }
+        let profile = user.profile
         headerView.setName(name: profile.username)
         
         guard let url = profile.photoURL else { return headerView }

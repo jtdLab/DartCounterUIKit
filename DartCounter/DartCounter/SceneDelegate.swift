@@ -18,29 +18,27 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let windowScene = (scene as? UIWindowScene) else { return }
         self.window = UIWindow(windowScene: windowScene)
         
-        let authListener  = Auth.auth().addStateDidChangeListener { auth, user in
+        Auth.auth().addStateDidChangeListener { auth, user in
             
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
             
-            if user != nil {
-                // signed in
-                let uid = user!.uid
-                UserService.observeUserProfile(uid: uid)
-                UserService.observeCareerStats(uid: uid)
-                
-                let rootViewController = storyboard.instantiateViewController(identifier: UIStoryboard.Identifiers.HomeViewController)
-                let navigationController = UINavigationController(rootViewController: rootViewController)
-                navigationController.navigationBar.tintColor = .black
-                self.window?.rootViewController = navigationController
-                self.window?.makeKeyAndVisible()
-            } else {
+            guard let user = user else {
                 // signed out
-                UserService.currentProfile = nil
+                UserService.removeUser()
                 
-                let rootViewController = storyboard.instantiateViewController(identifier: UIStoryboard.Identifiers.SignInViewController) 
+                let rootViewController = storyboard.instantiateViewController(identifier: UIStoryboard.Identifiers.SignInViewController)
                 self.window?.rootViewController = UINavigationController(rootViewController: rootViewController)
                 self.window?.makeKeyAndVisible()
+                return
             }
+            
+            UserService.observeUser(uid: user.uid)
+            
+            let rootViewController = storyboard.instantiateViewController(identifier: UIStoryboard.Identifiers.HomeViewController)
+            let navigationController = UINavigationController(rootViewController: rootViewController)
+            navigationController.navigationBar.tintColor = .black
+            self.window?.rootViewController = navigationController
+            self.window?.makeKeyAndVisible()
         }
         // Use this method to optionally configure and attach the UIWindow `window` to the provided UIWindowScene `scene`.
         // If using a storyboard, the `window` property will automatically be initialized and attached to the scene.

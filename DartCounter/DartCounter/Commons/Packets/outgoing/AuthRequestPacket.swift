@@ -13,8 +13,8 @@ class AuthRequestPacket: Packet {
     var username: String
     
     private enum CodingKeys: String, CodingKey {
-            case uid
-            case username
+        case uid
+        case username
     }
     
     init(uid: String, username: String) {

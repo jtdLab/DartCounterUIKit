@@ -12,10 +12,25 @@ class Invitation {
     var inviter: String
     var gameCode: Int
     
+    init(dict: [String:Any]) throws {
+        if let i = dict["inviter"] as? String,
+           let g = dict["gameCode"] as? Int {
+            self.inviter = i
+            self.gameCode = g
+            return
+        }
+        
+        throw Errors.GeneralError.initError("Can't construct Invitation from given dict")
+    }
     
     init(inviter: String, gameCode: Int) {
         self.inviter = inviter
         self.gameCode = gameCode
+    }
+    
+    init() {
+        self.inviter = "TEST"
+        self.gameCode = 8888
     }
     
     var dict: [String:Any] {
@@ -25,12 +40,5 @@ class Invitation {
         ]
     }
     
-    static func fromDict(dict: [String:Any]) -> Invitation? {
-        if let i = dict["inviter"] as? String,
-           let g = dict["gameCode"] as? Int {
-            return Invitation(inviter: i, gameCode: g)
-        }
-        return nil
-    }
     
 }

@@ -15,6 +15,31 @@ class CareerStats {
     var wins: String
     var defeats: String
     
+    init() {
+        self.average = "0.00"
+        self.firstNine = "0.00"
+        self.checkoutPerentage = "0.00"
+        self.wins = "0"
+        self.defeats = "0"
+    }
+    
+    init(dict: [String:Any]) throws {
+        if let a = dict["average"] as? String,
+           let f = dict["firstNine"] as? String,
+           let c = dict["checkoutPerentage"] as? String,
+           let w = dict["wins"] as? String,
+           let d = dict["defeats"] as? String {
+            self.average = a
+            self.firstNine = f
+            self.checkoutPerentage = c
+            self.wins = w
+            self.defeats = d
+            return
+        }
+        
+        throw Errors.GeneralError.initError("Can't construct CareerStats from given dict")
+    }
+    
     init(average: String, firstNine: String, checkoutPerentage: String, wins: String, defeats: String) {
         self.average = average
         self.firstNine = firstNine
@@ -31,18 +56,6 @@ class CareerStats {
             "wins": wins,
             "defeats": defeats
         ]
-    }
-    
-    static func fromDict(dict: [String:Any]) -> CareerStats? {
-        if let a = dict["average"] as? String,
-           let f = dict["firstNine"] as? String,
-           let c = dict["checkoutPerentage"] as? String,
-           let w = dict["wins"] as? String,
-           let d = dict["defeats"] as? String {
-            return CareerStats(average: a, firstNine: f, checkoutPerentage: c, wins: w, defeats: d)
-        }
-        
-        return nil
     }
     
 }

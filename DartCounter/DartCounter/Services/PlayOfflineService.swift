@@ -31,7 +31,7 @@ class PlayOfflineService {
     }
     
     static func createGame() {
-        guard let username = UserService.currentProfile?.username else { return }
+        guard let username = UserService.user?.profile.username else { return }
         
         game = Game(player: Player(name: username))
         

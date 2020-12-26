@@ -51,7 +51,7 @@ class CreateGameViewController: UIViewController {
     
     @IBAction func onAddPlayer(_ sender: UIButton) {
         if online {
-            //PlayOnlineService.inviteToGame(uid: "dmnaOOEf3ydld42aVggf0fExHv72", username: "needs00")
+            PlayOnlineService.inviteToGame(uid: "mIMJq0U5obd2wqQm0vH5jOhAkoF2", username: "mrjosch")
              
             performSegue(withIdentifier: Segues.CreateGame_AddFriend, sender: self)
         } else {
@@ -261,7 +261,7 @@ extension CreateGameViewController: PlayOfflineServiceDelegate, PlayOnlineServic
         }
         
         // if this client doesn't own the game
-        if snapshot.ownerUsername != UserService.currentProfile?.username {
+        if snapshot.ownerUsername != UserService.user?.profile.username {
             // disable controlls
             segmentedStartingPoints.isUserInteractionEnabled = false
             segmentedGameMode.isUserInteractionEnabled = false
