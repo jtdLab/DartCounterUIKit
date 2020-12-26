@@ -87,8 +87,8 @@ class User {
         self.uid = uid
         self.profile = Profile(username: username)
         self.careerStats = CareerStats()
-        self.friends = ["HALLO","HDHD"]
-        self.invitations = [Invitation(inviter: "Rim", gameCode: 3324), Invitation(inviter: "ha", gameCode: 9999)]
+        self.friends = []
+        self.invitations = []
     }
     
     init(uid: String ,profile: Profile, careerStats: CareerStats) {
