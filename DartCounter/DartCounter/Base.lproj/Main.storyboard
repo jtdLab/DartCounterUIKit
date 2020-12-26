@@ -33,12 +33,9 @@
                                     <constraint firstItem="Yhb-hf-XPW" firstAttribute="centerY" secondItem="Cfy-PS-GD4" secondAttribute="centerY" id="qdI-y5-BpA"/>
                                 </constraints>
                             </view>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="50" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="FxX-Dh-hjh">
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" placeholderIntrinsicWidth="414" placeholderIntrinsicHeight="100" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="50" estimatedRowHeight="50" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="FxX-Dh-hjh" customClass="ContentSizedTableView" customModule="DartCounter" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="50" width="414" height="100"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="100" id="clL-tc-5dq"/>
-                                </constraints>
                             </tableView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="H9G-PQ-zAn"/>
@@ -60,7 +57,7 @@
                         </barButtonItem>
                     </navigationItem>
                     <connections>
-                        <outlet property="friendsTableView" destination="FxX-Dh-hjh" id="u28-Jc-cTu"/>
+                        <outlet property="tableView_friends" destination="FxX-Dh-hjh" id="CDv-xZ-IqW"/>
                         <segue destination="bIQ-Mi-ZuU" kind="presentation" identifier="Friends_SearchUser" id="R0T-rN-N9A"/>
                     </connections>
                 </viewController>
@@ -173,7 +170,6 @@
                         </constraints>
                     </view>
                     <connections>
-                        <outlet property="tableView_friends" destination="m2C-lF-VvC" id="pUO-zx-sZH"/>
                         <outlet property="textField_search" destination="lvs-2E-1Dn" id="2gg-OV-lLw"/>
                     </connections>
                 </viewController>
