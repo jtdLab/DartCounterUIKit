@@ -1,2 +1,2 @@
 # DartCounterUIKit
-DartCounter (native < IOS 13.0)
+DartCounter mobile Client (native < IOS 13.0)
